@@ -1,0 +1,42 @@
+:root {
+  --verde-primario: #1B5E20; /* Verde oscuro principal */
+  --verde-secundario: #388E3C; /* Verde medio */
+  --verde-acento: #4CAF50; /* Verde vibrante */
+  --verde-claro: #C8E6C9; /* Verde suave */
+  --verde-muy-claro: #E8F5E8; /* Verde de fondo */
+
+  --blanco: #FFFFFF;
+  --gris-claro: #F5F5F5;
+  --gris-medio: #757575;
+  --gris-oscuro: #424242;
+
+  --sombra-suave: 0 4px 20px rgba(27, 94, 32, 0.1);
+  --sombra-media: 0 8px 32px rgba(27, 94, 32, 0.15);
+  --sombra-fuerte: 0 12px 40px rgba(27, 94, 32, 0.2);
+
+  --transicion: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --radio-base: 16px;
+  --radio-grande: 24px;
+}
+
+/* Clases globales */
+.titulo-principal {
+  color: var(--verde-primario);
+  font-weight: 1000;
+}
+
+.titulo-secundario {
+  color: var(--verde-secundario);
+  font-weight: 600;
+}
+
+.titulo-principal-gris {
+  color: var(--gris-medio);
+  font-weight: 600;
+}
+
+.titulo-topbar {
+  color: var(--blanco);
+  font-weight: 200;
+  font-size: 70%;
+}

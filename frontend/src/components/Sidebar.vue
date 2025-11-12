@@ -11,13 +11,14 @@
 
     <!-- Menú -->
     <ul class="navbar-nav">
+
       <li class="nav-item">
         <router-link
-          to="/estadisticas"
+          to="/home"
           class="nav-link"
-          :class="{ active: isActive('/estadisticas') }"
+          :class="{ active: isActive('/home') }"
         >
-          <span class="nav-link-text">Estadísticas</span>
+          <span class="nav-link-text">Inicio</span>
         </router-link>
       </li>
 
@@ -28,6 +29,16 @@
           :class="{ active: isActive('/equipos') }"
         >
           <span class="nav-link-text">Equipos</span>
+        </router-link>
+      </li>
+
+      <li class="nav-item">
+        <router-link
+          to="/estadisticas"
+          class="nav-link"
+          :class="{ active: isActive('/estadisticas') }"
+        >
+          <span class="nav-link-text">Estadísticas</span>
         </router-link>
       </li>
     </ul>
@@ -53,7 +64,7 @@
           rel="noopener noreferrer"
         >
           MariaPaulinaArias
-        </a>,
+        </a>
         <a
           href="https://github.com/DaFeTaCo"
           target="_blank"
@@ -86,10 +97,10 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600&display=swap");
 
 .sidenav {
-  font-family: "Poppins", sans-serif;
+  font-family: "Lato", sans-serif;
   position: fixed;
   left: 0;
   top: 0;
@@ -102,6 +113,7 @@ export default {
   flex-direction: column;
   overflow-y: auto;
   transition: width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  z-index: 1100;
 }
 
 /* --- Logo --- */

@@ -11,18 +11,26 @@
 import Sidebar from "@/components/Sidebar.vue";
 
 export default {
+  name: "AppLayout",
   components: { Sidebar },
 };
 </script>
 
 <style>
+
+/* --- Layout general --- */
 .app-layout {
   display: flex;
+  min-height: 100vh;
+  font-family: 'Lato', sans-serif;
+  background-color: #f8fafc;
 }
 
+/* --- Contenido principal --- */
 .main-content {
-  margin-left: 220px; /* igual al ancho del sidebar */
+  margin-left: 100px; /* 👈 asegúrate que coincida con el ancho del Sidebar */
   flex: 1;
-  padding: 1rem;
+  padding: 1.5rem;
 }
+
 </style>
