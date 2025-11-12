@@ -1,11 +1,28 @@
-<script setup></script>
-
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <div class="app-layout">
+    <Sidebar />
+    <div class="main-content">
+      <router-view />
+    </div>
+  </div>
 </template>
 
-<style scoped></style>
+<script>
+import Sidebar from "@/components/Sidebar.vue";
+
+export default {
+  components: { Sidebar },
+};
+</script>
+
+<style>
+.app-layout {
+  display: flex;
+}
+
+.main-content {
+  margin-left: 220px; /* igual al ancho del sidebar */
+  flex: 1;
+  padding: 1rem;
+}
+</style>
