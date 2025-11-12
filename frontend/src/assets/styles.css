@@ -23,17 +23,20 @@
 .titulo-principal {
   color: var(--verde-primario);
   font-weight: 1000;
+  font-size: large;
 }
 
 .titulo-secundario {
   color: var(--verde-secundario);
   font-weight: 600;
+  font-style: initial;
+  font-size: medium;
 }
 
 .titulo-principal-gris {
   color: var(--gris-medio);
-  font-weight: 600;
-  font-size: 100%;
+  font-weight: 550;
+  font-size: medium;
 }
 
 .titulo-topbar {
@@ -78,5 +81,63 @@
   font-size: 1.1rem;
   line-height: 1.6;
   color: #f1f1f1;
+}
+
+
+.badge {
+  cursor: default;
+  font-size: 0.85rem;
+}
+
+.bg-verde-acento {
+  background-color: var(--verde-acento) !important;
+}
+
+/* Pestañas de los tabs */
+.nav-pills .nav-link {
+  background-color: #f8f9fa; /* fondo gris claro por defecto */
+  color: #000; /* texto negro */
+  border-radius: 0.25rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Solo la pestaña activa tiene bg-info */
+.nav-pills .nav-link.active {
+  background-color: #61ab63 !important; /* bg-info */
+  color: white;
+}
+
+.custom-header {
+  background-color: #61ab63 !important; /* Verde #4CAF50 */
+  color: white;
+}
+
+.custom-btn {
+  border-color: #61ab63 !important;
+  color: #61ab63 !important;
+}
+
+.custom-btn:hover {
+  background-color: #61ab63 !important;
+  color: white !important;
+  border-color: #61ab63 !important;
+}
+
+.filtro {
+  min-width: 180px;
+}
+
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #6c757d !important; /* gris Bootstrap */
+  padding: 0 3px;
+  cursor: pointer;
+}
+
+.icon-btn:hover i {
+  color: #4CAF50 !important; /* tono verde al pasar el mouse */
+  transition: color 0.2s ease !important;
 }
 

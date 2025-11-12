@@ -22,7 +22,7 @@ export default {
 .app-layout {
   display: flex;
   min-height: 100vh;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Roboto', sans-serif;
   background-color: #f8fafc;
 }
 

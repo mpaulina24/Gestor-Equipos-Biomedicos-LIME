@@ -91,8 +91,7 @@ const sedes = [
     nombre: "Sede Prado – Hospital Alma Máter, Sede Ambulatoria",
     direccion: " Calle 64 #51 - 31. Bloque B, piso 2. Medellín , Antioquia.",
     descripcion:
-      "Cuenta con laboratorios de calibración, bancos de prueba biomédica y áreas de innovación tecnológica orientadas a la seguridad y confiabilidad de los equipos médicos institucionales.",
-    icono: "bi bi-building",
+      "Cuenta con los servicios LIME Central, Fotodermatología, Resonador y Oftalmología.",
   },
   {
     nombre: "Sede Alma Máter – Complejo de la Salud",

@@ -64,7 +64,7 @@
           rel="noopener noreferrer"
         >
           MariaPaulinaArias
-        </a>
+        </a>,
         <a
           href="https://github.com/DaFeTaCo"
           target="_blank"
@@ -97,10 +97,10 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap");
 
 .sidenav {
-  font-family: "Lato", sans-serif;
+  font-family: "Roboto", sans-serif;
   position: fixed;
   left: 0;
   top: 0;

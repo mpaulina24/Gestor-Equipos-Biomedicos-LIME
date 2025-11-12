@@ -3,6 +3,7 @@ import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import Estadisticas from '@/views/Estadisticas.vue'
 import Equipos from '@/views/Equipos.vue'
 import Home from '@/views/Home.vue'
+import AgregarEquipo from '@/views/AgregarEquipo.vue'
 
 const routes = [
   {
@@ -25,8 +26,13 @@ const routes = [
         component: Equipos
       },
       {
+        path: '/equipos/agregarEquipo',
+        name: 'AgregarEquipo',
+        component: AgregarEquipo
+      },
+      {
         path: '/',
-        redirect: '/home' // opcional, define la vista inicial
+        redirect: '/home' // Vista Inicial
       }
     ]
   }
