@@ -26,38 +26,23 @@ El proyecto sigue una arquitectura **cliente-servidor** con separación entre fr
 
 ---
 
-## 🗂️ Estructura del Proyecto
 
-
-Gestor-Equipos-Biomedicos/
-│
-├─ backend/ → API REST con Django y MySQL
-│ ├─ core/ → Configuración general del proyecto
-│ ├─ api/ → Endpoints y vistas del sistema
-│ └─ venv/ → Entorno virtual de Python
-│
-├─ frontend/ → Interfaz desarrollada con Vue.js
-│ ├─ src/ → Componentes, layouts y servicios
-│ ├─ public/ → Archivos estáticos
-│ └─ package.json → Dependencias del frontend
-│
-└─ README.md → Documentación general
-
-
-
-👩‍💻 Equipo de Desarrollo
+## 👩‍💻 Equipo de Desarrollo
 
 Desarrollado por estudiantes del curso Ingeniería de Software:
 
 María Paulina Arias Castillo
 
-[Agrega tus compañeros si aplica]
+Daniel Felipe Tamayo Cortes
+
+Santiago Tabares Osorio
 
 Docente:
 
 Angelower Santana Velásquez
 
+---
 
-📜 Licencia y Uso
+## 📜 Licencia y Uso
 
 Proyecto desarrollado únicamente con fines académicos.
