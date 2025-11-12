@@ -1,17 +1,17 @@
 <template>
   <div class="min-vh-100 py-5 bg-light">
     <!-- 🔹 Descripción principal -->
-    <section class="container text-center mb-5">
-      <h1 class="titulo-principal">
-
-        Sistema de Gestión de Equipos Médicos
-      </h1>
-      <p class="lead text-muted text-justify">
-        El <strong>Sistema de Gestión de Equipos Médicos</strong> del Laboratorio Integrado de Medicina Especializada (LIME),
-        desarrollado en el curso de <strong>Ingeniería de Software de la Universidad de Antioquia</strong>, permite
-        registrar y monitorear los equipos biomédicos de las distintas sedes. Garantiza trazabilidad, seguridad
-        y eficiencia en la gestión tecnológica de los dispositivos médicos institucionales.
-      </p>
+    <section class="hero-section d-flex align-items-center justify-content-center text-center text-white mb-5">
+      <div class="overlay"></div>
+      <div class="container position-relative z-2 px-4">
+        <h1 class="display-5 fw-bold mb-3">Sistema de Gestión de Equipos Médicos</h1>
+        <p class="lead mx-auto" style="max-width: 800px;">
+          El <strong>Sistema de Gestión de Equipos Médicos</strong> del Laboratorio Integrado de Medicina Especializada (LIME),
+          desarrollado en el curso de <strong>Ingeniería de Software de la Universidad de Antioquia</strong>, permite
+          registrar y monitorear los equipos biomédicos de las distintas sedes.
+          Garantiza trazabilidad, seguridad y eficiencia en la gestión tecnológica de los dispositivos médicos institucionales.
+        </p>
+      </div>
     </section>
 
     <!-- 🔹 Contenido dividido -->
@@ -48,38 +48,35 @@
         <div class="col-lg-4 d-flex flex-column gap-4">
           <!-- Card UdeA -->
           <div class="card shadow-sm" style="height: 250px;">
-            <img src="/src/assets/FotoUdeA.png" class="card-img-top" alt="UdeA" style="height: 120px; object-fit: cover;">
+            <img src="/src/assets/FotoUdeA.png" class="card-img-top" alt="UdeA" style="height: 180px; object-fit: cover;">
             <div class="card-body text-center position-relative pt-4">
               <!-- Imagen rectangular sobre la card -->
               <div class="position-absolute top-0 start-50 translate-middle" style="margin-top: 0px; width: 150px; height: 70px;">
                 <img src="/src/assets/UdeA.png" class="img-fluid" style="width: 100%; height: 100%; object-fit: contain;" alt="UdeA Foto">
               </div>
               <h5 class="titulo-principal-gris">Universidad de Antioquia</h5>
-              <p class="card-text text-muted mb-0">Sede Principal</p>
             </div>
           </div>
 
           <!-- Card LIME -->
           <div class="card shadow-sm" style="height: 250px;">
-            <img src="/src/assets/LIME.png" class="card-img-top" alt="LIME" style="height: 120px; object-fit: cover;">
+            <img src="/src/assets/LIME.png" class="card-img-top" alt="LIME" style="height: 170px; object-fit: cover;">
             <div class="card-body text-center position-relative pt-4">
-              <div class="position-absolute top-0 start-50 translate-middle" style="margin-top: 0px; width: 150px; height: 70px;">
+              <div class="position-absolute top-0 start-50 translate-middle" style="margin-top: -10px; width: 150px; height: 70px;">
                 <img src="/src/assets/LIME.png" class="img-fluid"  style="width: 100%; height: 100%; object-fit: contain;" alt="LIME Foto">
               </div>
               <h5 class="titulo-principal-gris">Laboratorio Integrado de Medicina Especializada</h5>
-              <p class="card-text text-muted mb-0">Universidad de Antioquia</p>
             </div>
           </div>
 
           <!-- Card Alma Mater -->
           <div class="card shadow-sm" style="height: 250px;">
-            <img src="/src/assets/FotoAlmaMater.png" class="card-img-top" alt="Alma Mater" style="height: 120px; object-fit: cover;">
+            <img src="/src/assets/FotoAlmaMater.png" class="card-img-top" alt="Alma Mater" style="height: 180px; object-fit: cover;">
             <div class="card-body text-center position-relative pt-4">
               <div class="position-absolute top-0 start-50 translate-middle" style="margin-top: 0px; width: 150px; height: 70px;">
                 <img src="/src/assets/AlmaMater.png" class="img-fluid" style="width: 100%; height: 100%; object-fit: contain;" alt="Alma Mater Foto">
               </div>
               <h5 class="titulo-principal-gris">Hospital Alma Máter de Antioquia</h5>
-              <p class="card-text text-muted mb-0">Complejo de la Salud</p>
             </div>
           </div>
         </div>

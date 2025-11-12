@@ -33,6 +33,7 @@
 .titulo-principal-gris {
   color: var(--gris-medio);
   font-weight: 600;
+  font-size: 100%;
 }
 
 .titulo-topbar {
@@ -40,3 +41,42 @@
   font-weight: 200;
   font-size: 70%;
 }
+
+.hero-section {
+  position: relative;
+  height: 40vh; /* Altura visible al entrar */
+  width: 100%; 
+  background-image: url('/src/assets/FotoUdeA.png'); 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /*efecto parallax */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.hero-section .overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 80, 45, 0.7); /* verde institucional con 70% de opacidad */
+  z-index: 1;
+}
+
+.hero-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-section h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.hero-section p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #f1f1f1;
+}
+
