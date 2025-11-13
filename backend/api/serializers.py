@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Equipo
+from .models import Equipo, EdicionEquipo
+
+class EdicionEquipoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EdicionEquipo
+        fields = '__all__'
 
 class EquipoCreateSerializer(serializers.ModelSerializer):
     class Meta:

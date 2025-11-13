@@ -5,6 +5,7 @@ import Equipos from '@/views/Equipos.vue'
 import Home from '@/views/Home.vue'
 import AgregarEquipo from '@/views/AgregarEquipo.vue'
 import DetalleEquipo from '@/views/DetalleEquipo.vue'
+import TrasladoEquipo from '@/views/TrasladoEquipo.vue'
 
 const routes = [
   {
@@ -35,6 +36,12 @@ const routes = [
         path: '/equipos/:id',
         name: 'DetalleEquipo',
         component: DetalleEquipo,
+        props: true
+      },
+      {
+        path: '/equipos/:id/editar/',
+        name: 'TrasladoEquipo',
+        component: TrasladoEquipo,
         props: true
       },
       {

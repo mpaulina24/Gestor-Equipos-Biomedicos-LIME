@@ -65,3 +65,9 @@ class Equipo(models.Model):
     def __str__(self):
         return f"{self.nombre_equipo} ({self.proceso})"
 
+class EdicionEquipo(models.Model):
+    equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
+    fecha = models.DateField(auto_now_add=True)
+    justificacion = models.TextField()
+    responsable_actualizado = models.TextField(max_length=100)
+    servicio_actualizado = models.TextField(max_length=100)

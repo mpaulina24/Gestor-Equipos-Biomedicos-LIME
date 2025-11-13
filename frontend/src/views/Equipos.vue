@@ -5,7 +5,7 @@
     <div class="card shadow-sm mb-2">
   <div class="card-body">
     
-    <!-- 🔹 Buscador arriba -->
+    <!-- Buscador arriba -->
     <div class="mb-3">
       <input
         v-model="busqueda"
@@ -15,7 +15,7 @@
       />
     </div>
 
-    <!-- 🔹 Filtros y botón agregar abajo -->
+    <!-- Filtros y botón agregar abajo -->
     <div class="row align-items-center g-2">
       
       <!-- Columna de filtros -->
@@ -43,14 +43,10 @@
       </button>
       </div>
     </div>
-
   </div>
 </div>
 
-
-
-
-    <!-- 🔹 Tabla de equipos -->
+    <!-- Tabla de equipos -->
     <div class="table-responsive shadow-sm rounded">
       <table class="table align-middle table-hover">
         <thead class="table-light">
@@ -131,8 +127,6 @@
             </td>
 
 
-
-
             <td class="text-center">
               <div class="d-flex flex-wrap justify-content-center gap-2">
                 <span
@@ -183,6 +177,7 @@
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
                 title="Editar"
+                @click="editarEquipo(equipo.id)"
               >
                 <i class="bi bi-pencil-square"></i>
               </button>
@@ -195,11 +190,84 @@
               >
                 <i class="bi bi-eye-slash"></i>
               </button>
+
+              <button
+                class="icon-btn"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Historial traslados"
+                @click="verRegistroEdiciones(equipo.id)"
+              >
+                <i class="bi-journal-text"></i>
+              </button>
+
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+
+    <!-- Modal de registros de ediciones -->
+    <div
+      class="modal fade"
+      id="modalRegistros"
+      tabindex="-1"
+      aria-labelledby="modalRegistrosLabel"
+      aria-hidden="true"
+      ref="modalElement"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content shadow border-0 rounded-4">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="modalRegistrosLabel">
+              Historial de traslados — {{ equipoSeleccionado?.nombre_equipo || 'Equipo' }}
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div v-if="cargando" class="text-center py-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+            </div>
+
+            <div v-else-if="registros.length === 0" class="text-center text-muted py-3">
+              No hay registros de traslados para este equipo.
+            </div>
+
+            <ul v-else class="list-group list-group-flush">
+              <li
+                v-for="registro in registros"
+                :key="registro.id"
+                class="list-group-item"
+              >
+                <p class="mb-1"><strong>📅 Fecha:</strong> {{ registro.fecha }}</p>
+                <p class="mb-1"><strong>👤 Responsable:</strong> {{ registro.responsable_actualizado }}</p>
+                <p class="mb-1"><strong>🏥 Servicio:</strong> {{ registro.servicio_actualizado }}</p>
+                <p class="mb-0"><strong>📝 Justificación:</strong> {{ registro.justificacion }}</p>
+              </li>
+            </ul>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -217,8 +285,7 @@ const filtroServicio = ref("");
 // Lista de equipos
 const equipos = ref([]);
 
-// 🔹 Llamada al backend
-// 🔹 Llamada al backend (reemplaza tu cargarEquipos por esto)
+// Llamada al backend
 const cargarEquipos = async () => {
   try {
     const res = await axios.get("http://127.0.0.1:8000/api/equipos/");
@@ -273,12 +340,16 @@ const cargarEquipos = async () => {
 onMounted(async () => {
   await cargarEquipos();
 
-  // inicializa tooltips sólo si bootstrap está cargado (evita errores)
   if (window.bootstrap && window.bootstrap.Tooltip) {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    [...tooltipTriggerList].forEach((el) => new window.bootstrap.Tooltip(el));
+    tooltipTriggerList.forEach((el) => new window.bootstrap.Tooltip(el));
+  }
+
+  if (modalElement.value && Modal) {
+    modalInstance = new Modal(modalElement.value);
   }
 });
+
 
 
 // Computed para aplicar los filtros
@@ -311,6 +382,41 @@ const verDetalles = (id) => {
 const agregarEquipo = () => {
   router.push("/equipos/agregarEquipo");
 };
+
+const editarEquipo = (id) => {
+  router.push(`/equipos/${id}/editar/`);
+};
+
+
+import { Modal } from "bootstrap"; // 👈 importante para controlar el modal
+
+const registros = ref([]);
+const equipoSeleccionado = ref(null);
+const modalElement = ref(null);
+let modalInstance = null;
+const cargando = ref(false);
+
+const verRegistroEdiciones = async (id) => {
+  try {
+    cargando.value = true;
+    equipoSeleccionado.value = equipos.value.find((e) => e.id === id);
+
+    const res = await axios.get(`http://127.0.0.1:8000/api/equipos/${id}/ediciones/`);
+    registros.value = res.data;
+
+    // Mostrar modal
+    if (!modalInstance) {
+      modalInstance = new Modal(modalElement.value);
+    }
+    modalInstance.show();
+  } catch (error) {
+    console.error("Error al cargar los registros:", error);
+  } finally {
+    cargando.value = false;
+  }
+};
+
+
 </script>
 
 
@@ -351,6 +457,18 @@ const agregarEquipo = () => {
   background-color: var(--verde-secundario);
   border-color: var(--verde-secundario);
   transform: translateY(-2px);
+}
+
+
+.icon-btn {
+  border: none;
+  background: none;
+  color: #0d6efd;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  color: #0a58ca;
 }
 
 
