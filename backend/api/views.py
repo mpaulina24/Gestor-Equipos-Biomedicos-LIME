@@ -11,7 +11,7 @@ class EquipoListAPIView(generics.ListAPIView):
 
 class EquipoDetailAPIView(generics.RetrieveAPIView):
     queryset = Equipo.objects.all()
-    serializer_class = EquipoListSerializer
+    serializer_class = EquipoCreateSerializer
 
 class EquipoCreateAPIView(generics.CreateAPIView):
     queryset = Equipo.objects.all()

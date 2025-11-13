@@ -18,6 +18,7 @@
           class="nav-link"
           :class="{ active: isActive('/home') }"
         >
+          <i class="bi bi-house-door"></i>
           <span class="nav-link-text">Inicio</span>
         </router-link>
       </li>
@@ -28,6 +29,7 @@
           class="nav-link"
           :class="{ active: isActive('/equipos') }"
         >
+          <i class="bi-list-ul"></i>
           <span class="nav-link-text">Equipos</span>
         </router-link>
       </li>
@@ -38,6 +40,7 @@
           class="nav-link"
           :class="{ active: isActive('/estadisticas') }"
         >
+          <i class="bi bi-bar-chart-line"></i>
           <span class="nav-link-text">Estadísticas</span>
         </router-link>
       </li>

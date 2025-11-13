@@ -11,7 +11,7 @@
         v-model="busqueda"
         type="text"
         class="form-control filtro"
-        placeholder="Buscar por nombre, marca, modelo, código..."
+        placeholder="Buscar por servicio, nombre, marca, modelo o código..."
       />
     </div>
 
@@ -22,15 +22,15 @@
       <div class="col-md-9 d-flex flex-wrap align-items-center gap-2">
         <select v-model="filtroSede" class="form-select filtro w-auto">
           <option value="">Todas las sedes</option>
-          <option value="Prado">Prado</option>
-          <option value="Sede2">Sede 2</option>
+          <option value="Prado">LIME - Hematología</option>
+          <option value="Sede2">1</option>
           <option value="Sede3">Sede 3</option>
         </select>
 
         <select v-model="filtroServicio" class="form-select filtro w-auto">
           <option value="">Todos los servicios</option>
-          <option value="Hematología">Hematología</option>
-          <option value="Imagenología">Imagenología</option>
+          <option value="LIME - Hematología">LIME - Hematología</option>
+          <option value="1">1</option>
           <option value="Laboratorio Clínico">Laboratorio Clínico</option>
           <option value="Electromedicina">Electromedicina</option>
         </select>
