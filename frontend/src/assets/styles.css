@@ -141,3 +141,24 @@
   transition: color 0.2s ease !important;
 }
 
+.badge {
+  font-size: 0.8rem;
+  padding: 0.4em 0.6em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.info-inventario {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centra todo horizontalmente */
+  gap: 4px;
+  font-size: 0.8rem; /* mantiene el tamaño original */
+}
+
+.info-inventario i {
+  font-size: 1rem;
+}
+
+.info-inventario span {
+  color: var(--gris-oscuro); /* conserva el color original */
+}
