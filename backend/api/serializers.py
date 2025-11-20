@@ -13,7 +13,7 @@ class EquipoCreateSerializer(serializers.ModelSerializer):
         
 
 class EquipoListSerializer(serializers.ModelSerializer):
-    # Campos agrupados
+    # Campos agrupados (Mantener como están)
     equipo = serializers.SerializerMethodField()
     codigos = serializers.SerializerMethodField()
     responsable_ubicacion = serializers.SerializerMethodField()
@@ -21,10 +21,11 @@ class EquipoListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Equipo
-        # Solo los campos relevantes para la tabla principal
+        # Incluir todos los campos esenciales para la tabla
         fields = [
             'id',
             'proceso',
+            'sede',                  # <-- ¡CAMPO AGREGADO!
             'equipo',
             'codigos',
             'responsable_ubicacion',

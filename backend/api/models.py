@@ -20,9 +20,9 @@ RIESGO_CHOICES = [
     ('III', 'Clase III'),
 ]
 SEDE_CHOICES = [
-    ('PRADO', 'Sede Prado'),
-    ('SEDE2', 'Sede 2'),
-    ('SEDE3', 'Sede 3'),
+    ('Sede Prado', 'Sede Prado'),
+    ('Sede Prado', 'Sede 2'),
+    ('Sede Prado', 'Sede 3'),
 ]
 
 class Equipo(models.Model):
@@ -83,9 +83,9 @@ class Equipo(models.Model):
     corriente = models.CharField(max_length=50, blank=True, null=True)
     humedad = models.CharField(max_length=50, blank=True, null=True)
     temperatura = models.CharField(max_length=50, blank=True, null=True)
-    dimensiones_alto = models.IntegerField(blank=True, null=True)
-    dimensiones_ancho = models.IntegerField(blank=True, null=True)
-    dimensiones_profundidad = models.IntegerField(blank=True, null=True)
+    dimensiones_alto = models.FloatField(blank=True, null=True)
+    dimensiones_ancho = models.FloatField(blank=True, null=True)
+    dimensiones_profundidad = models.FloatField(blank=True, null=True)
     peso = models.CharField(max_length=50, blank=True, null=True)
     otros = models.TextField(blank=True, null=True)
 
