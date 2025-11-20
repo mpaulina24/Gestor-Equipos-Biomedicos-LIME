@@ -11,7 +11,7 @@
         v-model="busqueda"
         type="text"
         class="form-control filtro"
-        placeholder="Buscar por servicio, nombre, marca, modelo o código..."
+        placeholder="Buscar por servicio, nombre, marca, modelo o código"
       />
     </div>
 
@@ -19,22 +19,30 @@
     <div class="row align-items-center g-2">
       
       <!-- Columna de filtros -->
-      <div class="col-md-9 d-flex flex-wrap align-items-center gap-2">
-        <select v-model="filtroSede" class="form-select filtro w-auto">
-          <option value="">Todas las sedes</option>
-          <option value="Prado">LIME - Hematología</option>
-          <option value="Sede2">1</option>
-          <option value="Sede3">Sede 3</option>
-        </select>
+      <select v-model="filtroSede" class="form-select filtro w-auto">
+        <option value="">Todas las sedes</option>
+        <option value='Sede Prado'>Sede Prado</option>
+        <option value='Sede 2'>Sede 2</option>
+        <option value='Sede 3'>Sede 3</option>
+      </select>
 
-        <select v-model="filtroServicio" class="form-select filtro w-auto">
-          <option value="">Todos los servicios</option>
-          <option value="LIME - Hematología">LIME - Hematología</option>
-          <option value="1">1</option>
-          <option value="Laboratorio Clínico">Laboratorio Clínico</option>
-          <option value="Electromedicina">Electromedicina</option>
-        </select>
-      </div>
+      <select v-model="filtroServicio" class="form-select filtro w-auto">
+        <option value="">Todos los servicios</option>
+        <option value="LIME">LIME</option>
+        <option value="LIME - Hematología">LIME - Hematología</option>
+        <option value="LIME - Citometría de Flujo">LIME - Citometría de Flujo</option>
+        <option value="LIME - Almacén">LIME - Almacén</option>
+        <option value="LIME - Atención a Pacientes">LIME - Atención a Pacientes</option
+        ><option value="LIME - Biología Molecular">LIME - Biología Molecular</option
+        ><option value="LIME - Microbiología">LIME - Microbiología</option
+        ><option value="Centro de resonancia">Centro de resonancia</option
+        ><option value="Fotodermatología">Fotodermatología</option
+        ><option value="Trasplantes GICIG">Trasplantes GICIG</option
+        ><option value="Inmunodeficiencias Primarias">Inmunodeficiencias Primarias</option
+        ><option value="Grupo Reproducción">Grupo Reproducción</option
+        ><option value="Patología">Patología</option
+        ><option value="Dermatopatología">Dermatopatología</option>
+      </select>
 
       <!-- Columna del botón -->
       <div class="col-md-3 justify-content-end">
@@ -77,7 +85,11 @@
                   <span>{{ equipo.marca }}</span>
                   <span>{{ equipo.modelo }}</span>
                 </div>
-              </div>
+                <div class="d-flex align-items-center gap-1">
+                  <i class="bi-upc text-muted"></i>
+                  <span class="small text-muted">Serie: {{ equipo.serie || 'N/A' }}</span>
+                </div>
+                </div>
             </td>
 
 
@@ -145,22 +157,30 @@
                   title="IPS"
                 >
                   {{ equipo.clasificacion.clasif_ips }}
-                </span>
-
-                <span
-                  v-if="equipo.clasificacion.clasif_riesgo"
-                  class="badge rounded-pill bg-light text-dark"
-                  data-bs-toggle="tooltip"
-                  title="Riesgo"
-                >
-                  {{ equipo.clasificacion.clasif_riesgo }}
-                </span>
+                </span>                
               </div>
             </td>
 
 
 
-            <td class="text-center">{{ equipo.invima }}</td>
+            <td class="text-center">
+              <div class="d-flex flex-column align-items-center gap-1">
+                <span class="badge rounded-pill bg-info text-dark" title="INVIMA">
+                  {{ equipo.invima }}
+                </span>
+                
+                <span
+                  v-if="equipo.clasificacion.clasif_riesgo"
+                  class="badge rounded-pill bg-warning text-dark mt-1"
+                  data-bs-toggle="tooltip"
+                  title="Riesgo"
+                >
+                  Riesgo: {{ equipo.clasificacion.clasif_riesgo }}
+                </span>
+              </div>
+            </td>
+
+
             <td class="text-center">
               <button
                 class="icon-btn"
@@ -292,7 +312,7 @@ const cargarEquipos = async () => {
     equipos.value = res.data.map((eq) => {
       // responsable_ubicacion viene como "Responsable / Ubicación" (según tu serializer)
       const [responsableRaw, ubicacionRaw] = (eq.responsable_ubicacion || "").split("/");
-      const [nombre_equipoRaw, marcaRaw, modeloRaw] = (eq.equipo || "").split("/");
+      const [nombre_equipoRaw, marcaRaw, modeloRaw, serieRaw] = (eq.equipo || "").split("/").map(s => s.trim()); 
 
       const codigoParts = (eq.codigos || "").split("/").map(s => s.trim()).filter(Boolean);
       const interno = codigoParts[0] || null;
@@ -309,13 +329,15 @@ const cargarEquipos = async () => {
         id: eq.id,
         servicio: eq.proceso || "",
         sede: eq.sede || eq.proceso || "",
+        
         // el backend puede devolver 'equipo' (agrupado) o 'nombre_equipo' según tu serializer/ejemplos
         equipo: (eq.equipo && eq.equipo.trim()) || (eq.nombre_equipo && eq.nombre_equipo.trim()) || "Sin nombre",
         
         nombre_equipo: (nombre_equipoRaw || "").trim() || "Sin nombre",
         marca: (marcaRaw || "").trim() || "Sin marca",
         modelo: (modeloRaw || "").trim() || "Sin marca",
-        
+        serie: (serieRaw || "").trim() || "Sin serie",
+
         codigos: {
           interno,
           ips,

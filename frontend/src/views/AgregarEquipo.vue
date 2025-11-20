@@ -39,10 +39,68 @@
                     </option>
                   </select>
                 </div> 
-                <div class="col-md-6 mb-3">
-                  <label>Proceso</label>
-                  <input v-model="equipo.proceso" class="form-control" required />
-                </div>               
+                
+                <div class="card-body">
+                  <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                      <label>Proceso/Servicio</label>
+                      <div class="input-group">
+                        <select 
+                          v-model="equipo.proceso" 
+                          class="form-select" 
+                          :disabled="mostrarNuevoServicio" 
+                          required
+                        >
+                          <option value="" disabled>Seleccione un proceso</option>
+                          <option 
+                            v-for="servicio in serviciosDisponibles" 
+                            :key="servicio" 
+                            :value="servicio"
+                          >
+                            {{ servicio }}
+                          </option>
+                        </select>
+                        
+                        <button 
+                          class="btn btn-outline-success" 
+                          type="button" 
+                          @click="mostrarNuevoServicio = true"
+                          v-if="!mostrarNuevoServicio"
+                        >
+                          + Nuevo
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div v-if="mostrarNuevoServicio" class="col-md-8 mb-3">
+                        <label>Ingresar Nuevo Servicio/Proceso</label>
+                        <div class="input-group">
+                            <input 
+                              v-model="nuevoServicio" 
+                              class="form-control" 
+                              placeholder="Ej: LIME - Genética"
+                            />
+                            <button 
+                                class="btn btn-success" 
+                                type="button" 
+                                @click="agregarNuevoServicio"
+                            >
+                                Guardar Nuevo
+                            </button>
+                            <button 
+                                class="btn btn-secondary" 
+                                type="button" 
+                                @click="mostrarNuevoServicio = false; nuevoServicio = ''"
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    </div>
+                </div>
+
                 </div>                
             </div>
 
@@ -130,10 +188,42 @@
                   </select>
                 </div>
                 
-                <div class="col-md-6 mb-3">
-                  <label>Registro INVIMA / Permiso Comercialización</label>
-                  <input v-model="equipo.registro_invima" class="form-control" />
+
+                <div class="row mt-3">  
+                  <div class="col-md-3 mb-3 d-flex align-items-center">
+                    <div>
+                      <label class="d-block">¿Requiere Registro INVIMA?</label>
+                      <div class="form-check form-switch mt-2">
+                        <input 
+                          class="form-check-input" 
+                          type="checkbox" 
+                          v-model="equipo.requiere_invima" 
+                          id="switchInvima"
+                          
+                          @change="equipo.registro_invima = equipo.requiere_invima ? '' : 'No requiere'" 
+                          >
+                        <label class="form-check-label" for="switchInvima">
+                          {{ equipo.requiere_invima ? 'Sí' : 'No' }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-9 mb-3">
+                    <label>Registro INVIMA / Permiso Comercialización</label>
+                    <input 
+                      v-model="equipo.registro_invima" 
+                      class="form-control"
+                      placeholder="Ingrese el número de registro, si aplica"
+                      :disabled="!equipo.requiere_invima"  
+                      :required="equipo.requiere_invima"
+                    />
+                    <small v-if="!equipo.requiere_invima" class="form-text text-muted">
+                      El campo se guardará como "No requiere".
+                    </small>
+                  </div>                  
                 </div>
+                
                 </div>
               </div>
             </div>
@@ -388,8 +478,8 @@
             <div class="col-md-3 mb-3">
               <label>Alto (cm)</label>
               <input 
-                type="number" 
-                v-model.number="equipo.dimensiones_alto" 
+                type="float" 
+                v-model.float="equipo.dimensiones_alto" 
                 class="form-control" 
                 placeholder="Alto"
               />
@@ -397,8 +487,8 @@
             <div class="col-md-3 mb-3">
               <label>Ancho (cm)</label>
               <input 
-                type="number" 
-                v-model.number="equipo.dimensiones_ancho" 
+                type="float" 
+                v-model.float="equipo.dimensiones_ancho" 
                 class="form-control" 
                 placeholder="Ancho"
               />
@@ -406,8 +496,8 @@
             <div class="col-md-3 mb-3">
               <label>Profundidad (cm)</label>
               <input 
-                type="number" 
-                v-model.number="equipo.dimensiones_profundidad" 
+                type="float" 
+                v-model.float="equipo.dimensiones_profundidad" 
                 class="form-control" 
                 placeholder="Profundidad"
               />
@@ -469,6 +559,7 @@ const equipo = ref({
   clasificacion_ips: "",
   clasificacion_riesgo: "",
   registro_invima: "",
+  requiere_invima: true,
 
   // --- Registro Histórico (Añade campos faltantes si no los habías incluido) ---
   tiempo_vida_util: "",
@@ -508,7 +599,33 @@ const equipo = ref({
 
 });
 
-
+//  Opciones Iniciales de Proceso/Servicio
+const serviciosDisponibles = ref([
+    'LIME',
+    'LIME - Hematología',
+    'LIME - Citometría de Flujo',
+    'LIME - Almacén',
+    'LIME - Atención a Pacientes',
+    'LIME - Biología Molecular',
+    'LIME - Microbiología',
+    'Centro de resonancia',
+    'Fotodermatología',
+    'Trasplantes GICIG',
+    'Inmunodeficiencias Primarias',
+    'Grupo Reproducción',
+    'Patología',
+    'Dermatopatología'
+]);
+const mostrarNuevoServicio = ref(false);
+const nuevoServicio = ref('');
+function agregarNuevoServicio() {
+    if (nuevoServicio.value && !serviciosDisponibles.value.includes(nuevoServicio.value)) {
+        serviciosDisponibles.value.push(nuevoServicio.value);
+        equipo.value.proceso = nuevoServicio.value; 
+        nuevoServicio.value = '';
+        mostrarNuevoServicio.value = false;
+    }
+}
 
 // --- Opciones de Clasificación para Vue ---
 const clasificacionesMisionales = [
@@ -529,11 +646,11 @@ const clasificacionesRiesgo = [
   { value: 'IIB', label: 'Clase IIb' },
   { value: 'III', label: 'Clase III' },
 ];
-
-const opcionesSede = [
-  { value: 'PRADO', label: 'Sede Prado' },
-  { value: 'SEDE2', label: 'Sede 2' },
-  { value: 'SEDE3', label: 'Sede 3' },
+// El 'value' debe coincidir con la clave única de models.py 
+const opcionesSede = [ 
+  { value: 'Sede Prado', label: 'Sede Prado' },
+  { value: 'Sede 2', label: 'Sede 2' },
+  { value: 'Sede 3', label: 'Sede 3' },
 ];
 
 const documentos = {

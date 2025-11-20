@@ -58,13 +58,13 @@
         </div>
       </section>
 
-      <!-- 🌡️ Condiciones de Funcionamiento -->
+      <!--  Condiciones de Funcionamiento -->
       <section>
         <h5 class="section-title">Condiciones de Funcionamiento</h5>
         <div class="row">
           <div v-for="campo in condiciones" :key="campo.key" class="col-md-4 mb-2">
-            <strong>{{ campo.label }}:</strong> {{ equipo[campo.key] || '—' }}
-          </div>
+            <strong>{{ campo.label }}:</strong> {{ formatValue(equipo[campo.key]) }}
+            </div>
         </div>
       </section>
     </div>
@@ -88,6 +88,7 @@ export default {
         { key: "proceso", label: "Proceso" },
         { key: "nombre_equipo", label: "Nombre del Equipo" },
         { key: "codigo_interno", label: "Código Interno" },
+        { key: "sede", label: "Sede LIME" },
         { key: "codigo_ips", label: "Código IPS" },
         { key: "codigo_ecri", label: "Código ECRI" },
         { key: "responsable", label: "Responsable" },
@@ -141,11 +142,26 @@ export default {
         { key: "corriente", label: "Corriente" },
         { key: "humedad", label: "Humedad relativa" },
         { key: "temperatura", label: "Temperatura" },
-        { key: "dimensiones", label: "Dimensiones" },
+        { key: "dimensiones_alto", label: "Alto (cm)" },        
+        { key: "dimensiones_ancho", label: "Ancho (cm)" },     
+        { key: "dimensiones_profundidad", label: "Profundidad (cm)" },
         { key: "peso", label: "Peso" },
         { key: "otros", label: "Otros" },
       ],
     };
+  },
+
+  methods: {
+    formatValue(value) {
+      if (value === null || value === undefined || value === "") {
+        return '—';
+      }
+      const num = parseFloat(value);
+      if (isNaN(num)) {
+        return value;
+      }
+      return num.toFixed(2).replace('.', ',');
+    }
   },
   mounted() {
     const id = this.$route.params.id;
