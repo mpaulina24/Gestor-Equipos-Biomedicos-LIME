@@ -19,12 +19,17 @@ RIESGO_CHOICES = [
     ('IIB', 'Clase IIb'),
     ('III', 'Clase III'),
 ]
+SEDE_CHOICES = [
+    ('PRADO', 'Sede Prado'),
+    ('SEDE2', 'Sede 2'),
+    ('SEDE3', 'Sede 3'),
+]
 
 class Equipo(models.Model):
     # --- Información general ---
     proceso = models.CharField(max_length=100)
     nombre_equipo = models.CharField(max_length=100)
-    codigo_interno = models.CharField(max_length=50, blank=True, null=True)
+    codigo_interno = models.CharField(max_length=50, blank=True, null=True)    
     codigo_ips = models.CharField(max_length=50, blank=True, null=True)
     codigo_ecri = models.CharField(max_length=50, blank=True, null=True)
     responsable = models.CharField(max_length=100, blank=True, null=True)
@@ -54,11 +59,11 @@ class Equipo(models.Model):
     hoja_vida = models.BooleanField(default=False)
     registro_importacion = models.BooleanField(default=False)
     manual_operacion = models.BooleanField(default=False)
-    manual_mantenimiento = models.TextField(blank=True, null=True)
+    manual_mantenimiento = models.BooleanField(blank=True, null=True)
     guia_rapida = models.BooleanField(default=False)
     instructivo = models.BooleanField(default=False)
-    protocolo_mto = models.TextField(blank=True, null=True)
-    frecuencia_metrologica = models.CharField(max_length=50, blank=True, null=True)
+    protocolo_mto = models.BooleanField(blank=True, null=True)
+    frecuencia_metrologica = models.BooleanField(max_length=50, blank=True, null=True)
 
     # --- Información metrológica administrativa ---
     mantenimiento = models.BooleanField(default=False)
@@ -78,9 +83,18 @@ class Equipo(models.Model):
     corriente = models.CharField(max_length=50, blank=True, null=True)
     humedad = models.CharField(max_length=50, blank=True, null=True)
     temperatura = models.CharField(max_length=50, blank=True, null=True)
-    dimensiones = models.CharField(max_length=100, blank=True, null=True)
+    dimensiones_alto = models.IntegerField(blank=True, null=True)
+    dimensiones_ancho = models.IntegerField(blank=True, null=True)
+    dimensiones_profundidad = models.IntegerField(blank=True, null=True)
     peso = models.CharField(max_length=50, blank=True, null=True)
     otros = models.TextField(blank=True, null=True)
+
+    sede = models.CharField(
+            max_length=50, 
+            choices=SEDE_CHOICES, # Usa las opciones definidas
+            blank=True, 
+            null=True
+        )
 
     clasificacion_misional = models.CharField(
     max_length=50, 
