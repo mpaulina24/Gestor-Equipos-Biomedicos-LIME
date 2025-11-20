@@ -90,7 +90,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'gestorlimebd',
         'USER': 'root',
-        'PASSWORD': '@tene@2025',
         'HOST': 'localhost',
         'PORT': '3306',
     }

@@ -1,5 +1,25 @@
 from django.db import models
 
+# --- Opciones de Clasificación ---
+CLASIFICACION_MISIONAL_CHOICES = [
+    ('DOCENCIA', 'Docencia'),
+    ('INVESTIGACION', 'Investigación'),
+    ('EXTENSION', 'Extensión'),
+]
+
+CLASIFICACION_IPS_CHOICES = [
+    ('BIO', 'BIO'),
+    ('IND', 'IND'),
+    ('GASES', 'Gases'),
+]
+
+RIESGO_CHOICES = [
+    ('I', 'Clase I'),
+    ('IIA', 'Clase IIa'),
+    ('IIB', 'Clase IIb'),
+    ('III', 'Clase III'),
+]
+
 class Equipo(models.Model):
     # --- Información general ---
     proceso = models.CharField(max_length=100)
@@ -62,8 +82,28 @@ class Equipo(models.Model):
     peso = models.CharField(max_length=50, blank=True, null=True)
     otros = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return f"{self.nombre_equipo} ({self.proceso})"
+    clasificacion_misional = models.CharField(
+    max_length=50, 
+    choices=CLASIFICACION_MISIONAL_CHOICES, # usa choices
+    blank=True, 
+    null=True
+    )
+    clasificacion_ips = models.CharField(
+    max_length=50, 
+    choices=CLASIFICACION_IPS_CHOICES, 
+    blank=True, 
+    null=True
+    )
+    clasificacion_riesgo = models.CharField(
+    max_length=50, 
+    choices=RIESGO_CHOICES,
+    blank=True, 
+    null=True
+    )
+    registro_invima = models.CharField(max_length=50, blank=True, null=True)
+
+def __str__(self):
+    return f"{self.nombre_equipo} ({self.proceso})"
 
 class EdicionEquipo(models.Model):
     equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)

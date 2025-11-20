@@ -19,7 +19,7 @@
     <form @submit.prevent="guardarEquipo">
       <div class="tab-content">
 
-        <!-- 🧾 Información General -->
+        <!-- Información General -->
         <div v-if="activeTab === 'general'" class="tab-pane fade show active">
           <div class="card shadow mb-4">
             <div class="card-header custom-header text-white">Información General</div>
@@ -65,6 +65,58 @@
                   <label>Serie</label>
                   <input v-model="equipo.serie" class="form-control" />
                 </div>
+                <!-- Secciones para Clasificación -->
+                <div class="row mt-3">                  
+                <div class="col-md-3 mb-3">
+                  <label>Clasificación Misional</label>
+                  <select v-model="equipo.clasificacion_misional" class="form-select">
+                    <option value="" disabled>Seleccione</option>
+                    <option 
+                      v-for="opcion in clasificacionesMisionales" 
+                      :key="opcion.value" 
+                      :value="opcion.value"
+                    >
+                      {{ opcion.label }}
+                    </option>
+                  </select>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  <label>Clasificación IPS</label>
+                  <select v-model="equipo.clasificacion_ips" class="form-select">
+                    <option value="" disabled>Seleccione</option>
+                    <option 
+                      v-for="opcion in clasificacionesIPS" 
+                      :key="opcion.value" 
+                      :value="opcion.value"
+                    >
+                      {{ opcion.label }}
+                    </option>
+                  </select>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  <label>Clasificación Riesgo</label>
+                  <select v-model="equipo.clasificacion_riesgo" class="form-select">
+                    <option value="" disabled>Seleccione</option>
+                    <option 
+                      v-for="opcion in clasificacionesRiesgo" 
+                      :key="opcion.value" 
+                      :value="opcion.value"
+                    >
+                      {{ opcion.label }}
+                    </option>
+                  </select>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  <label>Registro INVIMA</label>
+                  <input v-model="equipo.registro_invima" class="form-control" />
+                </div>
+
+                
+
+                </div>
               </div>
             </div>
           </div>
@@ -86,7 +138,7 @@
 
         </div>
 
-        <!-- 📜 Registro Histórico -->
+        <!-- Registro Histórico -->
         <div v-if="activeTab === 'historico'" class="tab-pane fade show active">
           <div class="card shadow mb-4">
             <div class="card-header custom-header text-white">Registro Histórico</div>
@@ -141,7 +193,7 @@
 
         </div>
 
-        <!-- 📁 Inventario de documentos -->
+        <!-- Inventario de documentos -->
         <div v-if="activeTab === 'documentos'" class="tab-pane fade show active">
           <div class="card shadow mb-4">
             <div class="card-header custom-header text-white">Inventario de Documentos</div>
@@ -174,7 +226,7 @@
 
         </div>
 
-        <!-- ⚙️ Información metrológica -->
+        <!-- Información metrológica -->
         <div v-if="activeTab === 'metrologica'" class="tab-pane fade show active">
           <div class="card shadow mb-4">
             <div class="card-header custom-header text-white">Información Metrológica</div>
@@ -215,7 +267,7 @@
 
         </div>
 
-        <!-- 🌡️ Condiciones de funcionamiento -->
+        <!-- Condiciones de funcionamiento -->
         <div v-if="activeTab === 'condiciones'" class="tab-pane fade show active">
           <div class="card shadow mb-4">
             <div class="card-header custom-header text-white">Condiciones de Funcionamiento</div>
@@ -300,6 +352,27 @@ const equipo = ref({
   calibracion: false,
 });
 
+// --- Opciones de Clasificación para Vue ---
+const clasificacionesMisionales = [
+  { value: 'DOCENCIA', label: 'Docencia' },
+  { value: 'INVESTIGACION', label: 'Investigación' },
+  { value: 'EXTENSION', label: 'Extensión' },
+];
+
+const clasificacionesIPS = [
+  { value: 'BIO', label: 'BIO' },
+  { value: 'IND', label: 'IND' },
+  { value: 'GASES', label: 'Gases' },
+];
+
+const clasificacionesRiesgo = [
+  { value: 'I', label: 'Clase I' },
+  { value: 'IIA', label: 'Clase IIa' },
+  { value: 'IIB', label: 'Clase IIb' },
+  { value: 'III', label: 'Clase III' },
+];
+
+
 const documentos = {
   hoja_vida: "Hoja de vida",
   registro_importacion: "Registro de importación",
@@ -310,25 +383,25 @@ const documentos = {
 
 const guardarEquipo = async () => {
   try {
-    const response = await axios.post("http://127.0.0.1:8000/api/equipos/agregarEquipo", equipo.value);
-    alert("✅ Equipo agregado correctamente");
+    const response = await axios.post("http://127.0.0.1:8000/api/equipos/agregarEquipo/", equipo.value);
+    alert(" Equipo agregado correctamente");
     console.log("Respuesta del servidor:", response.data);
   } catch (error) {
     // Si el servidor respondió con un error (400, 404, 500, etc.)
     if (error.response) {
-      console.error("🧩 Error del servidor:", error.response.data);
-      console.error("📡 Código de estado:", error.response.status);
-      alert(`❌ Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
+      console.error(" Error del servidor:", error.response.data);
+      console.error(" Código de estado:", error.response.status);
+      alert(` Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
 
     // Si no hubo respuesta del servidor (problemas de red o CORS)
     } else if (error.request) {
-      console.error("🌐 No hubo respuesta del servidor:", error.request);
-      alert("⚠️ No se recibió respuesta del servidor. Verifica tu conexión o CORS.");
+      console.error(" No hubo respuesta del servidor:", error.request);
+      alert("No se recibió respuesta del servidor. Verifica tu conexión o CORS.");
 
     // Error en la configuración o ejecución de la petición
     } else {
-      console.error("⚙️ Error en la configuración de la petición:", error.message);
-      alert(`⚙️ Error: ${error.message}`);
+      console.error(" Error en la configuración de la petición:", error.message);
+      alert(` Error: ${error.message}`);
     }
   }
 };
