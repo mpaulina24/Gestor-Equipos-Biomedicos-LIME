@@ -21,17 +21,49 @@
 
         <!-- Información General -->
         <div v-if="activeTab === 'general'" class="tab-pane fade show active">
-          <div class="card shadow mb-4">
+          <div class="card shadow mb-4">            
             <div class="card-header custom-header text-white">Información General</div>
             <div class="card-body">
-              <div class="row">
+              <div class="row">               
+                
+                <div class="col-md-4 mb-3">
+                  <label>Sede multicentro</label>
+                  <select v-model="equipo.sede" class="form-select" required>
+                    <option value="" disabled>Seleccione la Sede</option>
+                    <option 
+                      v-for="opcion in opcionesSede" 
+                      :key="opcion.value" 
+                      :value="opcion.value"
+                    >
+                      {{ opcion.label }}
+                    </option>
+                  </select>
+                </div> 
                 <div class="col-md-6 mb-3">
                   <label>Proceso</label>
                   <input v-model="equipo.proceso" class="form-control" required />
-                </div>
+                </div>               
+                </div>                
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                
                 <div class="col-md-6 mb-3">
                   <label>Nombre del equipo</label>
                   <input v-model="equipo.nombre_equipo" class="form-control" required />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label>Responsable</label>
+                  <input v-model="equipo.responsable" class="form-control" />
+                </div>                
+                <div class="col-md-4 mb-3">
+                  <label>Ubicación (Área / Laboratorio)</label>
+                  <input v-model="equipo.ubicacion" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label>Marca</label>
+                  <input v-model="equipo.marca" class="form-control" />
                 </div>
                 <div class="col-md-4 mb-3">
                   <label>Código Interno</label>
@@ -44,19 +76,7 @@
                 <div class="col-md-4 mb-3">
                   <label>Código ECRI</label>
                   <input v-model="equipo.codigo_ecri" class="form-control" />
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label>Responsable</label>
-                  <input v-model="equipo.responsable" class="form-control" />
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label>Ubicación</label>
-                  <input v-model="equipo.ubicacion" class="form-control" />
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label>Marca</label>
-                  <input v-model="equipo.marca" class="form-control" />
-                </div>
+                </div>                
                 <div class="col-md-4 mb-3">
                   <label>Modelo</label>
                   <input v-model="equipo.modelo" class="form-control" />
@@ -65,6 +85,7 @@
                   <label>Serie</label>
                   <input v-model="equipo.serie" class="form-control" />
                 </div>
+
                 <!-- Secciones para Clasificación -->
                 <div class="row mt-3">                  
                 <div class="col-md-3 mb-3">
@@ -110,12 +131,9 @@
                 </div>
                 
                 <div class="col-md-6 mb-3">
-                  <label>Registro INVIMA</label>
+                  <label>Registro INVIMA / Permiso Comercialización</label>
                   <input v-model="equipo.registro_invima" class="form-control" />
                 </div>
-
-                
-
                 </div>
               </div>
             </div>
@@ -152,6 +170,27 @@
                   <label>Fecha de adquisición</label>
                   <input type="date" v-model="equipo.fecha_adquisicion" class="form-control" />
                 </div>
+
+                <div class="col-md-4 mb-3">
+                  <label>Fecha de fabricación</label>
+                  <input type="date" v-model="equipo.fecha_fabricacion" class="form-control" />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label>Forma de adquisición</label>
+                  <input v-model="equipo.forma_adquisicion" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label>Tipo de documento</label>
+                  <input v-model="equipo.tipo_documento" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label>Numero de documento</label>
+                  <input v-model="equipo.numero_documento" class="form-control" />
+                </div>
+
+
+
                 <div class="col-md-4 mb-3">
                   <label>Propietario</label>
                   <input v-model="equipo.propietario" class="form-control" />
@@ -169,7 +208,7 @@
                   <input type="date" v-model="equipo.fecha_fin_garantia" class="form-control" />
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label>¿En garantía?</label>
+                  <label>El equipo se encuentra en garantía vigente.  </label>
                   <input type="checkbox" v-model="equipo.en_garantia" />
                 </div>
               </div>
@@ -193,38 +232,45 @@
 
         </div>
 
-        <!-- Inventario de documentos -->
+        <!----------- Inventario de documentos ------------->
+
+        
         <div v-if="activeTab === 'documentos'" class="tab-pane fade show active">
-          <div class="card shadow mb-4">
-            <div class="card-header custom-header text-white">Inventario de Documentos</div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-3" v-for="(field, key) in documentos" :key="key">
-                  <label>
-                    <input type="checkbox" v-model="equipo[key]" />
+        <div class="card shadow mb-4">
+          <div class="card-header custom-header text-white">Inventario de Documentos y Frecuencias Administrativas</div>
+          <div class="card-body">
+            
+            <h5 class="mb-3">Disponibilidad de Documentos / Datos del Fabricante</h5>
+            <div class="row mb-4">
+              <div class="col-md-4 mb-3" v-for="(field, key) in documentos" :key="key">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" v-model="equipo[key]" :id="'doc-' + key" />
+                  <label class="form-check-label" :for="'doc-' + key">
                     {{ field }}
                   </label>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="text-end mt-3">
-            <button 
-              type="button" 
-              class="btn custom-btn"
-              @click="siguienteSeccion"
-            >
-              Siguiente sección
-            </button>
-
-            <router-link to="/equipos" class="btn btn-success ms-2">
-              Ver Inventario
-            </router-link>
-
-          </div>
-
+            
+            
+            </div>
         </div>
+        
+        <div class="text-end mt-3">
+          <button 
+            type="button" 
+            class="btn custom-btn"
+            @click="siguienteSeccion"
+          >
+            Siguiente sección
+          </button>
+          <router-link to="/equipos" class="btn btn-success ms-2">
+            Ver Inventario
+          </router-link>
+        </div>
+        </div>
+
+
 
         <!-- Información metrológica -->
         <div v-if="activeTab === 'metrologica'" class="tab-pane fade show active">
@@ -247,8 +293,56 @@
                 <label>Rango de trabajo</label>
                 <input v-model="equipo.rango_trabajo" class="form-control" />
               </div>
+
+              <hr>
+
+            <h5 class="mb-3">Configuración de Mantenimiento y Calibración</h5>
+            <div class="row">
+              
+              <div class="col-md-6 mb-3">
+                <label>¿Requiere Mantenimiento?</label>
+                <div class="form-check form-switch mt-2">
+                  <input class="form-check-input" type="checkbox" v-model="equipo.mantenimiento" id="switch-mantenimiento">
+                  <label class="form-check-label" for="switch-mantenimiento">
+                    **{{ equipo.mantenimiento ? 'Sí' : 'No' }}**
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3" v-if="equipo.mantenimiento">
+                <label>Frecuencia Mantenimiento (en meses)</label>
+                <input 
+                  type="number" 
+                  v-model.number="equipo.frecuencia_mantenimiento" 
+                  class="form-control" 
+                  placeholder="Ej: 6"
+                />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label>¿Requiere Calibración?</label>
+                <div class="form-check form-switch mt-2">
+                  <input class="form-check-input" type="checkbox" v-model="equipo.calibracion" id="switch-calibracion">
+                  <label class="form-check-label" for="switch-calibracion">
+                    **{{ equipo.calibracion ? 'Sí' : 'No' }}**
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3" v-if="equipo.calibracion">
+                <label>Frecuencia Calibración (en meses)</label>
+                <input 
+                  type="number" 
+                  v-model.number="equipo.frecuencia_calibracion" 
+                  class="form-control" 
+                  placeholder="Ej: 12"
+                />
+              </div>
+            </div>
             </div>
           </div>
+
+          
+
+
           <div class="text-end mt-3">
 
             <button 
@@ -268,46 +362,78 @@
         </div>
 
         <!-- Condiciones de funcionamiento -->
+        
         <div v-if="activeTab === 'condiciones'" class="tab-pane fade show active">
-          <div class="card shadow mb-4">
-            <div class="card-header custom-header text-white">Condiciones de Funcionamiento</div>
-            <div class="card-body row">
-              <div class="col-md-4 mb-3">
-                <label>Voltaje</label>
-                <input v-model="equipo.voltaje" class="form-control" />
-              </div>
-              <div class="col-md-4 mb-3">
-                <label>Corriente</label>
-                <input v-model="equipo.corriente" class="form-control" />
-              </div>
-              <div class="col-md-4 mb-3">
-                <label>Humedad</label>
-                <input v-model="equipo.humedad" class="form-control" />
-              </div>
-              <div class="col-md-4 mb-3">
-                <label>Temperatura</label>
-                <input v-model="equipo.temperatura" class="form-control" />
-              </div>
-              <div class="col-md-4 mb-3">
-                <label>Peso</label>
-                <input v-model="equipo.peso" class="form-control" />
-              </div>
-              <div class="col-md-8 mb-3">
-                <label>Otros</label>
-                <textarea v-model="equipo.otros" class="form-control"></textarea>
-              </div>
+        <div class="card shadow mb-4">
+          <div class="card-header custom-header text-white">Condiciones de Funcionamiento</div>
+          <div class="card-body row">
+            <div class="col-md-4 mb-3">
+              <label>Voltaje</label>
+              <input v-model="equipo.voltaje" class="form-control" />
+            </div>
+            <div class="col-md-4 mb-3">
+              <label>Corriente</label>
+              <input v-model="equipo.corriente" class="form-control" />
+            </div>
+            <div class="col-md-4 mb-3">
+              <label>Humedad</label>
+              <input v-model="equipo.humedad" class="form-control" />
+            </div>
+            
+            <div class="col-md-3 mb-3">
+              <label>Temperatura</label>
+              <input v-model="equipo.temperatura" class="form-control" />
+            </div>
+            
+            <div class="col-md-3 mb-3">
+              <label>Alto (cm)</label>
+              <input 
+                type="number" 
+                v-model.number="equipo.dimensiones_alto" 
+                class="form-control" 
+                placeholder="Alto"
+              />
+            </div>
+            <div class="col-md-3 mb-3">
+              <label>Ancho (cm)</label>
+              <input 
+                type="number" 
+                v-model.number="equipo.dimensiones_ancho" 
+                class="form-control" 
+                placeholder="Ancho"
+              />
+            </div>
+            <div class="col-md-3 mb-3">
+              <label>Profundidad (cm)</label>
+              <input 
+                type="number" 
+                v-model.number="equipo.dimensiones_profundidad" 
+                class="form-control" 
+                placeholder="Profundidad"
+              />
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label>Peso</label>
+              <input v-model="equipo.peso" class="form-control" />
+            </div>
+            <div class="col-md-8 mb-3">
+              <label>Otros</label>
+              <textarea v-model="equipo.otros" class="form-control"></textarea>
             </div>
           </div>
-
-          <!-- Botón Guardar -->
-          <div class="text-end mt-4">
-            <button class="btn btn-success">Guardar Equipo</button>
-
-            <router-link to="/equipos" class="btn btn-success ms-2">
-              Ver Inventario
-            </router-link>
-          </div>
         </div>
+
+        <div class="text-end mt-4">
+          <button class="btn btn-success">Guardar Equipo</button>
+
+          <router-link to="/equipos" class="btn btn-success ms-2">
+            Ver Inventario
+          </router-link>
+        </div>
+</div>
+
+
       </div>
     </form>
   </div>
@@ -330,6 +456,7 @@ const tabs = [
 const equipo = ref({
   proceso: "",
   nombre_equipo: "",
+  sede: "",
   codigo_interno: "",
   codigo_ips: "",
   codigo_ecri: "",
@@ -342,15 +469,46 @@ const equipo = ref({
   clasificacion_ips: "",
   clasificacion_riesgo: "",
   registro_invima: "",
+
+  // --- Registro Histórico (Añade campos faltantes si no los habías incluido) ---
+  tiempo_vida_util: "",
+  fecha_adquisicion: null,
+  propietario: "",
+  fecha_fabricacion: "", // CharField
+  nit: "",
+  proveedor: "",
   en_garantia: false,
+  fecha_fin_garantia: null,
+  forma_adquisicion: "",
+  tipo_documento: "",
+  numero_documento: "",
+
+  // --- Inventario de Documentos ---
   hoja_vida: false,
   registro_importacion: false,
   manual_operacion: false,
+  manual_mantenimiento: false,
   guia_rapida: false,
   instructivo: false,
+  protocolo_mto: false, 
+  frecuencia_metrologica: false, //  CHARFIELD
+
+  // --- Información metrológica administrativa ---
   mantenimiento: false,
+  frecuencia_mantenimiento: null, // INTEGERFIELD
   calibracion: false,
+  frecuencia_calibracion: null, // INTEGERFIELD
+
+  // --- Condiciones de funcionamiento (Nuevos campos) ---
+  dimensiones_alto: null,      // Mapea a IntegerField
+  dimensiones_ancho: null,     // Mapea a IntegerField
+  dimensiones_profundidad: null, // Mapea a IntegerField
+  peso: "",
+  otros: "",
+
 });
+
+
 
 // --- Opciones de Clasificación para Vue ---
 const clasificacionesMisionales = [
@@ -372,13 +530,21 @@ const clasificacionesRiesgo = [
   { value: 'III', label: 'Clase III' },
 ];
 
+const opcionesSede = [
+  { value: 'PRADO', label: 'Sede Prado' },
+  { value: 'SEDE2', label: 'Sede 2' },
+  { value: 'SEDE3', label: 'Sede 3' },
+];
 
 const documentos = {
   hoja_vida: "Hoja de vida",
   registro_importacion: "Registro de importación",
   manual_operacion: "Manual de operación",
+  manual_mantenimiento: "Manual de mantenimiento",
   guia_rapida: "Guía rápida",
   instructivo: "Instructivo",
+  protocolo_mto: "Protocolo Mantenimiento", 
+  frecuencia_metrologica: "Frecuencia Metrológica del Fabricante",
 };
 
 const guardarEquipo = async () => {
