@@ -646,11 +646,12 @@ const clasificacionesRiesgo = [
   { value: 'IIB', label: 'Clase IIb' },
   { value: 'III', label: 'Clase III' },
 ];
+
 // El 'value' debe coincidir con la clave única de models.py 
 const opcionesSede = [ 
-  { value: 'Sede Prado', label: 'Sede Prado' },
-  { value: 'Sede 2', label: 'Sede 2' },
-  { value: 'Sede 3', label: 'Sede 3' },
+  { value: 'Prado', label: 'Prado' },
+  { value: 'SIU', label: 'SIU' },
+  { value: 'San Vicente', label: 'San Vicente' },
 ];
 
 const documentos = {

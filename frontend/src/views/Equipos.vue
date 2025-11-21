@@ -21,9 +21,9 @@
       <!-- Columna de filtros -->
       <select v-model="filtroSede" class="form-select filtro w-auto">
         <option value="">Todas las sedes</option>
-        <option value='Sede Prado'>Sede Prado</option>
-        <option value='Sede 2'>Sede 2</option>
-        <option value='Sede 3'>Sede 3</option>
+        <option value='Prado'>Prado</option>
+        <option value='SIU'>SIU</option>
+        <option value='San Vicente'>San Vicente</option>
       </select>
 
       <select v-model="filtroServicio" class="form-select filtro w-auto">
@@ -60,19 +60,29 @@
         <thead class="table-light">
           <tr>
             <th class="text-center">ID</th>
-            <th class="text-center">Servicio</th>
+            <th class="text-center">Sede - Servicio</th>
             <th class="text-center">Equipo</th>
             <th class="text-center">Códigos</th>
-            <th class="text-center">Responsable / Ubicación</th>
+            <th class="text-center">Responsable - Ubicación</th>
             <th class="text-center">Clasificación</th>
-            <th class="text-center">Registro Invima</th>
+            <th class="text-center">R. Invima - Niv. Riesgo</th>
             <th class="text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(equipo, index) in equiposFiltrados" :key="equipo.id">
             <td class="text-center">{{ index + 1 }}</td>
-            <td class="text-center">{{ equipo.servicio }}</td>
+
+            <td class="text-center text-secondary">
+              <div class="info-inventario d-flex flex-column align-items-center gap-1">
+                <div class="d-flex align-items-center gap-1">
+                  <span>{{ equipo.sede }}</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                  <span>{{ equipo.servicio }}</span>
+                </div>
+              </div>
+            </td>
 
             <td class="text-center">
               <div class="info-inventario d-flex flex-column align-items-center gap-1">
@@ -87,14 +97,14 @@
                 </div>
                 <div class="d-flex align-items-center gap-1">
                   <i class="bi-upc text-muted"></i>
-                  <span class="small text-muted">Serie: {{ equipo.serie || 'N/A' }}</span>
+                  <span> {{ equipo.serie || 'N/A' }}</span>
                 </div>
                 </div>
             </td>
 
 
             <td class="text-center">
-              <div class="d-flex flex-wrap justify-content-center gap-2">
+              <div class="d-flex flex-column align-items-center gap-1">
                 <span
                   v-if="equipo.codigos.interno"
                   class="badge rounded-pill bg-success"
@@ -104,9 +114,11 @@
                   {{ equipo.codigos.interno }}
                 </span>
 
+                <div class="d-flex justify-content-center gap-2">
+
                 <span
                   v-if="equipo.codigos.ips"
-                  class="badge rounded-pill bg-primary"
+                  class="badge rounded-pill bg-light text-dark"
                   data-bs-toggle="tooltip"
                   title="Código IPS"
                 >
@@ -121,6 +133,7 @@
                 >
                   {{ equipo.codigos.ecri }}
                 </span>
+              </div>
               </div>
             </td>
 
@@ -140,7 +153,7 @@
 
 
             <td class="text-center">
-              <div class="d-flex flex-wrap justify-content-center gap-2">
+              <div class="d-flex flex-column align-items-center gap-1">
                 <span
                   v-if="equipo.clasificacion.clasif_misional"
                   class="badge rounded-pill bg-success"
@@ -150,32 +163,33 @@
                   {{ equipo.clasificacion.clasif_misional }}
                 </span>
 
+                <div class="d-flex justify-content-center gap-2">
+
                 <span
                   v-if="equipo.clasificacion.clasif_ips"
-                  class="badge rounded-pill bg-primary"
+                  class="badge rounded-pill bg-light text-dark"
                   data-bs-toggle="tooltip"
                   title="IPS"
                 >
                   {{ equipo.clasificacion.clasif_ips }}
                 </span>                
               </div>
+              </div>
             </td>
 
-
-
             <td class="text-center">
-              <div class="d-flex flex-column align-items-center gap-1">
-                <span class="badge rounded-pill bg-info text-dark" title="INVIMA">
+              <div class="d-flex flex-column align-items-center gap-1"> 
+                <span class="badge rounded-pill bg-success" title="Invima">
                   {{ equipo.invima }}
                 </span>
                 
                 <span
                   v-if="equipo.clasificacion.clasif_riesgo"
-                  class="badge rounded-pill bg-warning text-dark mt-1"
+                  class="badge rounded-pill bg-light text-dark"
                   data-bs-toggle="tooltip"
-                  title="Riesgo"
+                  title="Niv. Riesgo"
                 >
-                  Riesgo: {{ equipo.clasificacion.clasif_riesgo }}
+                  {{ equipo.clasificacion.clasif_riesgo }}
                 </span>
               </div>
             </td>
@@ -196,7 +210,7 @@
                 class="icon-btn"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
-                title="Editar"
+                title="Traslado"
                 @click="editarEquipo(equipo.id)"
               >
                 <i class="bi bi-pencil-square"></i>
@@ -328,7 +342,7 @@ const cargarEquipos = async () => {
       return {
         id: eq.id,
         servicio: eq.proceso || "",
-        sede: eq.sede || eq.proceso || "",
+        sede: eq.sede || "",
         
         // el backend puede devolver 'equipo' (agrupado) o 'nombre_equipo' según tu serializer/ejemplos
         equipo: (eq.equipo && eq.equipo.trim()) || (eq.nombre_equipo && eq.nombre_equipo.trim()) || "Sin nombre",
