@@ -466,12 +466,12 @@
               <input v-model="equipo.corriente" class="form-control" />
             </div>
             <div class="col-md-4 mb-3">
-              <label>Humedad</label>
+              <label>Humedad (%HR)</label>
               <input v-model="equipo.humedad" class="form-control" />
             </div>
             
             <div class="col-md-3 mb-3">
-              <label>Temperatura</label>
+              <label>Temperatura (°C)</label>
               <input v-model="equipo.temperatura" class="form-control" />
             </div>
             
