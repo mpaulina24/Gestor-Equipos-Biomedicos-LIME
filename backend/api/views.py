@@ -68,7 +68,7 @@ class ActualizarEquipoCompletoAPIView(generics.UpdateAPIView):
         equipo = get_object_or_404(Equipo, pk=pk)
 
         # Actualizar todos los campos del modelo
-        
+        equipo.nombre_equipo = request.data.get('nombre_equipo', equipo.nombre_equipo)
         equipo.sede = request.data.get('sede', equipo.sede)
         equipo.proceso = request.data.get('proceso', equipo.proceso)
         equipo.responsable = request.data.get('responsable', equipo.responsable)
