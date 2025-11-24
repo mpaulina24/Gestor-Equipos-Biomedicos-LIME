@@ -221,6 +221,7 @@
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
                 title="Desactivar"
+                @click="abrirModalDesactivar(equipo)"
               >
                 <i class="bi bi-eye-slash"></i>
               </button>
@@ -233,6 +234,14 @@
                 @click="verRegistroEdiciones(equipo.id)"
               >
                 <i class="bi-journal-text"></i>
+              </button>
+
+              <button 
+              class="icon-btn" 
+              title="Editar" 
+              @click="modificarEquipo(equipo.id)"
+              >
+                <i class="bi bi-pencil-fill"></i>
               </button>
 
             </td>
@@ -301,6 +310,40 @@
         </div>
       </div>
     </div>
+    <div
+      class="modal fade"
+      id="modalDesactivar"
+      tabindex="-1"
+      aria-labelledby="modalDesactivarLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow border-0 rounded-4">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="modalDesactivarLabel">
+              Desactivar equipo — {{ equipoSeleccionado?.nombre_equipo || 'Equipo' }}
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <p>¿Está seguro que desea desactivar este equipo?</p>
+            <textarea v-model="justificacion" class="form-control mb-3" placeholder="Justificación"></textarea>
+            <input v-model="responsable" class="form-control" placeholder="Responsable de la baja" />
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" @click="confirmarDesactivacion">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -311,7 +354,6 @@ import { useRouter } from "vue-router";
 import axios from "axios";
 
 const router = useRouter();
-
 const busqueda = ref("");
 const filtroSede = ref("");
 const filtroServicio = ref("");
@@ -372,6 +414,30 @@ const cargarEquipos = async () => {
   }
 };
 
+//const equipoSeleccionado = ref(null)
+const justificacion = ref('')
+const responsable = ref('')
+
+const abrirModalDesactivar = (equipo) => {
+  equipoSeleccionado.value = equipo
+  justificacion.value = ''
+  responsable.value = ''
+}
+
+const confirmarDesactivacion = async () => {
+  try {
+    await axios.post(`http://127.0.0.1:8000/api/equipos/${equipoSeleccionado.value.id}/desactivar/`, {
+      justificacion: justificacion.value,
+      responsable: responsable.value,
+    })
+    alert('Equipo desactivado correctamente')
+    await cargarEquipos() // refresca lista de activos
+  } catch (error) {
+    console.error(error.response?.data)
+    alert('Error al desactivar equipo')
+  }
+}
+
 // onMounted: carga y arranca tooltips (con protección si bootstrap no existe)
 onMounted(async () => {
   await cargarEquipos();
@@ -385,8 +451,6 @@ onMounted(async () => {
     modalInstance = new Modal(modalElement.value);
   }
 });
-
-
 
 // Computed para aplicar los filtros
 const equiposFiltrados = computed(() => {
@@ -423,8 +487,11 @@ const editarEquipo = (id) => {
   router.push(`/equipos/${id}/editar/`);
 };
 
+const modificarEquipo = (id) => {
+  router.push(`/equipos/${id}/modificar`);
+};
 
-import { Modal } from "bootstrap"; // 👈 importante para controlar el modal
+import { Modal } from "bootstrap"; //  importante para controlar el modal
 
 const registros = ref([]);
 const equipoSeleccionado = ref(null);
@@ -452,9 +519,7 @@ const verRegistroEdiciones = async (id) => {
   }
 };
 
-
 </script>
-
 
 <style scoped>
 .titulo-principal {
@@ -495,7 +560,6 @@ const verRegistroEdiciones = async (id) => {
   transform: translateY(-2px);
 }
 
-
 .icon-btn {
   border: none;
   background: none;
@@ -506,6 +570,5 @@ const verRegistroEdiciones = async (id) => {
 .icon-btn:hover {
   color: #0a58ca;
 }
-
 
 </style>
