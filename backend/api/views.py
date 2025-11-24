@@ -56,6 +56,80 @@ class EditarEquipoAPIView(generics.UpdateAPIView):
             status=status.HTTP_200_OK
         )
 
+def normalize_date(value):
+    """Convierte string vacío en None para campos de fecha."""
+    return None if value in ["", None] else value
+
+
+class ActualizarEquipoCompletoAPIView(generics.UpdateAPIView):
+    queryset = Equipo.objects.all()
+
+    def put(self, request, pk, *args, **kwargs):
+        equipo = get_object_or_404(Equipo, pk=pk)
+
+        # Actualizar todos los campos del modelo
+        
+        equipo.sede = request.data.get('sede', equipo.sede)
+        equipo.proceso = request.data.get('proceso', equipo.proceso)
+        equipo.responsable = request.data.get('responsable', equipo.responsable)
+        equipo.ubicacion = request.data.get('ubicacion', equipo.ubicacion)
+        equipo.marca = request.data.get('marca', equipo.marca)
+        equipo.codigo_interno = request.data.get('codigo_interno', equipo.codigo_interno)
+        equipo.codigo_ips = request.data.get('codigo_ips', equipo.codigo_ips)
+        equipo.codigo_ecri = request.data.get('codigo_ecri', equipo.codigo_ecri)
+        equipo.modelo = request.data.get('modelo', equipo.modelo)
+        equipo.serie = request.data.get('serie', equipo.serie)
+        equipo.clasificacion_misional = request.data.get('clasificacion_misional', equipo.clasificacion_misional)
+        equipo.clasificacion_ips = request.data.get('clasificacion_ips', equipo.clasificacion_ips)
+        equipo.clasificacion_riesgo = request.data.get('clasificacion_riesgo', equipo.clasificacion_riesgo)
+        #equipo.requiere_invima = request.data.get('requiere_invima', equipo.requiere_invima)
+        equipo.registro_invima = request.data.get('registro_invima', equipo.registro_invima)
+
+        # Registro histórico
+        equipo.tiempo_vida_util = request.data.get('tiempo_vida_util', equipo.tiempo_vida_util)
+        equipo.fecha_adquisicion = normalize_date(request.data.get('fecha_adquisicion', equipo.fecha_adquisicion))
+        equipo.fecha_fabricacion = normalize_date(request.data.get('fecha_fabricacion', equipo.fecha_fabricacion))
+        equipo.fecha_fin_garantia = normalize_date(request.data.get('fecha_fin_garantia', equipo.fecha_fin_garantia))
+        equipo.tipo_documento = request.data.get('tipo_documento', equipo.tipo_documento)
+        equipo.numero_documento = request.data.get('numero_documento', equipo.numero_documento)
+        equipo.propietario = request.data.get('propietario', equipo.propietario)
+        equipo.proveedor = request.data.get('proveedor', equipo.proveedor)
+        equipo.nit = request.data.get('nit', equipo.nit)
+        equipo.en_garantia = request.data.get('en_garantia', equipo.en_garantia)
+
+        # Documentos
+        equipo.hoja_vida = request.data.get('hoja_vida', equipo.hoja_vida)
+        equipo.registro_importacion = request.data.get('registro_importacion', equipo.registro_importacion)
+        equipo.manual_operacion = request.data.get('manual_operacion', equipo.manual_operacion)
+        equipo.manual_mantenimiento = request.data.get('manual_mantenimiento', equipo.manual_mantenimiento)
+        equipo.guia_rapida = request.data.get('guia_rapida', equipo.guia_rapida)
+        equipo.instructivo = request.data.get('instructivo', equipo.instructivo)
+        equipo.protocolo_mto = request.data.get('protocolo_mto', equipo.protocolo_mto)
+
+        # Información metrológica
+        equipo.magnitud = request.data.get('magnitud', equipo.magnitud)
+        equipo.rango = request.data.get('rango', equipo.rango)
+        equipo.resolucion = request.data.get('resolucion', equipo.resolucion)
+        equipo.rango_trabajo = request.data.get('rango_trabajo', equipo.rango_trabajo)
+        equipo.mantenimiento = request.data.get('mantenimiento', equipo.mantenimiento)
+        equipo.frecuencia_mantenimiento = request.data.get('frecuencia_mantenimiento', equipo.frecuencia_mantenimiento)
+        equipo.calibracion = request.data.get('calibracion', equipo.calibracion)
+        equipo.frecuencia_calibracion = request.data.get('frecuencia_calibracion', equipo.frecuencia_calibracion)
+
+        # Condiciones de funcionamiento
+        equipo.voltaje = request.data.get('voltaje', equipo.voltaje)
+        equipo.corriente = request.data.get('corriente', equipo.corriente)
+        equipo.humedad = request.data.get('humedad', equipo.humedad)
+        equipo.temperatura = request.data.get('temperatura', equipo.temperatura)
+        equipo.dimensiones_alto = request.data.get('dimensiones_alto', equipo.dimensiones_alto)
+        equipo.dimensiones_ancho = request.data.get('dimensiones_ancho', equipo.dimensiones_ancho)
+        equipo.dimensiones_profundidad = request.data.get('dimensiones_profundidad', equipo.dimensiones_profundidad)
+        equipo.peso = request.data.get('peso', equipo.peso)
+        equipo.otros = request.data.get('otros', equipo.otros)
+
+        equipo.save()
+
+        return Response({"message": "Equipo actualizado correctamente"}, status=status.HTTP_200_OK)
 
 class EdicionesPorEquipoAPIView(generics.ListAPIView):
     serializer_class = EdicionEquipoSerializer
