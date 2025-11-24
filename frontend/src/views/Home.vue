@@ -46,17 +46,17 @@
 
         <!-- Columna derecha: imágenes institucionales -->
         <div class="col-lg-4 d-flex flex-column gap-4">
-          <!-- Card UdeA -->
+          <!-- Card UdeA 
           <div class="card shadow-sm" style="height: 250px;">
             <img src="/src/assets/FotoUdeA.png" class="card-img-top" alt="UdeA" style="height: 180px; object-fit: cover;">
             <div class="card-body text-center position-relative pt-4">
-              <!-- Imagen rectangular sobre la card -->
               <div class="position-absolute top-0 start-50 translate-middle" style="margin-top: 0px; width: 150px; height: 70px;">
                 <img src="/src/assets/UdeA.png" class="img-fluid" style="width: 100%; height: 100%; object-fit: contain;" alt="UdeA Foto">
               </div>
               <h5 class="titulo-principal-gris">Universidad de Antioquia</h5>
             </div>
           </div>
+          -->
 
           <!-- Card LIME -->
           <div class="card shadow-sm" style="height: 250px;">
@@ -69,7 +69,7 @@
             </div>
           </div>
 
-          <!-- Card Alma Mater -->
+          <!-- Card Alma Mater 
           <div class="card shadow-sm" style="height: 250px;">
             <img src="/src/assets/FotoAlmaMater.png" class="card-img-top" alt="Alma Mater" style="height: 180px; object-fit: cover;">
             <div class="card-body text-center position-relative pt-4">
@@ -79,6 +79,7 @@
               <h5 class="titulo-principal-gris">Hospital Alma Máter de Antioquia</h5>
             </div>
           </div>
+          -->
         </div>
       </div>
     </div>
