@@ -20,9 +20,9 @@ RIESGO_CHOICES = [
     ('III', 'Clase III'),
 ]
 SEDE_CHOICES = [
-    ('Sede Prado', 'Sede Prado'),
-    ('Sede Prado', 'Sede 2'),
-    ('Sede Prado', 'Sede 3'),
+    ('Prado', 'Prado'),
+    ('SIU', 'SIU'),
+    ('San Vicente', 'San Vicente'),
 ]
 
 class Equipo(models.Model):
