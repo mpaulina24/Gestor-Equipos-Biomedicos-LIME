@@ -7,5 +7,6 @@ urlpatterns = [
     path('equipos/<int:pk>/', views.EquipoDetailAPIView.as_view(), name='api_equipo_detail'),
     path('equipos/agregarEquipo/', views.EquipoCreateAPIView.as_view(), name='equipo-create'),
     path('equipos/<int:pk>/editar/', views.EditarEquipoAPIView.as_view(), name='editar-equipo'),
+    path('equipos/<int:pk>/modificar/', views.ActualizarEquipoCompletoAPIView.as_view(), name='mofidicar-equipo'),
     path('equipos/<int:pk>/ediciones/', views.EdicionesPorEquipoAPIView.as_view(), name='ediciones-equipo'),
 ]
