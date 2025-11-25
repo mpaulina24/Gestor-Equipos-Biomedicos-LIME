@@ -7,7 +7,7 @@ import AgregarEquipo from '@/views/AgregarEquipo.vue'
 import DetalleEquipo from '@/views/DetalleEquipo.vue'
 import TrasladoEquipo from '@/views/TrasladoEquipo.vue'
 import EditarEquipo from '@/views/EditarEquipo.vue'
-
+import EquiposDesactivados from '@/views/EquiposDesactivados.vue' 
 const routes = [
   {
     path: '/',
@@ -28,6 +28,14 @@ const routes = [
         name: 'Equipos',
         component: Equipos
       },
+      
+      {
+        path: '/equipos/desactivados',
+        name: 'EquiposDesactivados',
+        component: EquiposDesactivados // <-- Cambio a la variable importada
+      },
+
+      
       { 
         path: '/equipos/:id/modificar', 
         name: 'ModificarEquipo', 

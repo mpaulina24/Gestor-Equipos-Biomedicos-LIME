@@ -221,7 +221,7 @@
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
                 title="Desactivar"
-              >
+                @click="desactivarEquipo(equipo.id)"                >
                 <i class="bi bi-eye-slash"></i>
               </button>
 
@@ -440,6 +440,21 @@ const modalElement = ref(null);
 let modalInstance = null;
 const cargando = ref(false);
 
+const desactivarEquipo = async (id) => {
+  if (confirm("¿Estás seguro de que quieres desactivar este equipo?")) {
+    try {
+      // Llama al endpoint de desactivación
+      await axios.post(`http://127.0.0.1:8000/api/equipos/${id}/desactivar/`);
+      
+      // Actualiza la lista de equipos en el frontend
+      await cargarEquipos(); 
+      alert("Equipo desactivado correctamente.");
+    } catch (error) {
+      console.error("Error al desactivar el equipo:", error);
+      alert("Hubo un error al intentar desactivar el equipo.");
+    }
+  }
+};
 const verRegistroEdiciones = async (id) => {
   try {
     cargando.value = true;

@@ -47,9 +47,9 @@
 
       <li class="nav-item">
         <router-link
-          to="/desactivados"
+          to="equipos/desactivados"
           class="nav-link"
-          :class="{ active: isActive('/desactivados') }"
+          :class="{ active: isActive('equipos/desactivados') }"
         >
           <i class="bi bi-bar-chart-line"></i>
           <span class="nav-link-text">Equipos Desactivados</span>
