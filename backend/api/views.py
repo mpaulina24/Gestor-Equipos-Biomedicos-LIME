@@ -34,15 +34,14 @@ class EquipoCreateAPIView(generics.CreateAPIView):
 
 class EquipoActivoListAPIView(generics.ListAPIView):
     """Lista solo los equipos que están activos (para el menú principal)."""
-    # Filtra el queryset para incluir solo equipos donde activo=True
-    queryset = Equipo.objects.exclude(activo=False)
+    queryset = Equipo.objects.filter(activo=True) 
+    
     serializer_class = EquipoListSerializer
 
 class EquipoInactivoListAPIView(generics.ListAPIView):
     """Lista solo los equipos que están inactivos (para la nueva pestaña)."""
-    # Filtra el queryset para incluir solo equipos donde activo=False
-    queryset = Equipo.objects.filter(activo=False)
-    serializer_class = EquipoListSerializer # Puedes crear un Serializer más simple si quieres
+    queryset = Equipo.objects.filter(activo=False)     
+    serializer_class = EquipoListSerializer
 
 class DesactivarEquipoAPIView(generics.UpdateAPIView):
     """Cambia el campo 'activo' a False para un equipo específico."""

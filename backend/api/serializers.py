@@ -13,7 +13,7 @@ class EquipoCreateSerializer(serializers.ModelSerializer):
         
 
 class EquipoListSerializer(serializers.ModelSerializer):
-    # Campos agrupados (Mantener como están)
+    
     equipo = serializers.SerializerMethodField()
     codigos = serializers.SerializerMethodField()
     responsable_ubicacion = serializers.SerializerMethodField()

@@ -40,9 +40,7 @@ const cargarEquiposDesactivados = async () => {
     // Llama al nuevo endpoint de inactivos
     const res = await axios.get("http://127.0.0.1:8000/api/equipos/inactivos/");
     
-    // Mapea los datos igual que antes, pero solo si necesitas las partes desglosadas
     equiposDesactivados.value = res.data.map(eq => {
-      // Usamos la misma lógica de desglosar para obtener nombre y códigos
       const [nombre_equipoRaw] = (eq.equipo || "").split("/").map(s => s.trim()); 
       const codigoParts = (eq.codigos || "").split("/").map(s => s.trim()).filter(Boolean);
       const interno = codigoParts[0] || null;
@@ -52,7 +50,7 @@ const cargarEquiposDesactivados = async () => {
         nombre_equipo: nombre_equipoRaw || "Sin nombre",
         servicio: eq.proceso || "",
         codigos: { interno },
-        // ... otros campos si los necesitas
+        // ... se pueden añadir aquí otros campos si son necesarios
       };
     });
   } catch (error) {
@@ -63,7 +61,7 @@ const cargarEquiposDesactivados = async () => {
 const activarEquipo = async (id) => {
   if (confirm("¿Seguro que quieres reactivar este equipo? Volverá al inventario principal.")) {
     try {
-      // Necesitas crear un nuevo endpoint 'activar' en views.py similar a 'desactivar'
+      // endpoint 'activar' en views.py similar a 'desactivar'
       await axios.post(`http://127.0.0.1:8000/api/equipos/${id}/activar/`);
       alert("Equipo reactivado correctamente.");
       await cargarEquiposDesactivados(); // Recargar la lista

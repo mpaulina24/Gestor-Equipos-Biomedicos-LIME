@@ -331,8 +331,7 @@ const equipos = ref([]);
 const cargarEquipos = async () => {
   try {
     const res = await axios.get("http://127.0.0.1:8000/api/equipos/");
-    equipos.value = res.data.map((eq) => {
-      // responsable_ubicacion viene como "Responsable / Ubicación" (según tu serializer)
+    equipos.value = res.data.map((eq) => {      
       const [responsableRaw, ubicacionRaw] = (eq.responsable_ubicacion || "").split("/");
       const [nombre_equipoRaw, marcaRaw, modeloRaw, serieRaw] = (eq.equipo || "").split("/").map(s => s.trim()); 
 
