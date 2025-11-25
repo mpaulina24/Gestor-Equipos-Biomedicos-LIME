@@ -25,12 +25,13 @@ class EquipoListSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'proceso',
-            'sede',                  # <-- ¡CAMPO AGREGADO!
+            'sede',                  
             'equipo',
             'codigos',
             'responsable_ubicacion',
             'clasificacion',
             'registro_invima',
+            'activo'
         ]
 
 

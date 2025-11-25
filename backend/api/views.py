@@ -32,6 +32,41 @@ class EquipoCreateAPIView(generics.CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+class EquipoActivoListAPIView(generics.ListAPIView):
+    """Lista solo los equipos que están activos (para el menú principal)."""
+    # Filtra el queryset para incluir solo equipos donde activo=True
+    queryset = Equipo.objects.exclude(activo=False)
+    serializer_class = EquipoListSerializer
+
+class EquipoInactivoListAPIView(generics.ListAPIView):
+    """Lista solo los equipos que están inactivos (para la nueva pestaña)."""
+    # Filtra el queryset para incluir solo equipos donde activo=False
+    queryset = Equipo.objects.filter(activo=False)
+    serializer_class = EquipoListSerializer # Puedes crear un Serializer más simple si quieres
+
+class DesactivarEquipoAPIView(generics.UpdateAPIView):
+    """Cambia el campo 'activo' a False para un equipo específico."""
+    queryset = Equipo.objects.all()
+    serializer_class = EquipoCreateSerializer # Usamos EquipoCreateSerializer solo para validar/PUT
+    
+    def post(self, request, pk):
+        equipo = get_object_or_404(self.get_queryset(), pk=pk)
+        equipo.activo = False
+        equipo.save()
+        return Response({"status": f"Equipo {pk} desactivado."}, status=status.HTTP_200_OK)
+
+class ActivarEquipoAPIView(generics.UpdateAPIView):
+    """Cambia el campo 'activo' a True para un equipo específico (Reactivación)."""
+    queryset = Equipo.objects.all()
+    serializer_class = EquipoCreateSerializer
+    
+    def post(self, request, pk):
+        equipo = get_object_or_404(self.get_queryset(), pk=pk)
+        equipo.activo = True
+        equipo.save()
+        return Response({"status": f"Equipo {pk} activado."}, status=status.HTTP_200_OK)
+
+
 class EditarEquipoAPIView(generics.UpdateAPIView):
     queryset = Equipo.objects.all()
     serializer_class = EquipoCreateSerializer

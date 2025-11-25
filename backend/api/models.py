@@ -26,6 +26,7 @@ SEDE_CHOICES = [
 ]
 
 class Equipo(models.Model):
+    activo = models.BooleanField(default=True)
     # --- Información general ---
     proceso = models.CharField(max_length=100)
     nombre_equipo = models.CharField(max_length=100)
