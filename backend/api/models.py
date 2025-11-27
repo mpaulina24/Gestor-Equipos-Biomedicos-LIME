@@ -14,8 +14,8 @@ CLASIFICACION_IPS_CHOICES = [
 
 RIESGO_CHOICES = [
     ('I', 'Clase I'),
-    ('IIa', 'Clase IIa'),
-    ('IIb', 'Clase IIb'),
+    ('IIA', 'Clase IIa'),
+    ('IIB', 'Clase IIb'),
     ('III', 'Clase III'),
 ]
 

@@ -3,30 +3,39 @@
     <h1 class="titulo-principal">Inventario de Equipos Médicos</h1>
 
     <div class="card shadow-sm mb-2">
-  <div class="card-body">
+    <div class="card-body">
     
     <!-- Buscador arriba -->
-    <div class="mb-3">
+    <label class="form-label fw-bold small d-block">Buscar equipo</label>
+    <label class="form-label small d-block text-muted">
+      Filtre los equipos por código, marca, modelo...
+    </label>
+    <div class="mb-3 small">
       <input
         v-model="busqueda"
         type="text"
-        class="form-control filtro"
-        placeholder="Buscar por servicio, nombre, marca, modelo o código"
+        class="form-control form-control-sm"
+        placeholder="Servicio, nombre, marca, modelo o códigos (IPS, Interno, ECRI)"
       />
     </div>
 
     <!-- Filtros y botón agregar abajo -->
-    <div class="row align-items-center g-2">
+    <div class="d-flex align-items-center gap-2 flex-wrap">
       
       <!-- Columna de filtros -->
-      <select v-model="filtroSede" class="form-select filtro w-auto">
+      <div class="d-flex flex-column">
+      <label class="form-label small fw-bold d-block">Sede</label>
+      <select v-model="filtroSede" class="form-select form-select-sm w-auto">
         <option value="">Todas las sedes</option>
         <option value='Prado'>Prado</option>
         <option value='SIU'>SIU</option>
         <option value='San Vicente'>San Vicente</option>
       </select>
+      </div>
 
-      <select v-model="filtroServicio" class="form-select filtro w-auto">
+      <div class="d-flex flex-column">
+      <label class="form-label small fw-bold d-block">Servicio</label>
+      <select v-model="filtroServicio" class="form-select form-select-sm w-auto">
         <option value="">Todos los servicios</option>
         <option value="LIME">LIME</option>
         <option value="Centro de resonancia">Centro de resonancia</option
@@ -37,35 +46,36 @@
         ><option value="Patología">Patología</option
         ><option value="Dermatopatología">Dermatopatología</option>
       </select>
-
-      <!-- Columna del botón -->
-      <div class="col-md-3 justify-content-end">
-        <button class="btn btn-success d-flex align-items-center justify-content-center gap-2" @click="agregarEquipo">
-        <i class="bi bi-plus-lg"></i> Agregar Equipo
-      </button>
       </div>
+
+      <div class="ms-auto">
+        <button class="btn custom-btn btn-sm d-flex align-items-center gap-2" @click="agregarEquipo">
+          <i class="bi bi-plus-lg"></i> Agregar Equipo
+        </button>
+      </div>
+    
     </div>
   </div>
 </div>
 
+    
+
     <!-- Tabla de equipos -->
     <div class="table-scroll shadow-sm rounded">
       <table class="table align-middle table-hover">
-        <thead class="table-light">
+        <thead class="table-light encabezado-pequeno">
           <tr>
-            <th class="text-center">ID</th>
-            <th class="text-center">Sede - Servicio</th>
-            <th class="text-center">Equipo</th>
-            <th class="text-center">Códigos</th>
-            <th class="text-center">Responsable - Ubicación</th>
-            <th class="text-center">Clasificación</th>
-            <th class="text-center">R. Invima - Niv. Riesgo</th>
-            <th class="text-center">Acciones</th>
+            <th class="text-center">SEDE / SERVICIO</th>
+            <th class="text-center">EQUIPO</th>
+            <th class="text-center">CÓDIGOS</th>
+            <th class="text-center">RESPONSABLE / UBICACIÓN</th>
+            <th class="text-center">CLASIFICACIÓN</th>
+            <th class="text-center">INVIMA / RIESGO</th>
+            <th class="text-center">ACCIONES</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(equipo, index) in equiposFiltrados" :key="equipo.id">
-            <td class="text-center">{{ index + 1 }}</td>
 
             <td class="text-center text-secondary">
               <div class="info-inventario d-flex flex-column align-items-center gap-1">
@@ -73,12 +83,11 @@
                   <i class="bi bi-building"
                   data-bs-toggle="tooltip"
                   data-bs-placement="top"
-                  data-bs-custom-class="custom-tooltip"
                   title="Sede"></i>
                   <span>{{ equipo.sede }}</span>
                 </div>
                 <div class="d-flex align-items-center gap-1">
-                  <span>{{ equipo.servicio }}</span>
+                  <span style="font-size: 0.70rem;">{{ equipo.servicio }}</span>
                 </div>
               </div>
             </td>
@@ -89,7 +98,6 @@
                   <i class="bi-card-text text-success"
                   data-bs-toggle="tooltip"
                   data-bs-placement="top"
-                  data-bs-custom-class="custom-tooltip"
                   title="Nombre"></i>
                   <span>{{ equipo.nombre_equipo }}</span>
                 </div>
@@ -117,7 +125,7 @@
               <div class="d-flex flex-column align-items-center gap-1">
                 <span
                   v-if="equipo.codigos.interno"
-                  class="badge rounded-pill bg-success"
+                  class="badge rounded-pill badge-verde-claro"
                   data-bs-toggle="tooltip"
                   title="Código Interno"
                 >
@@ -166,7 +174,7 @@
               <div class="d-flex flex-column align-items-center gap-1">
                 <span
                   v-if="equipo.clasificacion.clasif_misional"
-                  class="badge rounded-pill bg-success"
+                  class="badge rounded-pill badge-verde-claro"
                   data-bs-toggle="tooltip"
                   title="Misional"
                 >
@@ -190,7 +198,7 @@
             <td class="text-center">
               <div class="d-flex flex-column align-items-center gap-1"> 
                 <span
-                  class="badge rounded-pill bg-success invima-text"
+                  class="badge rounded-pill badge-verde-claro invima-text"
                   data-bs-toggle="tooltip"
                   data-bs-placement="top"
                   :title="equipo.invima"
@@ -400,26 +408,15 @@ const cargarEquipos = async () => {
 onMounted(async () => {
   await cargarEquipos();
 
-  // Reinicializar tooltips correctamente
-  if (window.bootstrap?.Tooltip) {
+  if (window.bootstrap && window.bootstrap.Tooltip) {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-
-    tooltipTriggerList.forEach((el) => {
-      // Si ya existe un tooltip creado, destruirlo
-      const existing = window.bootstrap.Tooltip.getInstance(el);
-      if (existing) existing.dispose();
-
-      // Crear tooltip nuevo (ya aplicará custom class)
-      new window.bootstrap.Tooltip(el);
-    });
+    tooltipTriggerList.forEach((el) => new window.bootstrap.Tooltip(el));
   }
 
-  // Inicializar modal
-  if (modalElement.value) {
+  if (modalElement.value && Modal) {
     modalInstance = new Modal(modalElement.value);
   }
 });
-
 
 // Computed para aplicar los filtros
 const equiposFiltrados = computed(() => {

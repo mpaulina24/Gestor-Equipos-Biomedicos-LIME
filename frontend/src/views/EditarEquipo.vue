@@ -537,7 +537,7 @@ const tabs = [
 
 // Listas reutilizadas
 const serviciosDisponibles = [
-  "LIME","LIME - Hematología","Fotodermatología","Resonador","Oftalmología",
+  "LIME","Fotodermatología","Resonador","Oftalmología",
   "Trasplantes GICIG","Inmunodeficiencias Primarias","Grupo Reproducción","Patología","Dermatopatología"
 ];
 const opcionesSede = [ 

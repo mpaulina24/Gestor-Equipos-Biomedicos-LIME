@@ -1,5 +1,5 @@
 <template>
-  <nav class="sidenav">
+  <nav class="sidenav sidebar-small">
     <!-- Header con el logo -->
     <div class="sidenav-header">
       <img
@@ -113,10 +113,10 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
 
 .sidenav {
-  font-family: "Roboto", sans-serif;
+  font-family: "Inter", sans-serif;
   position: fixed;
   left: 0;
   top: 0;

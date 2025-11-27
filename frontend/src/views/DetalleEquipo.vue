@@ -1,81 +1,127 @@
 <template>
-  <div class="container mt-5">
-    <h3 class="text-success mb-4 text-center">
-      Detalle del Equipo Médico
-    </h3>
+  <div class="min-vh-100 bg-light py-4">
+    <div class="container">
 
-    <div v-if="equipo" class="card shadow-sm p-4">
-      <!-- 🧾 Información General -->
-      <section class="mb-4">
-        <h5 class="section-title">Información General</h5>
-        <div class="row">
-          <div v-for="campo in infoGeneral" :key="campo.key" class="col-md-4 mb-2">
-            <strong>{{ campo.label }}:</strong> {{ equipo[campo.key] || '—' }}
-          </div>
+      <!-- Título central -->
+      <h3 class="text-success text-center fw-bold mb-4">
+        Detalle del Equipo Médico
+      </h3>
+
+      <div v-if="equipo" class="card border-0 shadow-sm p-4 rounded-4">
+
+        <!-- Espacio con nombre grande del equipo -->
+        <div class="text-center mb-4">
+          <h4 class="fw-bold text-dark">{{ equipo.nombre_equipo }}</h4>
+          <p class="text-muted mb-1">
+            {{ equipo.marca }} — {{ equipo.modelo }}
+          </p>
+          <p class="text-muted">
+            Código Interno: <strong>{{ equipo.codigo_interno || '—' }}</strong>
+          </p>
         </div>
-      </section>
 
-      <!-- 📜 Registro Histórico -->
-      <section class="mb-4">
-        <h5 class="section-title">Registro Histórico</h5>
-        <div class="row">
-          <div v-for="campo in registroHistorico" :key="campo.key" class="col-md-4 mb-2">
-            <strong>{{ campo.label }}:</strong> {{ equipo[campo.key] || '—' }}
-          </div>
-        </div>
-      </section>
-
-      <!-- 📂 Inventario de Documentos -->
-      <section class="mb-4">
-        <h5 class="section-title">Inventario de Documentos</h5>
-        <div class="row">
-          <div v-for="campo in inventarioDocs" :key="campo.key" class="col-md-4 mb-2">
-            <strong>{{ campo.label }}:</strong>
-            <span :class="{'text-success fw-bold': equipo[campo.key], 'text-danger': !equipo[campo.key]}">
-              {{ equipo[campo.key] ? 'Sí' : 'No' }}
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ⚙️ Información Metrológica Administrativa -->
-      <section class="mb-4">
-        <h5 class="section-title">Información Metrológica Administrativa</h5>
-        <div class="row">
-          <div v-for="campo in infoMetrologicaAdmin" :key="campo.key" class="col-md-4 mb-2">
-            <strong>{{ campo.label }}:</strong> {{ equipo[campo.key] || '—' }}
-          </div>
-        </div>
-      </section>
-
-      <!-- 🔬 Información Metrológica Técnica -->
-      <section class="mb-4">
-        <h5 class="section-title">Información Metrológica Técnica</h5>
-        <div class="row">
-          <div v-for="campo in infoMetrologicaTec" :key="campo.key" class="col-md-4 mb-2">
-            <strong>{{ campo.label }}:</strong> {{ equipo[campo.key] || '—' }}
-          </div>
-        </div>
-      </section>
-
-      <!--  Condiciones de Funcionamiento -->
-      <section>
-        <h5 class="section-title">Condiciones de Funcionamiento</h5>
-        <div class="row">
-          <div v-for="campo in condiciones" :key="campo.key" class="col-md-4 mb-2">
-            <strong>{{ campo.label }}:</strong> {{ formatValue(equipo[campo.key]) }}
+        <!-- Información General -->
+        <section class="mb-4">
+          <h5 class="bloque-titulo">
+            Información General
+          </h5>
+          <div class="row">
+            <div v-for="campo in infoGeneral" :key="campo.key" class="col-md-4 mb-2">
+              <div class="campo-box">
+                <span class="campo-label">{{ campo.label }}</span>
+                <span class="campo-valor">{{ equipo[campo.key] || '—' }}</span>
+              </div>
             </div>
-        </div>
-      </section>
-    </div>
+          </div>
+        </section>
 
-    <div class="d-flex justify-content-end mt-4">
-      <router-link to="/equipos" class="btn btn-outline-success">
-        <i class="bi bi-arrow-left"></i> Volver al Inventario
-      </router-link>
+        <!-- Registro Histórico -->
+        <section class="mb-4">
+          <h5 class="bloque-titulo">
+            Registro Histórico
+          </h5>
+          <div class="row">
+            <div v-for="campo in registroHistorico" :key="campo.key" class="col-md-4 mb-2">
+              <div class="campo-box">
+                <span class="campo-label">{{ campo.label }}</span>
+                <span class="campo-valor">{{ equipo[campo.key] || '—' }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Inventario Documental -->
+        <section class="mb-4">
+          <h5 class="bloque-titulo">
+            Inventario de Documentos
+          </h5>
+          <div class="row">
+            <div v-for="campo in inventarioDocs" :key="campo.key" class="col-md-4 mb-2">
+              <div class="campo-box">
+                <span class="campo-label">{{ campo.label }}</span>
+                <span class="campo-valor">{{ equipo[campo.key] || '—' }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Información Metrológica Administrativa -->
+        <section class="mb-4">
+          <h5 class="bloque-titulo">
+            Información Metrológica Administrativa
+          </h5>
+          <div class="row">
+            <div v-for="campo in infoMetrologicaAdmin" :key="campo.key" class="col-md-4 mb-2">
+              <div class="campo-box">
+                <span class="campo-label">{{ campo.label }}</span>
+                <span class="campo-valor">{{ equipo[campo.key] || '—' }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Información Metrológica Técnica -->
+        <section class="mb-4">
+          <h5 class="bloque-titulo">
+            Información Metrológica Técnica
+          </h5>
+          <div class="row">
+            <div v-for="campo in infoMetrologicaTec" :key="campo.key" class="col-md-4 mb-2">
+              <div class="campo-box">
+                <span class="campo-label">{{ campo.label }}</span>
+                <span class="campo-valor">{{ equipo[campo.key] || '—' }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Condiciones de Funcionamiento -->
+        <section>
+          <h5 class="bloque-titulo">
+            Condiciones de Funcionamiento
+          </h5>
+          <div class="row">
+            <div v-for="campo in condiciones" :key="campo.key" class="col-md-4 mb-2">
+              <div class="campo-box">
+                <span class="campo-label">{{ campo.label }}</span>
+                <span class="campo-valor">{{ formatValue(equipo[campo.key]) }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="d-flex justify-content-end mt-4">
+        <router-link to="/equipos" class="btn btn-outline-success px-4">
+          ← Volver al Inventario
+        </router-link>
+      </div>
+
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -85,10 +131,10 @@ export default {
     return {
       equipo: null,
       infoGeneral: [
+        { key: "sede", label: "Sede" },
         { key: "proceso", label: "Proceso" },
         { key: "nombre_equipo", label: "Nombre del Equipo" },
         { key: "codigo_interno", label: "Código Interno" },
-        { key: "sede", label: "Sede LIME" },
         { key: "codigo_ips", label: "Código IPS" },
         { key: "codigo_ecri", label: "Código ECRI" },
         { key: "responsable", label: "Responsable" },
@@ -159,7 +205,7 @@ export default {
         return value;
       }
       return num.toFixed(2).replace('.', ',');
-    }
+    },
   },
   mounted() {
     const id = this.$route.params.id;
@@ -172,6 +218,8 @@ export default {
         console.error("Error al obtener detalles del equipo:", error);
       });
   },
+  
+
 };
 </script>
 
@@ -186,4 +234,40 @@ export default {
 .card {
   border-left: 4px solid #4CAF50;
 }
+
+.bloque-titulo {
+  font-weight: bold;
+  color: #1B5E20;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #4CAF50;
+}
+
+.campo-box {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+
+.campo-box:hover {
+  background: #f3fdf6;
+}
+
+.campo-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.campo-valor {
+  font-weight: bold;
+  color: #111;
+  font-size: 0.8rem
+}
+
 </style>

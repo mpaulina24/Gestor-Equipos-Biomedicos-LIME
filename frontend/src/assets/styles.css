@@ -113,8 +113,8 @@
 }
 
 .custom-btn {
-  border-color: #61ab63 !important;
-  color: #61ab63 !important;
+  border-color: #38783a !important;
+  color: #448746 !important;
 }
 
 .custom-btn:hover {
@@ -161,4 +161,26 @@
 
 .info-inventario span {
   color: var(--gris-oscuro); /* conserva el color original */
+}
+
+.badge-verde-claro {
+  background-color: rgba(12, 128, 41, 0.65); /* Verde tipo 'success' pero clarito y transparente */
+  color: #155724; /* Verde oscuro para buen contraste */
+}
+
+.encabezado-pequeno th {
+  font-size: 0.7rem;  /* Ajusta: 0.75rem, 0.7rem, etc. */
+  font-weight: bold; /* ← Negrita */
+}
+
+.sidebar-small .nav-link {
+  font-size: 0.85rem; /* Ajusta: 0.8rem o 0.75rem */
+}
+
+.sidebar-small .nav-link i {
+  font-size: 1rem; /* Reduce icono también, opcional */
+}
+
+.sidebar-small .nav-link-text {
+  font-size: 0.85rem;
 }

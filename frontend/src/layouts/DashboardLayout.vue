@@ -30,7 +30,7 @@ export default {
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  font-family: 'Roboto', sans-serif; /* 👈 Fuente base */
+  font-family: 'Inter', sans-serif; /* 👈 Fuente base */
   color: #333;
   background-color: #f8fafc;
 }

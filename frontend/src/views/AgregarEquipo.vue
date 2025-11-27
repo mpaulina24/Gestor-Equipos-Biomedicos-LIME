@@ -202,7 +202,7 @@
                           v-model="equipo.requiere_invima" 
                           id="switchInvima"
                           
-                          @change="equipo.registro_invima = equipo.requiere_invima ? '' : 'No requiere'" 
+                          @change="equipo.registro_invima = equipo.requiere_invima ? '' : 'NI'" 
                           >
                         <label class="form-check-label" for="switchInvima">
                           {{ equipo.requiere_invima ? 'Sí' : 'No' }}
@@ -221,7 +221,7 @@
                       :required="equipo.requiere_invima"
                     />
                     <small v-if="!equipo.requiere_invima" class="form-text text-muted">
-                      El campo se guardará como "No requiere".
+                      El campo se guardará como "NI: No identificado".
                     </small>
                   </div>                  
                 </div>
