@@ -1,59 +1,96 @@
 <template>
-  <div class="container mt-5">
-    <h2 class="titulo-principal text-center">Editar Responsable y Servicio</h2>
+  <div class="container mt-4 mb-5">
 
-    <div class="card shadow mb-4">
-      <div class="card-header custom-header text-white">
-        Modificación de Información del Equipo
+    <!-- Encabezado -->
+    <div class="text-center mb-4">
+      <h2 class="fw-bold text-success mb-1">
+        Traslado de Equipo
+      </h2>
+      <p class="text-muted small">
+        Aquí se registran los traslados de equipos, modificando su sede, servicio y responsable
+      </p>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+      <!-- Header verde -->
+      <div class="card-header custom-header text-white d-flex align-items-center">
+        <span class="fw-semibold">Modificación de información del equipo</span>
       </div>
 
       <div class="card-body">
-        <!-- Mostrar información no editable -->
-        <div class="mb-3">
-          <label><strong>Equipo:</strong></label>
-          <p class="form-control-plaintext">{{ equipo.nombre_equipo }}, {{ equipo.marca }} - {{ equipo.modelo }}</p>
+
+        <!-- EQUIPO referencia (no editable) -->
+        <div class="mb-4 p-3 bg-light rounded">
+          <label class="form-label small fw-bold text-muted d-block">Equipo</label>
+          <div class="fs-6">
+            {{ equipo.nombre_equipo }},
+            {{ equipo.marca }} —
+            {{ equipo.modelo }}
+          </div>
         </div>
 
+        <!-- FORMULARIO -->
         <div class="row">
 
           <div class="col-md-4 mb-3">
-            <label><strong>Sede</strong></label>
-            <input v-model="equipo.sede" class="form-control" />
+            <label class="form-label small fw-bold text-muted">Sede</label>
+            <input
+              v-model="equipo.sede"
+              class="form-control form-control-sm"
+              placeholder="Ej. Sede universitaria"
+            />
           </div>
 
           <div class="col-md-4 mb-3">
-            <label><strong>Servicio</strong></label>
-            <input v-model="equipo.proceso" class="form-control" />
+            <label class="form-label small fw-bold text-muted">Servicio</label>
+            <input
+              v-model="equipo.proceso"
+              class="form-control form-control-sm"
+              placeholder="Ej. Quimioterapia"
+            />
           </div>
 
           <div class="col-md-4 mb-3">
-            <label><strong>Responsable</strong></label>
-            <input v-model="equipo.responsable" class="form-control" />
+            <label class="form-label small fw-bold text-muted">Responsable</label>
+            <input
+              v-model="equipo.responsable"
+              class="form-control form-control-sm"
+              placeholder="Funcionario asignado"
+            />
           </div>
+
         </div>
 
         <div class="col-md-12 mb-3">
-          <label><strong>Justificación del traslado</strong></label>
+          <label class="form-label small fw-bold text-muted">
+            Justificación del traslado
+          </label>
           <textarea
             v-model="justificacion"
-            class="form-control"
+            class="form-control form-control-sm"
             rows="3"
-            placeholder="Describe el motivo del cambio..."
+            placeholder="Escribe de forma breve el motivo de la modificación..."
           ></textarea>
         </div>
 
-        <div class="text-end mt-3">
-          <button class="btn btn-success" @click="guardarCambios">
+        <!-- BOTONES -->
+        <div class="d-flex justify-content-end pt-2">
+
+          <button class="btn btn-success px-4 me-2" @click="guardarCambios">
             Guardar cambios
           </button>
-          <router-link to="/equipos" class="btn btn-secondary ms-2">
+
+          <router-link to="/equipos" class="btn btn-outline-secondary px-4">
             Cancelar
           </router-link>
+
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from "vue";

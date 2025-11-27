@@ -36,9 +36,9 @@
 
       <li class="nav-item">
         <router-link
-          to="equipos/desactivados"
+          to="equiposDadosDeBaja"
           class="nav-link"
-          :class="{ active: isActive('equipos/desactivados') }"
+          :class="{ active: isActive('equiposDadosDeBaja') }"
         >
           <i class="bi bi-eye-slash"></i>
           <span class="nav-link-text">Equipos dados de baja</span>

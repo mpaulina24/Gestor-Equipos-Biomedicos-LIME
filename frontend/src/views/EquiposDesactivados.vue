@@ -32,14 +32,12 @@
               <th class="text-center">Equipo</th>
               <th class="text-center">Código Interno</th>
               <th class="text-center">Servicio</th>
-              <th class="text-center">Estado</th>
               <th class="text-center">Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="equipo in equiposFiltrados" :key="equipo.id">
 
-              <!-- nombre -->
               <td class="text-center">
               <div class="info-inventario d-flex flex-column align-items-center gap-1">
                 <div class="d-flex align-items-center gap-1">
@@ -73,13 +71,6 @@
               <!-- servicio -->
               <td class="text-center text-muted">
                 <span class="small">{{ equipo.servicio || 'NI' }}</span>
-              </td>
-
-              <!-- estado -->
-              <td class="text-center">
-                <span class="badge bg-secondary rounded-pill">
-                  Desactivado
-                </span>
               </td>
 
               <!-- acciones -->
