@@ -1,47 +1,122 @@
 <template>
   <div class="container py-4">
-    <h1 class="titulo-principal">Historial de Equipos Desactivados</h1>
 
-    <div class="table-responsive shadow-sm rounded">
-      <table class="table align-middle table-hover">
-        <thead class="table-light">
-          <tr>
-            <th class="text-center">Nombre del Equipo</th>
-            <th class="text-center">Código Interno</th>
-            <th class="text-center">Servicio</th>
-            <th class="text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="equipo in equiposDesactivados" :key="equipo.id">
-            <td class="text-center">{{ equipo.nombre_equipo || 'NI' }}</td>
-            <td class="text-center">{{ equipo.codigos?.interno || 'NI' }}</td>
-            <td class="text-center">{{ equipo.servicio || 'NI' }}</td>
-            <td class="text-center">
-              <button class="icon-btn text-success" title="Reactivar" @click="activarEquipo(equipo.id)">
-                <i class="bi bi-arrow-clockwise"></i> Reactivar
-              </button>
+    <!-- Título -->
+    <h3 class="text-success text-center fw-bold mb-4">
+      Historial de Equipos dados de baja
+    </h3>
+
+    <div class="card border-0 shadow-sm rounded-4 p-3">
+
+      <!-- Texto explicativo -->
+      <p class="text-muted small mb-3">
+        Estos equipos fueron dados de baja del inventario activo. Puede consultarlos y reactivarlos cuando sea necesario.
+      </p>
+
+      <!-- Buscador -->
+      <div class="mb-3">
+        <label class="form-label fw-bold small d-block">Buscar equipo desactivado</label>
+        <input
+          v-model="busqueda"
+          type="text"
+          class="form-control form-control-sm"
+          placeholder="Nombre del equipo, servicio, código interno…"
+        />
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-scroll shadow-sm rounded">
+        <table class="table align-middle table-hover mb-0">
+          <thead class="table-light small">
+            <tr>
+              <th class="text-center">Equipo</th>
+              <th class="text-center">Código Interno</th>
+              <th class="text-center">Servicio</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="equipo in equiposFiltrados" :key="equipo.id">
+
+              <!-- nombre -->
+              <td class="text-center">
+              <div class="info-inventario d-flex flex-column align-items-center gap-1">
+                <div class="d-flex align-items-center gap-1">
+                  <i class="bi-card-text text-success"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Nombre"></i>
+                  <span>{{ equipo.nombre_equipo }}</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                  <i class="bi-upc text-muted"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Serie"></i>
+                  <span> {{ equipo.serie || 'N/A' }}</span>
+                </div>
+                </div>
             </td>
-          </tr>
-        </tbody>
-      </table>
+
+              <!-- código -->
+              <td class="text-center">
+                <span
+                  v-if="equipo.codigos?.interno"
+                  class="badge rounded-pill badge-verde-claro"
+                >
+                  {{ equipo.codigos?.interno }}
+                </span>
+                <span v-else class="text-muted small">NI</span>
+              </td>
+
+              <!-- servicio -->
+              <td class="text-center text-muted">
+                <span class="small">{{ equipo.servicio || 'NI' }}</span>
+              </td>
+
+              <!-- estado -->
+              <td class="text-center">
+                <span class="badge bg-secondary rounded-pill">
+                  Desactivado
+                </span>
+              </td>
+
+              <!-- acciones -->
+              <td class="text-center">
+                <button
+                  class="icon-btn success"
+                  title="Reactivar Equipo"
+                  @click="activarEquipo(equipo.id)"
+                >
+                  <i class="bi bi-arrow-clockwise me-1"></i>
+                  Reactivar
+                </button>
+              </td>
+
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
+
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 
 const equiposDesactivados = ref([]);
+const busqueda = ref("");
 
 const cargarEquiposDesactivados = async () => {
   try {
-    // Llama al nuevo endpoint de inactivos
     const res = await axios.get("http://127.0.0.1:8000/api/equipos/inactivos/");
-    
     equiposDesactivados.value = res.data.map(eq => {
-      const [nombre_equipoRaw] = (eq.equipo || "").split("/").map(s => s.trim()); 
+      const [nombre_equipoRaw, marcaRaw, modeloRaw, serieRaw] = (eq.equipo || "").split("/").map(s => s.trim()); 
       const codigoParts = (eq.codigos || "").split("/").map(s => s.trim()).filter(Boolean);
       const interno = codigoParts[0] || null;
 
@@ -49,8 +124,8 @@ const cargarEquiposDesactivados = async () => {
         id: eq.id,
         nombre_equipo: nombre_equipoRaw || "Sin nombre",
         servicio: eq.proceso || "",
+        serie: serieRaw || "",
         codigos: { interno },
-        // ... se pueden añadir aquí otros campos si son necesarios
       };
     });
   } catch (error) {
@@ -61,10 +136,9 @@ const cargarEquiposDesactivados = async () => {
 const activarEquipo = async (id) => {
   if (confirm("¿Seguro que quieres reactivar este equipo? Volverá al inventario principal.")) {
     try {
-      // endpoint 'activar' en views.py similar a 'desactivar'
       await axios.post(`http://127.0.0.1:8000/api/equipos/${id}/activar/`);
       alert("Equipo reactivado correctamente.");
-      await cargarEquiposDesactivados(); // Recargar la lista
+      await cargarEquiposDesactivados(); 
     } catch (error) {
       console.error("Error al reactivar el equipo:", error);
       alert("Hubo un error al intentar reactivar el equipo.");
@@ -72,5 +146,31 @@ const activarEquipo = async (id) => {
   }
 };
 
+const equiposFiltrados = computed(() => {
+  const q = busqueda.value.toLowerCase();
+  return equiposDesactivados.value.filter(e =>
+    e.nombre_equipo?.toLowerCase().includes(q) ||
+    e.servicio?.toLowerCase().includes(q) ||
+    e.codigos?.interno?.toLowerCase().includes(q)
+  );
+});
+
 onMounted(cargarEquiposDesactivados);
 </script>
+
+<style scoped>
+.table-scroll {
+  max-height: 400px;
+  max-width: 1200px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: var(--radio-base);
+}
+
+.table-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+</style>

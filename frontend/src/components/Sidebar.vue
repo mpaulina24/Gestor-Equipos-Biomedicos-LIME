@@ -41,7 +41,7 @@
           :class="{ active: isActive('equipos/desactivados') }"
         >
           <i class="bi bi-eye-slash"></i>
-          <span class="nav-link-text">Equipos Desactivados</span>
+          <span class="nav-link-text">Equipos dados de baja</span>
         </router-link>
       </li>
       

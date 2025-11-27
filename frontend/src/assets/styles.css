@@ -184,3 +184,27 @@
 .sidebar-small .nav-link-text {
   font-size: 0.85rem;
 }
+
+.badge-verde-claro {
+  background-color: var(--verde-acento);
+  color: white;
+}
+.icon-btn {
+  border: none;
+  background: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.icon-btn:hover {
+  opacity: 0.7;
+}
+
+.icon-btn.success {
+  color: var(--verde-secundario) !important;
+  font-weight: 600;
+}
+
+.icon-btn.success i {
+  color: var(--verde-secundario) !important;
+}
+
