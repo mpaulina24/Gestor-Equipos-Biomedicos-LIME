@@ -26,6 +26,7 @@ SEDE_CHOICES = [
 ]
 
 class Equipo(models.Model):
+
     activo = models.BooleanField(default=True)
 
     # --- Información general ---
@@ -78,7 +79,7 @@ class Equipo(models.Model):
     fecha_fabricacion = models.CharField(max_length=20, blank=True, null=True)
     nit = models.CharField(max_length=30, blank=True, null=True)
     proveedor = models.TextField(blank=True, null=True)
-    en_garantia = models.BooleanField(default=False)
+    en_garantia = models.CharField(max_length=20, blank=True, null=True)
     fecha_fin_garantia = models.CharField(max_length=20, blank=True, null=True) ###
     forma_adquisicion = models.CharField(max_length=30, blank=True, null=True)
     tipo_documento = models.TextField(blank=True, null=True)
@@ -86,7 +87,7 @@ class Equipo(models.Model):
     valor_compra = models.CharField(max_length=40, blank=True, null=True)
 
     # --- Inventario de documentos ---
-    hoja_vida = models.BooleanField(default=False)
+    hoja_vida = models.CharField(max_length=20, blank=True, null=True)
     registro_importacion = models.TextField(blank=True, null=True)
     manual_operacion = models.CharField(max_length=30, blank=True, null=True)
     manual_mantenimiento = models.TextField(blank=True, null=True)
@@ -96,9 +97,9 @@ class Equipo(models.Model):
     frecuencia_metrologica = models.CharField(max_length=30, blank=True, null=True)
 
     # --- Información metrológica administrativa ---
-    mantenimiento = models.BooleanField(default=False)
+    mantenimiento = models.CharField(max_length=20, blank=True, null=True)
     frecuencia_mantenimiento = models.CharField(max_length=10, blank=True, null=True)
-    calibracion = models.BooleanField(default=False)
+    calibracion = models.CharField(max_length=20, blank=True, null=True)
     frecuencia_calibracion = models.CharField(max_length=30, blank=True, null=True)
 
     # --- Información metrológica técnica ---
@@ -120,9 +121,28 @@ class Equipo(models.Model):
 def __str__(self):
     return f"{self.nombre_equipo} ({self.proceso})"
 
+# class EdicionEquipo(models.Model):
+#     equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
+#     fecha = models.DateField(auto_now_add=True)
+#     justificacion = models.TextField()
+#     responsable_actualizado = models.TextField(max_length=100)
+#     servicio_actualizado = models.TextField(max_length=100)
+
 class EdicionEquipo(models.Model):
     equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
     fecha = models.DateField(auto_now_add=True)
+
     justificacion = models.TextField()
-    responsable_actualizado = models.TextField(max_length=100)
-    servicio_actualizado = models.TextField(max_length=100)
+
+    # Antes vs después
+    responsable_anterior = models.CharField(max_length=100, null=True, blank=True)
+    responsable_nuevo = models.CharField(max_length=100, null=True, blank=True)
+
+    servicio_anterior = models.CharField(max_length=100, null=True, blank=True)
+    servicio_nuevo = models.CharField(max_length=100, null=True, blank=True)
+
+    sede_anterior = models.CharField(max_length=100, null=True, blank=True)
+    sede_nueva = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"Edición de {self.equipo.nombre_equipo} — {self.fecha}"

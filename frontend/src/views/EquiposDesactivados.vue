@@ -14,9 +14,9 @@
         </thead>
         <tbody>
           <tr v-for="equipo in equiposDesactivados" :key="equipo.id">
-            <td class="text-center">{{ equipo.nombre_equipo || 'N/A' }}</td>
-            <td class="text-center">{{ equipo.codigos?.interno || 'N/A' }}</td>
-            <td class="text-center">{{ equipo.servicio || 'N/A' }}</td>
+            <td class="text-center">{{ equipo.nombre_equipo || 'NI' }}</td>
+            <td class="text-center">{{ equipo.codigos?.interno || 'NI' }}</td>
+            <td class="text-center">{{ equipo.servicio || 'NI' }}</td>
             <td class="text-center">
               <button class="icon-btn text-success" title="Reactivar" @click="activarEquipo(equipo.id)">
                 <i class="bi bi-arrow-clockwise"></i> Reactivar

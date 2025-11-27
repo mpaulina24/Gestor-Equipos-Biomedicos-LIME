@@ -23,8 +23,9 @@
         <!-- Información General -->
         <section class="mb-4">
           <h5 class="bloque-titulo">
-            Información General
+            <i class="bi bi-info-circle me-2"></i> Información General
           </h5>
+          
           <div class="row">
             <div v-for="campo in infoGeneral" :key="campo.key" class="col-md-4 mb-2">
               <div class="campo-box">
@@ -38,7 +39,7 @@
         <!-- Registro Histórico -->
         <section class="mb-4">
           <h5 class="bloque-titulo">
-            Registro Histórico
+            <i class="bi bi-clock-history me-2"></i> Registro Histórico
           </h5>
           <div class="row">
             <div v-for="campo in registroHistorico" :key="campo.key" class="col-md-4 mb-2">
@@ -53,7 +54,7 @@
         <!-- Inventario Documental -->
         <section class="mb-4">
           <h5 class="bloque-titulo">
-            Inventario de Documentos
+            <i class="bi bi-folder-check me-2"></i> Inventario de Documentos
           </h5>
           <div class="row">
             <div v-for="campo in inventarioDocs" :key="campo.key" class="col-md-4 mb-2">
@@ -68,7 +69,7 @@
         <!-- Información Metrológica Administrativa -->
         <section class="mb-4">
           <h5 class="bloque-titulo">
-            Información Metrológica Administrativa
+            <i class="bi bi-gear-wide-connected me-2"></i> Información Metrológica Administrativa
           </h5>
           <div class="row">
             <div v-for="campo in infoMetrologicaAdmin" :key="campo.key" class="col-md-4 mb-2">
@@ -83,7 +84,7 @@
         <!-- Información Metrológica Técnica -->
         <section class="mb-4">
           <h5 class="bloque-titulo">
-            Información Metrológica Técnica
+            <i class="bi bi-rulers me-2"></i> Información Metrológica Técnica
           </h5>
           <div class="row">
             <div v-for="campo in infoMetrologicaTec" :key="campo.key" class="col-md-4 mb-2">
@@ -98,7 +99,7 @@
         <!-- Condiciones de Funcionamiento -->
         <section>
           <h5 class="bloque-titulo">
-            Condiciones de Funcionamiento
+            <i class="bi bi-speedometer2 me-2"></i> Condiciones de Funcionamiento
           </h5>
           <div class="row">
             <div v-for="campo in condiciones" :key="campo.key" class="col-md-4 mb-2">

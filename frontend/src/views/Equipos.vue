@@ -79,6 +79,7 @@
 
             <td class="text-center text-secondary">
               <div class="info-inventario d-flex flex-column align-items-center gap-1">
+              
                 <div class="d-flex align-items-center gap-1">
                   <i class="bi bi-building"
                   data-bs-toggle="tooltip"
@@ -315,10 +316,34 @@
                 :key="registro.id"
                 class="list-group-item"
               >
-                <p class="mb-1"><strong>📅 Fecha:</strong> {{ registro.fecha }}</p>
-                <p class="mb-1"><strong>👤 Responsable:</strong> {{ registro.responsable_actualizado }}</p>
-                <p class="mb-1"><strong>🏥 Servicio:</strong> {{ registro.servicio_actualizado }}</p>
-                <p class="mb-0"><strong>📝 Justificación:</strong> {{ registro.justificacion }}</p>
+                <p class="mb-1">
+                <strong>📅 Fecha:</strong> {{ registro.fecha }}</p>
+
+                <p class="mb-1">
+                  <strong>📍 Sede: </strong>
+                  <span class="text-muted">{{ registro.sede_anterior || 'N/A' }}</span>
+                  →
+                  <span class="text-success">{{ registro.sede_nueva || 'N/A' }}</span>
+                </p>
+
+                <p class="mb-1">
+                  <strong>🏥 Servicio: </strong>
+                  <span class="text-muted">{{ registro.servicio_anterior || 'N/A' }}</span>
+                  →
+                  <span class="text-success">{{ registro.servicio_nuevo || 'N/A' }}</span>
+                </p>
+
+                <p class="mb-1">
+                  <strong>👤 Responsable: </strong>
+                  <span class="text-muted">{{ registro.responsable_anterior || 'N/A' }}</span>
+                  →
+                  <span class="text-success">{{ registro.responsable_nuevo || 'N/A' }}</span>
+                </p>
+
+                <p class="mb-0">
+                  <strong>📝 Justificación: </strong> {{ registro.justificacion }}
+                </p>
+
               </li>
             </ul>
           </div>

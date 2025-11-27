@@ -66,29 +66,75 @@ class ActivarEquipoAPIView(generics.UpdateAPIView):
         return Response({"status": f"Equipo {pk} activado."}, status=status.HTTP_200_OK)
 
 
+# class EditarEquipoAPIView(generics.UpdateAPIView):
+#     queryset = Equipo.objects.all()
+#     serializer_class = EquipoCreateSerializer
+
+#     def put(self, request, pk):
+#         equipo = get_object_or_404(Equipo, pk=pk)
+#         equipo.proceso = request.data.get('proceso', equipo.proceso)
+#         equipo.responsable = request.data.get('responsable', equipo.responsable)
+#         equipo.save()
+
+#         # Registrar histórico de edición
+#         EdicionEquipo.objects.create(
+#             equipo=equipo,
+#             fecha=request.data.get('fecha_edicion'),
+#             justificacion=request.data.get('justificacion'),
+#             responsable_actualizado=equipo.responsable,
+#             servicio_actualizado=equipo.proceso,
+#         )
+
+#         return Response(
+#             {"message": "Cambios guardados correctamente"},
+#             status=status.HTTP_200_OK
+#         )
+
 class EditarEquipoAPIView(generics.UpdateAPIView):
     queryset = Equipo.objects.all()
     serializer_class = EquipoCreateSerializer
 
     def put(self, request, pk):
         equipo = get_object_or_404(Equipo, pk=pk)
-        equipo.proceso = request.data.get('proceso', equipo.proceso)
-        equipo.responsable = request.data.get('responsable', equipo.responsable)
+
+        # 1) Guardar valores antiguos antes de actualizar
+        responsable_anterior = equipo.responsable
+        servicio_anterior = equipo.proceso
+        sede_anterior = equipo.sede 
+
+        # 2) Nuevos valores desde request
+        responsable_nuevo = request.data.get('responsable', equipo.responsable)
+        servicio_nuevo = request.data.get('proceso', equipo.proceso)
+        sede_nueva = request.data.get('sede', equipo.sede)
+
+        # 3) Actualizar equipo
+        equipo.responsable = responsable_nuevo
+        equipo.proceso = servicio_nuevo
+        equipo.sede = sede_nueva
         equipo.save()
 
-        # Registrar histórico de edición
+        # 4) Guardar histórico
         EdicionEquipo.objects.create(
             equipo=equipo,
+            justificacion=request.data.get('justificacion', ''),
             fecha=request.data.get('fecha_edicion'),
-            justificacion=request.data.get('justificacion'),
-            responsable_actualizado=equipo.responsable,
-            servicio_actualizado=equipo.proceso,
+            
+
+            responsable_anterior=responsable_anterior,
+            responsable_nuevo=responsable_nuevo,
+
+            servicio_anterior=servicio_anterior,
+            servicio_nuevo=servicio_nuevo,
+
+            sede_anterior=sede_anterior,
+            sede_nueva=sede_nueva,
         )
 
         return Response(
             {"message": "Cambios guardados correctamente"},
             status=status.HTTP_200_OK
         )
+
 
 def normalize_date(value):
     """Convierte string vacío en None para campos de fecha."""

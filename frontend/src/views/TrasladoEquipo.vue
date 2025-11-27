@@ -11,23 +11,29 @@
         <!-- Mostrar información no editable -->
         <div class="mb-3">
           <label><strong>Equipo:</strong></label>
-          <p class="form-control-plaintext">{{ equipo.nombre_equipo }} ({{ equipo.marca }} - {{ equipo.modelo }})</p>
+          <p class="form-control-plaintext">{{ equipo.nombre_equipo }}, {{ equipo.marca }} - {{ equipo.modelo }}</p>
         </div>
 
         <div class="row">
-          <div class="col-md-6 mb-3">
-            <label>Servicio / Proceso</label>
+
+          <div class="col-md-4 mb-3">
+            <label><strong>Sede</strong></label>
+            <input v-model="equipo.sede" class="form-control" />
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label><strong>Servicio</strong></label>
             <input v-model="equipo.proceso" class="form-control" />
           </div>
 
-          <div class="col-md-6 mb-3">
-            <label>Responsable</label>
+          <div class="col-md-4 mb-3">
+            <label><strong>Responsable</strong></label>
             <input v-model="equipo.responsable" class="form-control" />
           </div>
         </div>
 
         <div class="col-md-12 mb-3">
-          <label>Justificación de la edición</label>
+          <label><strong>Justificación del traslado</strong></label>
           <textarea
             v-model="justificacion"
             class="form-control"
@@ -78,6 +84,7 @@ const guardarCambios = async () => {
   }
 
   const payload = {
+    sede: equipo.value.sede,
     proceso: equipo.value.proceso,
     responsable: equipo.value.responsable,
     justificacion: justificacion.value,
@@ -89,9 +96,20 @@ const guardarCambios = async () => {
     alert("✅ Cambios guardados correctamente");
     router.push("/equipos");
   } catch (error) {
-    console.error("Error guardando cambios:", error);
-    alert("❌ No se pudieron guardar los cambios");
+  console.error("Error guardando cambios:", error);
+
+  if (error.response) {
+    console.log("🔥 Respuesta del servidor:", error.response.data);
+    alert("❌ Error del servidor: " + JSON.stringify(error.response.data));
+  } else if (error.request) {
+    console.log("📡 No hubo respuesta del servidor:", error.request);
+    alert("❌ No hubo respuesta del servidor");
+  } else {
+    console.log("⚠️ Error configurando petición:", error.message);
+    alert("❌ Error: " + error.message);
   }
+}
+
 };
 </script>
 
