@@ -37,7 +37,7 @@ class EquipoListSerializer(serializers.ModelSerializer):
 
     def get_equipo(self, obj):
         # Agrupa nombre, marca, modelo
-        partes = filter(None, [obj.nombre_equipo, obj.marca, obj.modelo])
+        partes = filter(None, [obj.nombre_equipo, obj.marca, obj.modelo, obj.serie])
         return " / ".join(partes)
     
     def get_codigos(self, obj):
@@ -47,7 +47,7 @@ class EquipoListSerializer(serializers.ModelSerializer):
 
     def get_responsable_ubicacion(self, obj):
         partes = filter(None, [obj.responsable, obj.ubicacion])
-        return " / ".join(partes)
+        return " , ".join(partes)
 
     def get_clasificacion(self, obj):
         partes = filter(None, [obj.clasificacion_misional, obj.clasificacion_ips, obj.clasificacion_riesgo])

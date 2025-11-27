@@ -51,4 +51,8 @@
   color: #475569;
   line-height: 1.4;
 }
+
+.footer-content {
+  margin-left: 250px; /* deja espacio para el sidebar */
+}
 </style>

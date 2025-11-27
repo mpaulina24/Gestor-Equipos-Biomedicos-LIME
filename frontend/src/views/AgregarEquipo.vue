@@ -68,7 +68,7 @@
                           @click="mostrarNuevoServicio = true"
                           v-if="!mostrarNuevoServicio"
                         >
-                          + Nuevo
+                          + Nuevo servicio
                         </button>
                       </div>
                     </div>

@@ -49,7 +49,7 @@
 </div>
 
     <!-- Tabla de equipos -->
-    <div class="table-responsive shadow-sm rounded">
+    <div class="table-scroll shadow-sm rounded">
       <table class="table align-middle table-hover">
         <thead class="table-light">
           <tr>
@@ -70,6 +70,11 @@
             <td class="text-center text-secondary">
               <div class="info-inventario d-flex flex-column align-items-center gap-1">
                 <div class="d-flex align-items-center gap-1">
+                  <i class="bi bi-building"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-bs-custom-class="custom-tooltip"
+                  title="Sede"></i>
                   <span>{{ equipo.sede }}</span>
                 </div>
                 <div class="d-flex align-items-center gap-1">
@@ -84,6 +89,7 @@
                   <i class="bi-card-text text-success"
                   data-bs-toggle="tooltip"
                   data-bs-placement="top"
+                  data-bs-custom-class="custom-tooltip"
                   title="Nombre"></i>
                   <span>{{ equipo.nombre_equipo }}</span>
                 </div>
@@ -183,9 +189,15 @@
 
             <td class="text-center">
               <div class="d-flex flex-column align-items-center gap-1"> 
-                <span class="badge rounded-pill bg-success" title="Invima">
+                <span
+                  class="badge rounded-pill bg-success invima-text"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  :title="equipo.invima"
+                >
                   {{ equipo.invima }}
                 </span>
+
                 
                 <span
                   v-if="equipo.clasificacion.clasif_riesgo"
@@ -338,7 +350,7 @@ const cargarEquipos = async () => {
   try {
     const res = await axios.get("http://127.0.0.1:8000/api/equipos/");
     equipos.value = res.data.map((eq) => {      
-      const [responsableRaw, ubicacionRaw] = (eq.responsable_ubicacion || "").split("/");
+      const [responsableRaw, ubicacionRaw] = (eq.responsable_ubicacion || "").split(",");
       const [nombre_equipoRaw, marcaRaw, modeloRaw, serieRaw] = (eq.equipo || "").split("/").map(s => s.trim()); 
 
       const codigoParts = (eq.codigos || "").split("/").map(s => s.trim()).filter(Boolean);
@@ -388,15 +400,26 @@ const cargarEquipos = async () => {
 onMounted(async () => {
   await cargarEquipos();
 
-  if (window.bootstrap && window.bootstrap.Tooltip) {
+  // Reinicializar tooltips correctamente
+  if (window.bootstrap?.Tooltip) {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    tooltipTriggerList.forEach((el) => new window.bootstrap.Tooltip(el));
+
+    tooltipTriggerList.forEach((el) => {
+      // Si ya existe un tooltip creado, destruirlo
+      const existing = window.bootstrap.Tooltip.getInstance(el);
+      if (existing) existing.dispose();
+
+      // Crear tooltip nuevo (ya aplicará custom class)
+      new window.bootstrap.Tooltip(el);
+    });
   }
 
-  if (modalElement.value && Modal) {
+  // Inicializar modal
+  if (modalElement.value) {
     modalInstance = new Modal(modalElement.value);
   }
 });
+
 
 // Computed para aplicar los filtros
 const equiposFiltrados = computed(() => {
@@ -488,6 +511,15 @@ const verRegistroEdiciones = async (id) => {
   font-weight: 700;
 }
 
+.table-scroll {
+  max-height: 400px;
+  max-width: 1200px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: var(--radio-base);
+}
+
+
 .table {
   background-color: var(--blanco);
   border-radius: var(--radio-base);
@@ -531,5 +563,15 @@ const verRegistroEdiciones = async (id) => {
 .icon-btn:hover {
   color: #0a58ca;
 }
+
+.invima-text {
+  max-width: 150px;        /* Ajusta el ancho que quieras */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  cursor: pointer;         /* Para que el usuario sepa que puede ver más */
+}
+
 
 </style>
