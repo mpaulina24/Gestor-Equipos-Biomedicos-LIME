@@ -113,7 +113,22 @@ class ActualizarEquipoCompletoAPIView(generics.UpdateAPIView):
         equipo.codigo_ecri = request.data.get('codigo_ecri', equipo.codigo_ecri)
         equipo.modelo = request.data.get('modelo', equipo.modelo)
         equipo.serie = request.data.get('serie', equipo.serie)
-        equipo.clasificacion_misional = request.data.get('clasificacion_misional', equipo.clasificacion_misional)
+
+        # --- Clasificación misional ---
+        clasificacion_misional = request.data.get('clasificacion_misional')
+
+        # Si viene como lista → convertir a string para almacenar
+        if isinstance(clasificacion_misional, list):
+            equipo.clasificacion_misional = ",".join(clasificacion_misional)
+
+        # Si viene como string → almacenar tal cual
+        elif isinstance(clasificacion_misional, str):
+            equipo.clasificacion_misional = clasificacion_misional
+
+        # Si no viene nada → dejar lo que ya tenía
+        else:
+            pass
+
         equipo.clasificacion_ips = request.data.get('clasificacion_ips', equipo.clasificacion_ips)
         equipo.clasificacion_riesgo = request.data.get('clasificacion_riesgo', equipo.clasificacion_riesgo)
         #equipo.requiere_invima = request.data.get('requiere_invima', equipo.requiere_invima)
@@ -130,6 +145,7 @@ class ActualizarEquipoCompletoAPIView(generics.UpdateAPIView):
         equipo.proveedor = request.data.get('proveedor', equipo.proveedor)
         equipo.nit = request.data.get('nit', equipo.nit)
         equipo.en_garantia = request.data.get('en_garantia', equipo.en_garantia)
+        equipo.valor_compra = request.data.get('valor_compra', equipo.valor_compra)
 
         # Documentos
         equipo.hoja_vida = request.data.get('hoja_vida', equipo.hoja_vida)
@@ -155,9 +171,7 @@ class ActualizarEquipoCompletoAPIView(generics.UpdateAPIView):
         equipo.corriente = request.data.get('corriente', equipo.corriente)
         equipo.humedad = request.data.get('humedad', equipo.humedad)
         equipo.temperatura = request.data.get('temperatura', equipo.temperatura)
-        equipo.dimensiones_alto = request.data.get('dimensiones_alto', equipo.dimensiones_alto)
-        equipo.dimensiones_ancho = request.data.get('dimensiones_ancho', equipo.dimensiones_ancho)
-        equipo.dimensiones_profundidad = request.data.get('dimensiones_profundidad', equipo.dimensiones_profundidad)
+        equipo.dimensiones = request.data.get('dimensiones', equipo.dimensiones)
         equipo.peso = request.data.get('peso', equipo.peso)
         equipo.otros = request.data.get('otros', equipo.otros)
 

@@ -34,8 +34,6 @@ const routes = [
         name: 'EquiposDesactivados',
         component: EquiposDesactivados // <-- Cambio a la variable importada
       },
-
-      
       { 
         path: '/equipos/:id/modificar', 
         name: 'ModificarEquipo', 

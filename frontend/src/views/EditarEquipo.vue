@@ -146,19 +146,22 @@
 
                 <!-- Secciones para Clasificación -->
                 <div class="row mt-3">                  
-                <div class="col-md-3 mb-3">
+                <div class="col-md-6 mb-3">
                   <label>Clasificación Misional</label>
-                  <select v-model="equipo.clasificacion_misional" class="form-select">
-                    <option value="" disabled>Seleccione</option>
-                    <option 
-                      v-for="opcion in clasificacionesMisionales" 
-                      :key="opcion.value" 
+
+                  <div class="form-check" v-for="opcion in clasificacionesMisionales" :key="opcion.value">
+                    <input 
+                      class="form-check-input"
+                      type="checkbox"
                       :value="opcion.value"
-                    >
+                      v-model="equipo.clasificacion_misional"
+                    />
+                    <label class="form-check-label">
                       {{ opcion.label }}
-                    </option>
-                  </select>
+                    </label>
+                  </div>
                 </div>
+
                 
                 <div class="col-md-6 mb-3">
                   <label>Clasificación IPS</label>
@@ -258,12 +261,12 @@
                 </div>
                 <div class="col-md-4 mb-3">
                   <label>Fecha de adquisición</label>
-                  <input type="date" v-model="equipo.fecha_adquisicion" class="form-control" />
+                  <input v-model="equipo.fecha_adquisicion" class="form-control" />
                 </div>
 
                 <div class="col-md-4 mb-3">
                   <label>Fecha de fabricación</label>
-                  <input type="date" v-model="equipo.fecha_fabricacion" class="form-control" />
+                  <input v-model="equipo.fecha_fabricacion" class="form-control" />
                 </div>
 
                 <div class="col-md-4 mb-3">
@@ -295,7 +298,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                   <label>Fecha fin garantía</label>
-                  <input type="date" v-model="equipo.fecha_fin_garantia" class="form-control" />
+                  <input v-model="equipo.fecha_fin_garantia" class="form-control" />
                 </div>
                 <div class="col-md-6 mb-3">
                   <label>El equipo se encuentra en garantía vigente.  </label>
@@ -476,30 +479,11 @@
             </div>
             
             <div class="col-md-3 mb-3">
-              <label>Alto (cm)</label>
+              <label>Dimensiones</label>
               <input 
                 type="float" 
-                v-model.float="equipo.dimensiones_alto" 
+                v-model.float="equipo.dimensiones" 
                 class="form-control" 
-                placeholder="Alto"
-              />
-            </div>
-            <div class="col-md-3 mb-3">
-              <label>Ancho (cm)</label>
-              <input 
-                type="float" 
-                v-model.float="equipo.dimensiones_ancho" 
-                class="form-control" 
-                placeholder="Ancho"
-              />
-            </div>
-            <div class="col-md-3 mb-3">
-              <label>Profundidad (cm)</label>
-              <input 
-                type="float" 
-                v-model.float="equipo.dimensiones_profundidad" 
-                class="form-control" 
-                placeholder="Profundidad"
               />
             </div>
             
@@ -616,12 +600,19 @@ const desc = {
 onMounted(async () => {
   try {
     const res = await axios.get(`http://127.0.0.1:8000/api/equipos/${route.params.id}/`);
-    equipo.value = res.data;
+    equipo.value = {
+      ...res.data,
+      clasificacion_misional: res.data.clasificacion_misional
+        ? res.data.clasificacion_misional.split(",")   // Convertir string → array
+        : []
+    };
   } catch (error) {
     alert("Error al cargar los datos del equipo");
     console.error(error);
   }
 });
+
+
 
 // Navegación modular
 const siguienteSeccion = () => {
@@ -639,6 +630,11 @@ const guardarCambios = async () => {
     fecha_fabricacion: equipo.value.fecha_fabricacion || null,
     fecha_fin_garantia: equipo.value.fecha_fin_garantia || null
   };
+  
+  if (Array.isArray(payload.clasificacion_misional)) {
+    payload.clasificacion_misional = payload.clasificacion_misional.join(",");
+  }
+
 
   try {
     await axios.put(`http://127.0.0.1:8000/api/equipos/${route.params.id}/modificar/`, payload);
@@ -649,7 +645,9 @@ const guardarCambios = async () => {
     console.error(error);
   }
 };
+
 </script>
+
 
 <style scoped>
 .nav-link {

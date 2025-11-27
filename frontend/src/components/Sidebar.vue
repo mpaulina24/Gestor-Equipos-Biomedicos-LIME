@@ -36,6 +36,17 @@
 
       <li class="nav-item">
         <router-link
+          to="equipos/desactivados"
+          class="nav-link"
+          :class="{ active: isActive('equipos/desactivados') }"
+        >
+          <i class="bi bi-eye-slash"></i>
+          <span class="nav-link-text">Equipos Desactivados</span>
+        </router-link>
+      </li>
+      
+      <li class="nav-item">
+        <router-link
           to="/estadisticas"
           class="nav-link"
           :class="{ active: isActive('/estadisticas') }"
@@ -45,16 +56,7 @@
         </router-link>
       </li>
 
-      <li class="nav-item">
-        <router-link
-          to="equipos/desactivados"
-          class="nav-link"
-          :class="{ active: isActive('equipos/desactivados') }"
-        >
-          <i class="bi bi-bar-chart-line"></i>
-          <span class="nav-link-text">Equipos Desactivados</span>
-        </router-link>
-      </li>
+      
     </ul>
 
     <!-- Footer embebido -->

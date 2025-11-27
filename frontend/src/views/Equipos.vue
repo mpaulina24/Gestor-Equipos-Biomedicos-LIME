@@ -29,13 +29,7 @@
       <select v-model="filtroServicio" class="form-select filtro w-auto">
         <option value="">Todos los servicios</option>
         <option value="LIME">LIME</option>
-        <option value="LIME - Hematología">LIME - Hematología</option>
-        <option value="LIME - Citometría de Flujo">LIME - Citometría de Flujo</option>
-        <option value="LIME - Almacén">LIME - Almacén</option>
-        <option value="LIME - Atención a Pacientes">LIME - Atención a Pacientes</option
-        ><option value="LIME - Biología Molecular">LIME - Biología Molecular</option
-        ><option value="LIME - Microbiología">LIME - Microbiología</option
-        ><option value="Centro de resonancia">Centro de resonancia</option
+        <option value="Centro de resonancia">Centro de resonancia</option
         ><option value="Fotodermatología">Fotodermatología</option
         ><option value="Trasplantes GICIG">Trasplantes GICIG</option
         ><option value="Inmunodeficiencias Primarias">Inmunodeficiencias Primarias</option
@@ -47,7 +41,7 @@
       <!-- Columna del botón -->
       <div class="col-md-3 justify-content-end">
         <button class="btn btn-success d-flex align-items-center justify-content-center gap-2" @click="agregarEquipo">
-        <i class="bi bi-plus-lg"></i> Agregar
+        <i class="bi bi-plus-lg"></i> Agregar Equipo
       </button>
       </div>
     </div>
@@ -87,16 +81,26 @@
             <td class="text-center">
               <div class="info-inventario d-flex flex-column align-items-center gap-1">
                 <div class="d-flex align-items-center gap-1">
-                  <i class="bi-card-text text-success"></i>
+                  <i class="bi-card-text text-success"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Nombre"></i>
                   <span>{{ equipo.nombre_equipo }}</span>
                 </div>
                 <div class="d-flex align-items-center gap-1">
-                  <i class="bi-tag text-secondary"></i>
+                  <i class="bi-tag text-secondary"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Marca, modelo"></i>
                   <span>{{ equipo.marca }}</span>
+                  <span v-if="equipo.marca && equipo.modelo">,</span>
                   <span>{{ equipo.modelo }}</span>
                 </div>
                 <div class="d-flex align-items-center gap-1">
-                  <i class="bi-upc text-muted"></i>
+                  <i class="bi-upc text-muted"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Serie"></i>
                   <span> {{ equipo.serie || 'N/A' }}</span>
                 </div>
                 </div>
@@ -206,12 +210,10 @@
                 <i class="bi bi-eye"></i>
               </button>
 
-              <button
-                class="icon-btn"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Traslado"
-                @click="editarEquipo(equipo.id)"
+              <button 
+              class="icon-btn" 
+              title="Editar" 
+              @click="modificarEquipo(equipo.id)"
               >
                 <i class="bi bi-pencil-square"></i>
               </button>
@@ -220,9 +222,10 @@
                 class="icon-btn"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
-                title="Desactivar"
-                @click="desactivarEquipo(equipo.id)"                >
-                <i class="bi bi-eye-slash"></i>
+                title="Traslado"
+                @click="editarEquipo(equipo.id)"
+              >
+                <i class="bi bi-shuffle"></i>
               </button>
 
               <button
@@ -235,13 +238,16 @@
                 <i class="bi-journal-text"></i>
               </button>
 
-              <button 
-              class="icon-btn" 
-              title="Editar" 
-              @click="modificarEquipo(equipo.id)"
-              >
-                <i class="bi bi-pencil-fill"></i>
+
+              <button
+                class="icon-btn"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Dar de baja"
+                @click="desactivarEquipo(equipo.id)"                >
+                <i class="bi bi-eye-slash"></i>
               </button>
+              
 
             </td>
           </tr>

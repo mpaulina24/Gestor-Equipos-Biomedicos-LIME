@@ -45,42 +45,38 @@
         </div>
 
         <!-- Columna derecha: imágenes institucionales -->
-        <div class="col-lg-4 d-flex flex-column gap-4">
-          <!-- Card UdeA 
-          <div class="card shadow-sm" style="height: 250px;">
-            <img src="/src/assets/FotoUdeA.png" class="card-img-top" alt="UdeA" style="height: 180px; object-fit: cover;">
-            <div class="card-body text-center position-relative pt-4">
-              <div class="position-absolute top-0 start-50 translate-middle" style="margin-top: 0px; width: 150px; height: 70px;">
-                <img src="/src/assets/UdeA.png" class="img-fluid" style="width: 100%; height: 100%; object-fit: contain;" alt="UdeA Foto">
-              </div>
-              <h5 class="titulo-principal-gris">Universidad de Antioquia</h5>
-            </div>
-          </div>
-          -->
+        <div class="col-lg-4">
+  <div class="card contacto-card shadow-sm border-0 p-4 text-center">
 
-          <!-- Card LIME -->
-          <div class="card shadow-sm" style="height: 250px;">
-            <img src="/src/assets/LIME.png" class="card-img-top" alt="LIME" style="height: 170px; object-fit: cover;">
-            <div class="card-body text-center position-relative pt-4">
-              <div class="position-absolute top-0 start-50 translate-middle" style="margin-top: -10px; width: 150px; height: 70px;">
-                <img src="/src/assets/LIME.png" class="img-fluid"  style="width: 100%; height: 100%; object-fit: contain;" alt="LIME Foto">
-              </div>
-              <h5 class="titulo-principal-gris">Laboratorio Integrado de Medicina Especializada</h5>
-            </div>
-          </div>
+    <!-- Imagen institucional -->
+    <div class="contacto-imagen mb-3">
+      <img src="/src/assets/Logos.png"
+           alt="LIME Logos"
+           class="img-fluid contacto-logo">
+    </div>
 
-          <!-- Card Alma Mater 
-          <div class="card shadow-sm" style="height: 250px;">
-            <img src="/src/assets/FotoAlmaMater.png" class="card-img-top" alt="Alma Mater" style="height: 180px; object-fit: cover;">
-            <div class="card-body text-center position-relative pt-4">
-              <div class="position-absolute top-0 start-50 translate-middle" style="margin-top: 0px; width: 150px; height: 70px;">
-                <img src="/src/assets/AlmaMater.png" class="img-fluid" style="width: 100%; height: 100%; object-fit: contain;" alt="Alma Mater Foto">
-              </div>
-              <h5 class="titulo-principal-gris">Hospital Alma Máter de Antioquia</h5>
-            </div>
-          </div>
-          -->
-        </div>
+    <!-- Texto principal -->
+    <h5 class="fw-bold text-success mb-2">
+      Laboratorio Integrado de Medicina Especializada
+    </h5>
+
+    <p class="contacto-descripcion mb-4">
+      Procedimientos especializados, precisos y oportunos 
+      para mejorar y salvar vidas.
+      <br>
+      <strong>Agenda tu cita o consulta nuestros servicios:</strong>
+    </p>
+
+    <!-- Botón Linktree -->
+    <a href="https://linktr.ee/lime.udea"
+       target="_blank"
+       class="btn btn-success w-100 py-2 fw-semibold shadow-sm contacto-boton">
+      Contáctanos aquí
+    </a>
+
+  </div>
+</div>
+
       </div>
     </div>
   </div>
@@ -96,7 +92,7 @@ const sedes = [
       icono: "bi bi-hospital",
   },
   {
-    nombre: "Sede SIU",
+    nombre: "Sede SIU – Sede de Investigación Universitaria",
     direccion: "Cl. 62 #52-59, Medellín",
     descripcion:
       "Cuenta con los servicios Transplantes GICIG, Inmunodeficiencias primarias, Grupo Reproducción...",
@@ -126,4 +122,33 @@ const sedes = [
 .card-text {
   font-size: 0.95rem;
 }
+
+.contacto-card {
+  border-radius: 14px;
+  background-color: #ffffff;
+}
+
+.contacto-logo {
+  width: 85%;
+  max-height: 130px;
+  object-fit: contain;
+  filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.1));
+}
+
+.contacto-descripcion {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.contacto-boton {
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.contacto-boton:hover {
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+
 </style>

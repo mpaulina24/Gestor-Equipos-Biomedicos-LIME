@@ -146,18 +146,20 @@
 
                 <!-- Secciones para Clasificación -->
                 <div class="row mt-3">                  
-                <div class="col-md-3 mb-3">
+                <div class="col-md-6 mb-3">
                   <label>Clasificación Misional</label>
-                  <select v-model="equipo.clasificacion_misional" class="form-select">
-                    <option value="" disabled>Seleccione</option>
-                    <option 
-                      v-for="opcion in clasificacionesMisionales" 
-                      :key="opcion.value" 
+
+                  <div class="form-check" v-for="opcion in clasificacionesMisionales" :key="opcion.value">
+                    <input 
+                      class="form-check-input"
+                      type="checkbox"
                       :value="opcion.value"
-                    >
+                      v-model="equipo.clasificacion_misional"
+                    />
+                    <label class="form-check-label">
                       {{ opcion.label }}
-                    </option>
-                  </select>
+                    </label>
+                  </div>
                 </div>
                 
                 <div class="col-md-6 mb-3">
@@ -476,30 +478,12 @@
             </div>
             
             <div class="col-md-3 mb-3">
-              <label>Alto (cm)</label>
+              <label>Dimensiones</label>
               <input 
                 type="float" 
-                v-model.float="equipo.dimensiones_alto" 
+                v-model.float="equipo.dimensiones" 
                 class="form-control" 
-                placeholder="Alto"
-              />
-            </div>
-            <div class="col-md-3 mb-3">
-              <label>Ancho (cm)</label>
-              <input 
-                type="float" 
-                v-model.float="equipo.dimensiones_ancho" 
-                class="form-control" 
-                placeholder="Ancho"
-              />
-            </div>
-            <div class="col-md-3 mb-3">
-              <label>Profundidad (cm)</label>
-              <input 
-                type="float" 
-                v-model.float="equipo.dimensiones_profundidad" 
-                class="form-control" 
-                placeholder="Profundidad"
+                placeholder="Dimensiones"
               />
             </div>
             
@@ -555,7 +539,7 @@ const equipo = ref({
   marca: "",
   modelo: "",
   serie: "",
-  clasificacion_misional: "",
+  clasificacion_misional: [],
   clasificacion_ips: "",
   clasificacion_riesgo: "",
   registro_invima: "",
@@ -591,9 +575,7 @@ const equipo = ref({
   frecuencia_calibracion: null, // INTEGERFIELD
 
   // --- Condiciones de funcionamiento (Nuevos campos) ---
-  dimensiones_alto: null,      // Mapea a IntegerField
-  dimensiones_ancho: null,     // Mapea a IntegerField
-  dimensiones_profundidad: null, // Mapea a IntegerField
+  dimensiones: null,      // Mapea a IntegerField
   peso: "",
   otros: "",
 
@@ -602,12 +584,6 @@ const equipo = ref({
 //  Opciones Iniciales de Proceso/Servicio
 const serviciosDisponibles = ref([
     'LIME',
-    'LIME - Hematología',
-    'LIME - Citometría de Flujo',
-    'LIME - Almacén',
-    'LIME - Atención a Pacientes',
-    'LIME - Biología Molecular',
-    'LIME - Microbiología',
     'Centro de resonancia',
     'Fotodermatología',
     'Trasplantes GICIG',
@@ -667,7 +643,14 @@ const documentos = {
 
 const guardarEquipo = async () => {
   try {
-    const response = await axios.post("http://127.0.0.1:8000/api/equipos/agregarEquipo/", equipo.value);
+
+    // Convertir array a string antes de enviar
+    const payload = { ...equipo.value };
+    if (Array.isArray(payload.clasificacion_misional)) {
+      payload.clasificacion_misional = payload.clasificacion_misional.join(",");
+    }
+
+    const response = await axios.post("http://127.0.0.1:8000/api/equipos/agregarEquipo/", payload);
     alert(" Equipo agregado correctamente");
     console.log("Respuesta del servidor:", response.data);
   } catch (error) {

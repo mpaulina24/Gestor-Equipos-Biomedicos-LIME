@@ -3,9 +3,13 @@
     <Sidebar />
     <div class="main-container">
       <Topbar />
+
       <main class="main-content">
         <router-view />
       </main>
+
+      <Footer />
+
     </div>
   </div>
 </template>
@@ -13,11 +17,12 @@
 <script>
 import Sidebar from '@/components/Sidebar.vue'
 import Topbar from '@/components/Topbar.vue'
+import Footer from '@/components/Footer.vue'
 
 
 export default {
   name: 'DashboardLayout',
-  components: { Topbar, Sidebar }
+  components: { Topbar, Sidebar, Footer }
 }
 </script>
 
