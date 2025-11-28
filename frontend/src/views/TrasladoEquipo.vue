@@ -2,8 +2,8 @@
   <div class="container mt-4 mb-5">
 
     <!-- Encabezado -->
-    <div class="text-center mb-4">
-      <h2 class="fw-bold text-success mb-1">
+    <div  class="container mt-5">
+      <h2 class="titulo-principal text-center">
         Traslado de Equipo
       </h2>
       <p class="text-muted small">
@@ -14,14 +14,14 @@
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
 
       <!-- Header verde -->
-      <div class="card-header custom-header text-white d-flex align-items-center">
+      <div class="card-header custom-header text-white">
         <span class="fw-semibold">Modificación de información del equipo</span>
       </div>
 
-      <div class="card-body">
+      <div class="card-body tarjeta-verde">
 
         <!-- EQUIPO referencia (no editable) -->
-        <div class="mb-4 p-3 bg-light rounded">
+        <div class="mb-4 p-3 tarjeta-verde rounded">
           <label class="form-label small fw-bold text-muted d-block">Equipo</label>
           <div class="fs-6">
             {{ equipo.nombre_equipo }},
@@ -149,10 +149,3 @@ const guardarCambios = async () => {
 
 };
 </script>
-
-<style scoped>
-.custom-header {
-  background-color: var(--verde-acento);
-  font-weight: 600;
-}
-</style>

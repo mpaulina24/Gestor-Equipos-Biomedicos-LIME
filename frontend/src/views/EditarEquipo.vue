@@ -733,17 +733,6 @@ const guardarCambios = async () => {
   font-weight: 800;
 }
 
-.custom-header {
-  background-color: rgba(27, 94, 32, 0.8) !important;
-  backdrop-filter: blur(3px);
-  font-weight: bold;
-}
-
-.tarjeta-verde {
-  border: 1px solid rgba(27, 94, 32, 0.3);
-  background-color: rgba(232, 245, 233, 0.5);
-}
-
 label {
   color: #1B5E20;
   font-weight: 600;

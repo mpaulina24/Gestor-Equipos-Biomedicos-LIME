@@ -7,17 +7,18 @@
     
     <!-- Buscador arriba -->
     <label class="form-label fw-bold small d-block">Buscar equipo</label>
-    <label class="form-label small d-block text-muted">
-      Filtre los equipos por código, marca, modelo...
-    </label>
     <div class="mb-3 small">
       <input
         v-model="busqueda"
         type="text"
         class="form-control form-control-sm"
-        placeholder="Servicio, nombre, marca, modelo o códigos (IPS, Interno, ECRI)"
+        placeholder="Servicio, nombre, marca, modelo, serie o códigos (IPS, Interno, ECRI)"
       />
     </div>
+
+    <label class="form-label small d-block text-muted mt-4">
+      Filtros combinados 
+    </label>
 
     <!-- Filtros y botón agregar abajo -->
     <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -25,7 +26,7 @@
       <!-- Columna de filtros -->
       <div class="d-flex flex-column">
       <label class="form-label small fw-bold d-block">Sede</label>
-      <select v-model="filtroSede" class="form-select form-select-sm w-auto">
+      <select v-model="filtroSede" class="form-select form-select-sm" style="width: 150px;">
         <option value="">Todas las sedes</option>
         <option value='Prado'>Prado</option>
         <option value='SIU'>SIU</option>
@@ -35,7 +36,7 @@
 
       <div class="d-flex flex-column">
       <label class="form-label small fw-bold d-block">Servicio</label>
-      <select v-model="filtroServicio" class="form-select form-select-sm w-auto">
+      <select v-model="filtroServicio" class="form-select form-select-sm" style="width: 200px;">
         <option value="">Todos los servicios</option>
         <option value="LIME">LIME</option>
         <option value="Centro de resonancia">Centro de resonancia</option
@@ -45,6 +46,38 @@
         ><option value="Grupo Reproducción">Grupo Reproducción</option
         ><option value="Patología">Patología</option
         ><option value="Dermatopatología">Dermatopatología</option>
+      </select>
+      </div>
+
+      <div class="d-flex flex-column">
+      <label class="form-label small fw-bold d-block">Clasificación Misional</label>
+      <select v-model="filtroMisional" class="form-select form-select-sm" style="width: 150px;">
+        <option value="">Todos</option>
+        <option value="Docencia">Docencia</option>
+        <option value="Investigación">Investigación</option
+        ><option value="Extensión">Extensión</option>
+      </select>
+      </div>
+
+      <div class="d-flex flex-column">
+      <label class="form-label small fw-bold d-block">Clasificación IPS</label>
+      <select v-model="filtroIPS" class="form-select form-select-sm" style="width: 150px;">
+        <option value="">Todos</option>
+        <option value="IND">IND</option>
+        <option value="BIO">BIO</option
+        ><option value="GASES">GASES</option>
+      </select>
+      </div>
+
+      <div class="d-flex flex-column">
+      <label class="form-label small fw-bold d-block">Clase de riesgo</label>
+      <select v-model="filtroRiesgo" class="form-select form-select-sm" style="width: 150px;">
+        <option value="">Todos</option>
+        <option value="Clase I">Clase I</option>
+        <option value="Clase IIa">Clase IIa</option
+        ><option value="Clase IIb">Clase IIb</option
+        ><option value="Clase III">Clase III</option
+        ><option value="NI">NI</option>
       </select>
       </div>
 
@@ -374,6 +407,9 @@ const router = useRouter();
 const busqueda = ref("");
 const filtroSede = ref("");
 const filtroServicio = ref("");
+const filtroRiesgo = ref("");
+const filtroIPS = ref("");
+const filtroMisional = ref("");
 
 // Lista de equipos
 const equipos = ref([]);
@@ -448,7 +484,6 @@ const equiposFiltrados = computed(() => {
   return equipos.value.filter((eq) => {
     const texto = busqueda.value.toLowerCase();
 
-    // concatena los campos donde buscar: equipo, servicio y todos los códigos
     const codigosConcat = [eq.codigos?.interno, eq.codigos?.ips, eq.codigos?.ecri]
       .filter(Boolean)
       .join(" ")
@@ -457,14 +492,19 @@ const equiposFiltrados = computed(() => {
     const coincideBusqueda =
       (eq.equipo || "").toLowerCase().includes(texto) ||
       codigosConcat.includes(texto) ||
-      (eq.servicio || "").toLowerCase().includes(texto);
+      (eq.servicio || "").toLowerCase().includes(texto) ||
+      ((eq.clasificacion.clasif_riesgo || "").toLowerCase().includes(texto));
 
     const coincideSede = !filtroSede.value || eq.sede === filtroSede.value;
     const coincideServicio = !filtroServicio.value || eq.servicio === filtroServicio.value;
+    const coincideRiesgo = !filtroRiesgo.value || eq.clasificacion.clasif_riesgo === filtroRiesgo.value;
+    const coincideIPS = !filtroIPS.value || eq.clasificacion.clasif_ips === filtroIPS.value;
+    const coincideMisional = !filtroMisional.value || eq.clasificacion.clasif_misional === filtroMisional.value;
 
-    return coincideBusqueda && coincideSede && coincideServicio;
+    return coincideBusqueda && coincideSede && coincideServicio && coincideRiesgo && coincideIPS && coincideMisional;
   });
 });
+
 
 const verDetalles = (id) => {
   router.push(`/equipos/${id}`);
@@ -542,6 +582,9 @@ const verRegistroEdiciones = async (id) => {
 }
 
 
+
+
+
 .table {
   background-color: var(--blanco);
   border-radius: var(--radio-base);
@@ -575,12 +618,12 @@ const verRegistroEdiciones = async (id) => {
 }
 
 .invima-text {
-  max-width: 150px;        /* Ajusta el ancho que quieras */
+  max-width: 150px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
-  cursor: pointer;         /* Para que el usuario sepa que puede ver más */
+  cursor: pointer;
 }
 
 

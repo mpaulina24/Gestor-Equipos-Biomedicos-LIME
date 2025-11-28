@@ -818,10 +818,6 @@ const siguienteSeccion = () => {
   font-weight: bold;
 }
 
-.tarjeta-verde {
-  border: 1px solid rgba(27, 94, 32, 0.3);
-  background-color: rgba(232, 245, 233, 0.5);
-}
 
 label {
   color: #1B5E20;

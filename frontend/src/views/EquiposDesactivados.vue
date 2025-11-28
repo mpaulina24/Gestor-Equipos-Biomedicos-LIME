@@ -2,9 +2,9 @@
   <div class="container py-4">
 
     <!-- Título -->
-    <h3 class="text-success text-center fw-bold mb-4">
+    <h4 class="titulo-principal text-center fw-bold mb-2">
       Historial de Equipos dados de baja
-    </h3>
+    </h4>
 
     <div class="card border-0 shadow-sm rounded-4 p-3">
 
@@ -27,12 +27,12 @@
       <!-- Tabla -->
       <div class="table-scroll shadow-sm rounded">
         <table class="table align-middle table-hover mb-0">
-          <thead class="table-light small">
+          <thead class="table-light encabezado-pequeno">
             <tr>
-              <th class="text-center">Equipo</th>
-              <th class="text-center">Código Interno</th>
-              <th class="text-center">Servicio</th>
-              <th class="text-center">Acciones</th>
+              <th class="text-center">EQUIPO</th>
+              <th class="text-center">CÓDIGO INTERNO</th>
+              <th class="text-center">SERVICIO</th>
+              <th class="text-center">ACCIONES</th>
             </tr>
           </thead>
           <tbody>

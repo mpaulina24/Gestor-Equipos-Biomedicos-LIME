@@ -3,19 +3,11 @@
     <div class="container">
 
       <!-- Título central -->
-      <h4 class="text-success text-center fw-bold mb-4">
+      <h4 class="titulo-principal text-center fw-bold mb-4">
         Detalle del Equipo Médico
       </h4>
 
       <div v-if="equipo" class="card border-0 shadow-sm p-3 rounded-3">
-
-        <!-- Espacio con nombre grande del equipo -->
-        <div class="text-center mb-4">
-          <h5 class="fw-bold text-dark">{{ equipo.nombre_equipo }}</h5>
-          <p class="text-muted mb-1">
-            {{ equipo.marca }} — {{ equipo.modelo }}
-          </p>
-        </div>
 
         <!-- Información General -->
         <section class="mb-4">
