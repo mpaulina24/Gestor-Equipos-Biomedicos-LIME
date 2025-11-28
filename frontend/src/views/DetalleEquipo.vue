@@ -15,9 +15,6 @@
           <p class="text-muted mb-1">
             {{ equipo.marca }} — {{ equipo.modelo }}
           </p>
-          <p class="text-muted">
-            Código Interno: <strong>{{ equipo.codigo_interno || '—' }}</strong>
-          </p>
         </div>
 
         <!-- Información General -->
