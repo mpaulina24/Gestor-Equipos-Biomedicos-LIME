@@ -115,6 +115,7 @@
 .custom-btn {
   border-color: #38783a !important;
   color: #448746 !important;
+  font-size: 0.88rem !important;
 }
 
 .custom-btn:hover {
@@ -164,8 +165,11 @@
 }
 
 .badge-verde-claro {
-  background-color: rgba(12, 128, 41, 0.65); /* Verde tipo 'success' pero clarito y transparente */
-  color: #155724; /* Verde oscuro para buen contraste */
+  background-color: rgba(76, 175, 80, 0.18) !important; /* verde-acento translúcido */
+  color: #155724 !important; /* verde oscuro */
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 2px 6px;
 }
 
 .encabezado-pequeno th {
@@ -194,6 +198,7 @@
   background: none;
   font-size: 0.9rem;
   cursor: pointer;
+  font-size: 0.88rem !important;
 }
 .icon-btn:hover {
   opacity: 0.7;
@@ -202,9 +207,28 @@
 .icon-btn.success {
   color: var(--verde-secundario) !important;
   font-weight: 600;
+  font-size: 0.88rem !important;
 }
 
 .icon-btn.success i {
   color: var(--verde-secundario) !important;
+}
+
+
+.form-check-input {
+  border: 1px solid var(--verde-primario) !important;
+}
+
+.form-check-input:checked {
+  background-color: var(--verde-primario) !important;
+  border-color: var(--verde-primario) !important;
+}
+
+.btn.btn-success,
+.btn.btn-outline-secondary {
+  font-size: 0.88rem !important;
+}
+.btn.btn-secondary {
+  font-size: 0.88rem !important;
 }
 

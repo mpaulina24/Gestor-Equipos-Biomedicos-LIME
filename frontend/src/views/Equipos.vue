@@ -49,7 +49,7 @@
       </div>
 
       <div class="ms-auto">
-        <button class="btn custom-btn btn-sm d-flex align-items-center gap-2" @click="agregarEquipo">
+        <button class="btn btn-success px-4 d-flex align-items-center gap-2" @click="agregarEquipo">
           <i class="bi bi-plus-lg"></i> Agregar Equipo
         </button>
       </div>
@@ -562,18 +562,6 @@ const verRegistroEdiciones = async (id) => {
   min-width: 200px;
 }
 
-.btn-success {
-  background-color: var(--verde-acento);
-  border-color: var(--verde-acento);
-  font-weight: 600;
-  transition: var(--transicion);
-}
-
-.btn-success:hover {
-  background-color: var(--verde-secundario);
-  border-color: var(--verde-secundario);
-  transform: translateY(-2px);
-}
 
 .icon-btn {
   border: none;

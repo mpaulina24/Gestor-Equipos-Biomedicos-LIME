@@ -15,7 +15,7 @@
 
       <!-- Buscador -->
       <div class="mb-3">
-        <label class="form-label fw-bold small d-block">Buscar equipo desactivado</label>
+        <label class="form-label fw-bold small d-block">Buscar equipo dado de baja</label>
         <input
           v-model="busqueda"
           type="text"

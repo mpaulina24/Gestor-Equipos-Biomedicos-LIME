@@ -3,15 +3,15 @@
     <div class="container">
 
       <!-- Título central -->
-      <h3 class="text-success text-center fw-bold mb-4">
+      <h4 class="text-success text-center fw-bold mb-4">
         Detalle del Equipo Médico
-      </h3>
+      </h4>
 
-      <div v-if="equipo" class="card border-0 shadow-sm p-4 rounded-4">
+      <div v-if="equipo" class="card border-0 shadow-sm p-3 rounded-3">
 
         <!-- Espacio con nombre grande del equipo -->
         <div class="text-center mb-4">
-          <h4 class="fw-bold text-dark">{{ equipo.nombre_equipo }}</h4>
+          <h5 class="fw-bold text-dark">{{ equipo.nombre_equipo }}</h5>
           <p class="text-muted mb-1">
             {{ equipo.marca }} — {{ equipo.modelo }}
           </p>
@@ -22,9 +22,9 @@
 
         <!-- Información General -->
         <section class="mb-4">
-          <h5 class="bloque-titulo">
+          <h6 class="bloque-titulo">
             <i class="bi bi-info-circle me-2"></i> Información General
-          </h5>
+          </h6>
           
           <div class="row">
             <div v-for="campo in infoGeneral" :key="campo.key" class="col-md-4 mb-2">
@@ -38,9 +38,9 @@
 
         <!-- Registro Histórico -->
         <section class="mb-4">
-          <h5 class="bloque-titulo">
+          <h6 class="bloque-titulo">
             <i class="bi bi-clock-history me-2"></i> Registro Histórico
-          </h5>
+          </h6>
           <div class="row">
             <div v-for="campo in registroHistorico" :key="campo.key" class="col-md-4 mb-2">
               <div class="campo-box">
@@ -53,9 +53,9 @@
 
         <!-- Inventario Documental -->
         <section class="mb-4">
-          <h5 class="bloque-titulo">
+          <h6 class="bloque-titulo">
             <i class="bi bi-folder-check me-2"></i> Inventario de Documentos
-          </h5>
+          </h6>
           <div class="row">
             <div v-for="campo in inventarioDocs" :key="campo.key" class="col-md-4 mb-2">
               <div class="campo-box">
@@ -68,9 +68,9 @@
 
         <!-- Información Metrológica Administrativa -->
         <section class="mb-4">
-          <h5 class="bloque-titulo">
+          <h6 class="bloque-titulo">
             <i class="bi bi-gear-wide-connected me-2"></i> Información Metrológica Administrativa
-          </h5>
+          </h6>
           <div class="row">
             <div v-for="campo in infoMetrologicaAdmin" :key="campo.key" class="col-md-4 mb-2">
               <div class="campo-box">
@@ -83,9 +83,9 @@
 
         <!-- Información Metrológica Técnica -->
         <section class="mb-4">
-          <h5 class="bloque-titulo">
+          <h6 class="bloque-titulo">
             <i class="bi bi-rulers me-2"></i> Información Metrológica Técnica
-          </h5>
+          </h6>
           <div class="row">
             <div v-for="campo in infoMetrologicaTec" :key="campo.key" class="col-md-4 mb-2">
               <div class="campo-box">
@@ -98,9 +98,9 @@
 
         <!-- Condiciones de Funcionamiento -->
         <section>
-          <h5 class="bloque-titulo">
+          <h6 class="bloque-titulo">
             <i class="bi bi-speedometer2 me-2"></i> Condiciones de Funcionamiento
-          </h5>
+          </h6>
           <div class="row">
             <div v-for="campo in condiciones" :key="campo.key" class="col-md-4 mb-2">
               <div class="campo-box">
@@ -114,7 +114,7 @@
       </div>
 
       <div class="d-flex justify-content-end mt-4">
-        <router-link to="/equipos" class="btn btn-outline-success px-4">
+        <router-link to="/equipos" class="btn btn btn-secondary px-4">
           ← Volver al Inventario
         </router-link>
       </div>
