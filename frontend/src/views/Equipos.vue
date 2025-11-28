@@ -12,20 +12,20 @@
         v-model="busqueda"
         type="text"
         class="form-control form-control-sm"
-        placeholder="Servicio, nombre, marca, modelo, serie o códigos (IPS, Interno, ECRI)"
+        placeholder="Buscar equipo por servicio, nombre, marca, modelo, serie o códigos (IPS, Interno, ECRI)"
       />
     </div>
 
-    <label class="form-label small d-block text-muted mt-4">
+    <label class="form-label small fw-bold d-block  mt-4">
       Filtros combinados 
     </label>
 
-    <!-- Filtros y botón agregar abajo -->
+    <!-- Filtros y botón agregar -->
     <div class="d-flex align-items-center gap-2 flex-wrap">
       
       <!-- Columna de filtros -->
       <div class="d-flex flex-column">
-      <label class="form-label small fw-bold d-block">Sede</label>
+      <label class="form-label small d-block text-muted">Sede</label>
       <select v-model="filtroSede" class="form-select form-select-sm" style="width: 150px;">
         <option value="">Todas las sedes</option>
         <option value='Prado'>Prado</option>
@@ -35,7 +35,7 @@
       </div>
 
       <div class="d-flex flex-column">
-      <label class="form-label small fw-bold d-block">Servicio</label>
+      <label class="form-label small d-block text-muted">Servicio</label>
       <select v-model="filtroServicio" class="form-select form-select-sm" style="width: 200px;">
         <option value="">Todos los servicios</option>
         <option value="LIME">LIME</option>
@@ -50,7 +50,7 @@
       </div>
 
       <div class="d-flex flex-column">
-      <label class="form-label small fw-bold d-block">Clasificación Misional</label>
+      <label class="form-label small d-block text-muted">Clasificación Misional</label>
       <select v-model="filtroMisional" class="form-select form-select-sm" style="width: 150px;">
         <option value="">Todos</option>
         <option value="Docencia">Docencia</option>
@@ -60,7 +60,7 @@
       </div>
 
       <div class="d-flex flex-column">
-      <label class="form-label small fw-bold d-block">Clasificación IPS</label>
+      <label class="form-label small d-block text-muted">Clasificación IPS</label>
       <select v-model="filtroIPS" class="form-select form-select-sm" style="width: 150px;">
         <option value="">Todos</option>
         <option value="IND">IND</option>
@@ -70,7 +70,7 @@
       </div>
 
       <div class="d-flex flex-column">
-      <label class="form-label small fw-bold d-block">Clase de riesgo</label>
+      <label class="form-label small d-block text-muted">Clase de riesgo</label>
       <select v-model="filtroRiesgo" class="form-select form-select-sm" style="width: 150px;">
         <option value="">Todos</option>
         <option value="Clase I">Clase I</option>
@@ -94,7 +94,7 @@
     
 
     <!-- Tabla de equipos -->
-    <div class="table-scroll shadow-sm rounded">
+    <div class="table-scroll shadow-sm rounded  mt-4">
       <table class="table align-middle table-hover">
         <thead class="table-light encabezado-pequeno">
           <tr>
@@ -253,17 +253,8 @@
             </td>
 
 
-            <td class="text-center">
-              <button
-                class="icon-btn"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Ver más"
-                @click="verDetalles(equipo.id)"
-              >
-                <i class="bi bi-eye"></i>
-              </button>
-
+            <td class="text-center align-items-center gap-1">
+              
               <button 
               class="icon-btn" 
               title="Editar" 
@@ -300,6 +291,10 @@
                 title="Dar de baja"
                 @click="desactivarEquipo(equipo.id)"                >
                 <i class="bi bi-eye-slash"></i>
+              </button>
+
+              <button class="btn-ver-mas" @click="verDetalles(equipo.id)">
+                Ver más
               </button>
               
 
@@ -393,7 +388,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -574,16 +568,12 @@ const verRegistroEdiciones = async (id) => {
 }
 
 .table-scroll {
-  max-height: 400px;
+  max-height: 500px;
   max-width: 1200px;
   overflow-y: auto;
   overflow-x: auto;
   border-radius: var(--radio-base);
 }
-
-
-
-
 
 .table {
   background-color: var(--blanco);
@@ -624,6 +614,23 @@ const verRegistroEdiciones = async (id) => {
   text-overflow: ellipsis;
   display: inline-block;
   cursor: pointer;
+}
+
+.btn-ver-mas {
+  background-color: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+  border: none;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 450;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  white-space: nowrap;
+}
+
+.btn-ver-mas:hover {
+  background-color: rgba(13, 110, 253, 0.2);
 }
 
 

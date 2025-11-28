@@ -25,6 +25,17 @@
 
       <li class="nav-item">
         <router-link
+          to="/estadisticas"
+          class="nav-link"
+          :class="{ active: isActive('/estadisticas') }"
+        >
+          <i class="bi bi-bar-chart-line"></i>
+          <span class="nav-link-text">Dashboard</span>
+        </router-link>
+      </li>
+
+      <li class="nav-item">
+        <router-link
           to="/equipos"
           class="nav-link"
           :class="{ active: isActive('/equipos') }"
@@ -44,18 +55,6 @@
           <span class="nav-link-text">Equipos dados de baja</span>
         </router-link>
       </li>
-      
-      <li class="nav-item">
-        <router-link
-          to="/estadisticas"
-          class="nav-link"
-          :class="{ active: isActive('/estadisticas') }"
-        >
-          <i class="bi bi-bar-chart-line"></i>
-          <span class="nav-link-text">Estadísticas</span>
-        </router-link>
-      </li>
-
       
     </ul>
 
