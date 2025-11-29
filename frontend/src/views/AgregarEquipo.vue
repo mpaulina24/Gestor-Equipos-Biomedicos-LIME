@@ -176,26 +176,33 @@
               <!-- CLASIFICACIONES -->
               <div class="row mt-3">
 
-                <div class="col-md-6 mb-3">
-                  <label>Clasificación Misional</label>
+                
+                <div class="col-md-6 mb-4">
+                <label class="fw-semibold">Clasificación Misional</label>
 
-                  <div 
-                    v-for="opcion in clasificacionesMisionales" 
-                    :key="opcion.value" 
-                    class="form-check"
-                  >
-                    <input 
-                      class="form-check-input"
-                      type="checkbox"
-                      :value="opcion.value"
-                      v-model="equipo.clasificacion_misional"
-                    />
-                    <label class="form-check-label">
-                      {{ opcion.label }}
-                    </label>
-                  </div>
-
+                <div 
+                  class="form-check" 
+                  v-for="opcion in clasificacionesMisionales" 
+                  :key="opcion.value"
+                >
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    :checked="equipo.clasificacion_misional.includes(opcion.value)"
+                    @change="toggleMisional(opcion.value)"
+                  />
+                  <label class="form-check-label">
+                    {{ opcion.label }}
+                  </label>
                 </div>
+
+
+
+
+              </div>
+
+
+
 
                 <div class="col-md-6 mb-3">
                   <label>Clasificación IPS</label>
@@ -627,7 +634,9 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
 
+const router = useRouter(); 
 const activeTab = ref("general");
 
 const tabs = [
@@ -637,6 +646,7 @@ const tabs = [
   { id: "metrologica", label: "Información Metrológica" },
   { id: "condiciones", label: "Condiciones Funcionamiento" },
 ];
+
 
 const equipo = ref({
   proceso: "",
@@ -650,7 +660,7 @@ const equipo = ref({
   marca: "",
   modelo: "",
   serie: "",
-  clasificacion_misional: [],
+  clasificacion_misional: "",
   clasificacion_ips: "",
   clasificacion_riesgo: "",
   registro_invima: "",
@@ -677,7 +687,7 @@ const equipo = ref({
   guia_rapida: false,
   instructivo: false,
   protocolo_mto: false, 
-  frecuencia_metrologica: false, //  CHARFIELD
+  frecuencia_metrologica: false, 
 
   // --- Información metrológica administrativa ---
   mantenimiento: false,
@@ -713,6 +723,16 @@ function agregarNuevoServicio() {
         mostrarNuevoServicio.value = false;
     }
 }
+
+const limpiarCampo = (valor) => {
+    if (valor === "" || valor === null || valor === undefined) {
+        return null; 
+    }
+    if (typeof valor === 'boolean') {
+        return valor; 
+    }
+    return valor;
+};
 
 // --- Opciones de Clasificación para Vue ---
 const clasificacionesMisionales = [
@@ -752,39 +772,96 @@ const documentos = {
   frecuencia_metrologica: "Frecuencia Metrológica del Fabricante",
 };
 
-const guardarEquipo = async () => {
-  try {
+const toggleMisional = (valor) => {
+  const arr = equipo.value.clasificacion_misional;
 
-    // Convertir array a string antes de enviar
-    const payload = { ...equipo.value };
-    if (Array.isArray(payload.clasificacion_misional)) {
-      payload.clasificacion_misional = payload.clasificacion_misional.join(",");
-    }
-
-    const response = await axios.post("http://127.0.0.1:8000/api/equipos/agregarEquipo/", payload);
-    alert(" Equipo agregado correctamente");
-    console.log("Respuesta del servidor:", response.data);
-  } catch (error) {
-    // Si el servidor respondió con un error (400, 404, 500, etc.)
-    if (error.response) {
-      console.error(" Error del servidor:", error.response.data);
-      console.error(" Código de estado:", error.response.status);
-      alert(` Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
-
-    // Si no hubo respuesta del servidor (problemas de red o CORS)
-    } else if (error.request) {
-      console.error(" No hubo respuesta del servidor:", error.request);
-      alert("No se recibió respuesta del servidor. Verifica tu conexión o CORS.");
-
-    // Error en la configuración o ejecución de la petición
-    } else {
-      console.error(" Error en la configuración de la petición:", error.message);
-      alert(` Error: ${error.message}`);
-    }
+  if (arr.includes(valor)) {
+    equipo.value.clasificacion_misional = arr.filter(v => v !== valor);
+  } else {
+    equipo.value.clasificacion_misional.push(valor);
   }
 };
 
-const tabsIds = tabs.map(tab => tab.id); // ["general", "historico", "documentos", "metrologica", "condiciones"]
+
+const guardarEquipo = async () => {
+    try {
+        let payload = { ...equipo.value };
+
+        // --- 1. Conversión de ARRAY (Clasificación Misional) ---
+        if (Array.isArray(payload.clasificacion_misional)) {
+            payload.clasificacion_misional = payload.clasificacion_misional.join(",");
+        }
+        const limpiar = (v) => (v === '' || v === 0 || v === null || v === false) ? null : v;
+        const limpiarBool = (v) => v === true ? 'True' : v === false ? 'False' : null;
+
+        // Limpieza de campos problemáticos (booleanos/choice/strings)
+        payload.en_garantia = limpiarBool(equipo.value.en_garantia); 
+        
+        // Documentos (Convertir booleanos a 'True'/'False' como strings o 'null')
+        payload.hoja_vida = limpiarBool(equipo.value.hoja_vida);
+        payload.registro_importacion = limpiarBool(equipo.value.registro_importacion);
+        payload.manual_operacion = limpiarBool(equipo.value.manual_operacion);
+        payload.manual_mantenimiento = limpiarBool(equipo.value.manual_mantenimiento);
+        payload.guia_rapida = limpiarBool(equipo.value.guia_rapida);
+        payload.instructivo = limpiarBool(equipo.value.instructivo);
+        payload.protocolo_mto = limpiarBool(equipo.value.protocolo_mto);
+
+        // Frecuencias (Probablemente esperan strings o null)
+        payload.mantenimiento = limpiarBool(equipo.value.mantenimiento);
+        payload.calibracion = limpiarBool(equipo.value.calibracion);
+        
+        // Las frecuencias de mantenimiento/calibración son null si el checkbox es 'No'
+        if (equipo.value.mantenimiento === false) {
+             payload.frecuencia_mantenimiento = null;
+        } else {
+             payload.frecuencia_mantenimiento = limpiar(equipo.value.frecuencia_mantenimiento);
+        }
+        if (equipo.value.calibracion === false) {
+             payload.frecuencia_calibracion = null;
+        } else {
+             payload.frecuencia_calibracion = limpiar(equipo.value.frecuencia_calibracion);
+        }
+        // Campos de Fecha y otros strings que pueden ser nulos
+        payload.fecha_adquisicion = limpiar(equipo.value.fecha_adquisicion);
+        payload.fecha_fabricacion = limpiar(equipo.value.fecha_fabricacion);
+        payload.fecha_fin_garantia = limpiar(equipo.value.fecha_fin_garantia);
+        
+        // Otros campos que pueden ser vacíos
+        payload.frecuencia_metrologica = equipo.value.frecuencia_metrologica 
+                                 ? 'Si' 
+                                 : 'N/A';
+
+        console.log("[PAYLOAD FINAL ENVIADO]:", payload); 
+
+        const response = await axios.post("http://127.0.0.1:8000/api/equipos/agregarEquipo/", payload);
+        
+        alert("Equipo agregado correctamente");
+        console.log("Respuesta del servidor:", response.data);
+        router.push('/equipos'); 
+
+    } catch (error) {
+    // Si el servidor respondió con un error (400, 404, 500, etc.)
+    if (error.response) {
+      console.error(" Error del servidor:", error.response.data);
+      console.error(" Código de estado:", error.response.status);
+      alert(` Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
+
+    // Si no hubo respuesta del servidor (problemas de red o CORS)
+    } else if (error.request) {
+      console.error(" No hubo respuesta del servidor:", error.request);
+      alert("No se recibió respuesta del servidor. Verifica tu conexión o CORS.");
+
+    // Error en la configuración o ejecución de la petición
+    } else {
+      console.error(" Error en la configuración de la petición:", error.message);
+      alert(` Error: ${error.message}`);
+    }
+  }
+
+};
+
+
+const tabsIds = tabs.map(tab => tab.id);
 
 const siguienteSeccion = () => {
   const indexActual = tabsIds.indexOf(activeTab.value);

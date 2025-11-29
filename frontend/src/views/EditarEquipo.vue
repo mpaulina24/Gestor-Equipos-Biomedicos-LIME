@@ -145,7 +145,7 @@
 
             <hr>
 
-            <div class="row">
+            <div class="mt-3">
 
               <div class="col-md-6 mb-4">
                 <label class="fw-semibold">Clasificación Misional</label>
@@ -588,6 +588,9 @@ import axios from "axios";
 const route = useRoute();
 const router = useRouter();
 
+const mostrarNuevoServicio = ref(false);
+const nuevoServicio = ref('');
+
 // Estado principal
 const equipo = ref({});
 const justificacion = ref("");
@@ -688,6 +691,22 @@ const siguienteSeccion = () => {
     activeTab.value = tabs[indexActual + 1].id;
   }
 };
+
+const agregarNuevoServicio = () => {
+    const nuevo = nuevoServicio.value.trim();
+    if (nuevo && !serviciosDisponibles.value.includes(nuevo)) {
+        serviciosDisponibles.value.push(nuevo);        
+        if (equipo.value) {
+            equipo.value.proceso = nuevo; 
+        }
+        console.log(`[VERIFICACIÓN] Lista de servicios actualizada:`, serviciosDisponibles.value);
+    } else {
+        console.log(`[ADVERTENCIA] No se añadió: '${nuevo}' ya existe o está vacío.`);
+    }    
+    mostrarNuevoServicio.value = false;
+    nuevoServicio.value = '';
+};
+// ----------------
 
 // Guardar cambios
 const guardarCambios = async () => {

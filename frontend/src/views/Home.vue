@@ -100,7 +100,7 @@ const sedes = [
   },
   {
     nombre: "Sede San Vicente",
-    direccion: "Especificar dirección",
+    direccion: "Cl. 64 #51D - 154, Medellín",
     descripcion:
       "Cuenta con los servicios Patología, Dermatopatología",
     icono: "bi bi-hospital",

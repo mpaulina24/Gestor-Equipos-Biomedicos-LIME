@@ -37,10 +37,10 @@
         <div class="card card-chart p-3 h-100 d-flex flex-column">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <h6 class="mb-0 fw-bold">Distribución por sede</h6>
-            <small class="text-muted">Última actualización</small>
+            <small class="text-muted">En tiempo real</small>
           </div>
 
-          <div class="chart-box mx-auto mb-1">
+          <div class="chart-box chart-sede mx-auto mb-1">
             <Doughnut :data="chartDataSede" :options="chartOptionsSede" />
           </div>
 
@@ -341,6 +341,10 @@ const chartOptionsRiesgo = {
 <style scoped>
 .titulo-principal {
   color: var(--gris-oscuro);
+}
+.chart-sede {
+  max-width: 200px !important;   
+  height: 180px !important;      
 }
 
 

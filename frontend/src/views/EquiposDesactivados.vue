@@ -120,7 +120,7 @@ const cargarEquiposDesactivados = async () => {
       };
     });
   } catch (error) {
-    console.error("Error cargando equipos desactivados:", error);
+    console.error("Error cargando equipos dados de baja:", error);
   }
 };
 
