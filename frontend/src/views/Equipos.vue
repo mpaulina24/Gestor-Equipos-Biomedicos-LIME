@@ -94,7 +94,7 @@
     
 
     <!-- Tabla de equipos -->
-    <div class="table-scroll shadow-sm rounded  mt-4">
+    <div class="table-scroll shadow-sm rounded mt-4">
       <table class="table align-middle table-hover">
         <thead class="table-light encabezado-pequeno">
           <tr>
@@ -396,7 +396,7 @@
     <div class="modal fade" id="modalDesactivar" tabindex="-1" aria-labelledby="modalDesactivarLabel" aria-hidden="true" ref="modalDesactivarElement">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow border-0 rounded-4">
-          <div class="modal-header bg-warning text-white">
+          <div class="modal-header bg-danger text-white">
             <h5 class="modal-title" id="modalDesactivarLabel">Desactivar Equipo</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
           </div>

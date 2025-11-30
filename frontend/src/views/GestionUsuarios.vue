@@ -60,8 +60,8 @@
         </div>
       </div>
 
-      <div class="table-responsive">
-        <table class="table table-hover">
+      <div class="table-scroll shadow-sm rounded">
+        <table class="table align-middle table-hover">
           <thead class="table-light encabezado-pequeno">
             <tr>
               <th>USUARIO</th>
@@ -244,6 +244,19 @@ onMounted(() => {
 
 .contenido-usuarios {
   font-size: 0.88rem;
+}
+
+.table-scroll {
+  max-height: 200px;
+  max-width: 1200px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: var(--radio-base);
+}
+
+.table-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 </style>
