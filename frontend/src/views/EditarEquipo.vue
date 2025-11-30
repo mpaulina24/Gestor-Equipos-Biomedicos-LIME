@@ -145,7 +145,7 @@
 
             <hr>
 
-            <div class="mt-3">
+            <div class="row">
 
               <div class="col-md-6 mb-4">
                 <label class="fw-semibold">Clasificación Misional</label>
@@ -588,9 +588,6 @@ import axios from "axios";
 const route = useRoute();
 const router = useRouter();
 
-const mostrarNuevoServicio = ref(false);
-const nuevoServicio = ref('');
-
 // Estado principal
 const equipo = ref({});
 const justificacion = ref("");
@@ -616,9 +613,9 @@ const opcionesSede = [
   { value: 'San Vicente', label: 'San Vicente' },
 ];
 const clasificacionesMisionales = [
-  { value: 'DOCENCIA', label: 'Docencia' },
-  { value: 'INVESTIGACION', label: 'Investigación' },
-  { value: 'EXTENSION', label: 'Extensión' },
+  { value: 'Docencia', label: 'Docencia' },
+  { value: 'Investigación', label: 'Investigación' },
+  { value: 'Extensión', label: 'Extensión' },
 ];
 
 const clasificacionesIPS = [
@@ -644,6 +641,37 @@ const documentos = {
   protocolo_mto: "Protocolo Mantenimiento",
 };
 
+const estandarizarValor = (valor) => {
+  if (valor === null || valor === undefined || valor === "" || valor === false) {
+    return "NI";
+  }
+  if (typeof valor === "string" && valor.trim() === "") {
+    return "NI";
+  }
+  if (typeof valor === "number" && isNaN(valor)) {
+    return "NI";
+  }
+  return valor;
+};
+
+const procesarObjetoEquipo = (objeto) => {
+  const procesado = { ...objeto };
+  
+  // Campos que NO deben convertirse a "NI"
+  const excluirCampos = ['id', 'activo', 'clasificacion_misional', 'requiere_invima'];
+  
+  Object.keys(procesado).forEach(key => {
+    if (!excluirCampos.includes(key)) {
+      // Mantener valores "Si"/"No" sin cambiar
+      if (procesado[key] === 'Si' || procesado[key] === 'No') {
+        return;
+      }
+      procesado[key] = estandarizarValor(procesado[key]);
+    }
+  });
+  
+  return procesado;
+};
 
 // Tooltips / descripciones
 const desc = {
@@ -670,19 +698,38 @@ const desc = {
 onMounted(async () => {
   try {
     const res = await axios.get(`http://127.0.0.1:8000/api/equipos/${route.params.id}/`);
-    equipo.value = {
-      ...res.data,
-      clasificacion_misional: res.data.clasificacion_misional
-        ? res.data.clasificacion_misional.split(",")   // Convertir string → array
-        : []
-    };
+    const data = res.data;
+
+    // Convertir clasificacion_misional de string a array
+    if (data.clasificacion_misional) {
+      data.clasificacion_misional = data.clasificacion_misional.split(',').map(item => item.trim());
+    } else {
+      data.clasificacion_misional = [];
+    }
+
+    // Convertir campos de "Si"/"No" a boolean para los checkboxes
+    const camposBooleanos = [
+      'hoja_vida', 'registro_importacion', 'manual_operacion', 
+      'manual_mantenimiento', 'guia_rapida', 'instructivo', 
+      'protocolo_mto', 'mantenimiento', 'calibracion', 'en_garantia',
+      'frecuencia_metrologica'
+    ];
+
+    camposBooleanos.forEach(campo => {
+      if (data.hasOwnProperty(campo)) {
+        data[campo] = data[campo] === 'Si';
+      }
+    });
+
+    // Convertir requiere_invima a boolean
+    data.requiere_invima = data.registro_invima !== 'NI';
+
+    equipo.value = data;
   } catch (error) {
     alert("Error al cargar los datos del equipo");
     console.error(error);
   }
 });
-
-
 
 // Navegación modular
 const siguienteSeccion = () => {
@@ -692,43 +739,72 @@ const siguienteSeccion = () => {
   }
 };
 
-const agregarNuevoServicio = () => {
-    const nuevo = nuevoServicio.value.trim();
-    if (nuevo && !serviciosDisponibles.value.includes(nuevo)) {
-        serviciosDisponibles.value.push(nuevo);        
-        if (equipo.value) {
-            equipo.value.proceso = nuevo; 
-        }
-        console.log(`[VERIFICACIÓN] Lista de servicios actualizada:`, serviciosDisponibles.value);
-    } else {
-        console.log(`[ADVERTENCIA] No se añadió: '${nuevo}' ya existe o está vacío.`);
-    }    
-    mostrarNuevoServicio.value = false;
-    nuevoServicio.value = '';
-};
-// ----------------
-
 // Guardar cambios
 const guardarCambios = async () => {
-  const payload = {
-    ...equipo.value,
-    fecha_adquisicion: equipo.value.fecha_adquisicion || null,
-    fecha_fabricacion: equipo.value.fecha_fabricacion || null,
-    fecha_fin_garantia: equipo.value.fecha_fin_garantia || null
-  };
-  
+  // 1. Preparar payload base
+  let payload = { ...equipo.value };
+
+  // 2. Convertir clasificacion_misional de array a string
   if (Array.isArray(payload.clasificacion_misional)) {
     payload.clasificacion_misional = payload.clasificacion_misional.join(",");
   }
 
+  // 3. Convertir campos booleanos a "Si"/"No"
+  const camposBooleanos = [
+    'hoja_vida', 'registro_importacion', 'manual_operacion', 
+    'manual_mantenimiento', 'guia_rapida', 'instructivo', 
+    'protocolo_mto', 'mantenimiento', 'calibracion', 'en_garantia',
+    'frecuencia_metrologica'
+  ];
+  
+  camposBooleanos.forEach(campo => {
+    if (payload.hasOwnProperty(campo)) {
+      payload[campo] = payload[campo] ? 'Si' : 'No';
+    }
+  });
+
+  // 4. Manejar INVIMA
+  if (!payload.requiere_invima) {
+    payload.registro_invima = "NI";
+  } else {
+    payload.registro_invima = payload.registro_invima || "";
+  }
+
+  // 5. Convertir números a string
+  if (payload.frecuencia_mantenimiento !== null && payload.frecuencia_mantenimiento !== undefined) {
+    payload.frecuencia_mantenimiento = payload.frecuencia_mantenimiento.toString();
+  }
+  if (payload.frecuencia_calibracion !== null && payload.frecuencia_calibracion !== undefined) {
+    payload.frecuencia_calibracion = payload.frecuencia_calibracion.toString();
+  }
+
+  // 6. Estandarizar campos vacíos a "NI"
+  payload = procesarObjetoEquipo(payload);
 
   try {
     await axios.put(`http://127.0.0.1:8000/api/equipos/${route.params.id}/modificar/`, payload);
-    alert("Cambios guardados correctamente");
+    alert(" Cambios guardados correctamente");
     router.push("/equipos");
   } catch (error) {
-    alert("No se pudieron guardar los cambios");
-    console.error(error);
+    console.error("Error guardando cambios:", error);
+    if (error.response) {
+      console.error(" Error del servidor:", error.response.data);
+      if (error.response.data.errors) {
+        const errores = error.response.data.errors;
+        let mensajeError = "Errores de validación:\n";
+        Object.keys(errores).forEach(campo => {
+          mensajeError += `- ${campo}: ${errores[campo].join(', ')}\n`;
+        });
+        alert(mensajeError);
+      } else {
+        alert(` Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
+      }
+    } else if (error.request) {
+      console.error(" No hubo respuesta del servidor:", error.request);
+      alert(" No se recibió respuesta del servidor.");
+    } else {
+      alert(` Error: ${error.message}`);
+    }
   }
 };
 
