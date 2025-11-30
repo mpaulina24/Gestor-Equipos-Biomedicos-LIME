@@ -182,7 +182,7 @@ class Usuario(models.Model):
     contraseña = models.CharField(max_length=255)  # Texto plano temporalmente
     rol = models.CharField(max_length=10, choices=ROLES)
     activo = models.BooleanField(default=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.nombreusuario} ({self.rol})"

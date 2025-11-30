@@ -315,3 +315,30 @@
   padding: 8px;
   border-bottom: 2px solid #cfd6e4;
 }
+
+
+.admin-badge {
+  background-color: #FFC107 !important;  /* dorado */
+  color: #000 !important;
+}
+
+.viewer-badge {
+  background-color: #BDBDBD !important;  /* gris */
+  color: #000 !important;
+}
+
+.btn-warning {
+  background-color: #dc2626 !important;
+  border: none !important;
+  color: #fff !important;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: 0.2s;
+  font-weight: 500;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background-color: #b91c1c !important;
+  transform: scale(1.03);
+  color: #fff !important;
+}

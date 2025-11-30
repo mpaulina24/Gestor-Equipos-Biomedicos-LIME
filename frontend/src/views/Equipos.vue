@@ -159,7 +159,7 @@
               <div class="d-flex flex-column align-items-center gap-1">
                 <span
                   v-if="equipo.codigos.interno"
-                  class="badge rounded-pill bg-light text-dark"
+                  class="badge rounded-pill badge-verde-claro"
                   data-bs-toggle="tooltip"
                   title="Código Interno"
                 >
@@ -208,7 +208,7 @@
               <div class="d-flex flex-column align-items-center gap-1">
                 <span
                   v-if="equipo.clasificacion.clasif_misional"
-                  class="badge rounded-pill bg-light text-dark"
+                  class="badge rounded-pill badge-verde-claro"
                   data-bs-toggle="tooltip"
                   title="Misional"
                 >
@@ -232,7 +232,7 @@
             <td class="text-center">
               <div class="d-flex flex-column align-items-center gap-1"> 
                 <span
-                  class="badge rounded-pill bg-light text-dark invima-text"
+                  class="badge rounded-pill badge-verde-claro invima-text"
                   data-bs-toggle="tooltip"
                   data-bs-placement="top"
                   :title="equipo.invima"
@@ -722,7 +722,7 @@ const verRegistroEdiciones = async (id) => {
   border: none;
   border-radius: 50px;
   font-size: 0.7rem;
-  font-weight: 450;
+  font-weight: 800;
   padding: 2px 6px;
   cursor: pointer;
   transition: 0.2s;

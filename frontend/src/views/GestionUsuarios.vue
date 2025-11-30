@@ -1,12 +1,12 @@
 <template>
-  <div class="container py-4">
+  <div class="container py-4 contenido-usuarios">
     <h4 class="titulo-principal text-center fw-bold mb-4">
       Gestión de Usuarios
     </h4>
 
     <!-- Solo mostrar si es admin -->
     <div v-if="authStore.isAdmin" class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-      <h5 class="fw-bold mb-3">Agregar Nuevo Usuario</h5>
+      <h6 class="fw-bold mb-3">Agregar Nuevo Usuario</h6>
       <form @submit.prevent="agregarUsuario" class="row g-3">
         <div class="col-md-4">
           <label class="form-label">Nombre de Usuario</label>
@@ -34,7 +34,7 @@
 
     <div class="card border-0 shadow-sm rounded-4 p-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="fw-bold mb-0">Usuarios del Sistema</h5>
+        <h6 class="fw-bold mb-0">Usuarios del Sistema</h6>
         <div class="btn-group">
           <button 
             class="btn btn-outline-secondary btn-sm" 
@@ -62,20 +62,20 @@
 
       <div class="table-responsive">
         <table class="table table-hover">
-          <thead class="table-light">
+          <thead class="table-light encabezado-pequeno">
             <tr>
-              <th>Usuario</th>
-              <th>Rol</th>
-              <th>Fecha Creación</th>
-              <th>Estado</th>
-              <th v-if="authStore.isAdmin">Acciones</th>
+              <th>USUARIO</th>
+              <th>ROL</th>
+              <th>FECHA CREACIÓN</th>
+              <th>ESTADO</th>
+              <th v-if="authStore.isAdmin">ACCIONES</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="usuario in usuariosFiltrados" :key="usuario.id">
               <td>{{ usuario.nombreusuario }}</td>
               <td>
-                <span class="badge" :class="usuario.rol === 'admin' ? 'bg-danger' : 'bg-info'">
+                <span class="badge" :class="usuario.rol === 'admin' ? 'admin-badge' : 'viewer-badge'">
                   {{ usuario.rol === 'admin' ? 'Administrador' : 'Solo lectura' }}
                 </span>
               </td>
@@ -241,4 +241,9 @@ onMounted(() => {
   background-color: #eb0606;
   border-color: #ea0505;
 }
+
+.contenido-usuarios {
+  font-size: 0.88rem;
+}
+
 </style>

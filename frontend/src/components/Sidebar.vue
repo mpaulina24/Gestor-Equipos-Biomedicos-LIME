@@ -46,18 +46,7 @@
 
     <!-- Información del usuario y logout -->
     <div class="sidebar-footer">
-      <div class="user-info mb-2">
-        <small class="text-muted">Conectado como:</small>
-        <div class="fw-bold">{{ authStore.userName }}</div>
-        <span class="badge" :class="authStore.isAdmin ? 'bg-danger' : 'bg-info'">
-          {{ authStore.isAdmin ? 'Administrador' : 'Solo lectura' }}
-        </span>
-      </div>
       
-      <button class="btn btn-outline-danger btn-sm w-100" @click="handleLogout">
-        <i class="bi bi-box-arrow-right me-1"></i>
-        Cerrar Sesión
-      </button>
 
       <div class="footer-devs mt-3">
         Programado por

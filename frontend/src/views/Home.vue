@@ -88,21 +88,21 @@ const sedes = [
     nombre: "Sede Prado – Hospital Alma Máter, Sede Ambulatoria",
     direccion: " Calle 64 #51 - 31. Bloque B, piso 2. Medellín , Antioquia.",
     descripcion:
-      "Cuenta con los servicios LIME, Centro de resonancia, Fotodermatología, Resonador, Oftalmología...",
+      "Servicios: LIME, Centro de resonancia, Fotodermatología, Resonador, Oftalmología",
       icono: "bi bi-hospital",
   },
   {
     nombre: "Sede SIU – Sede de Investigación Universitaria",
     direccion: "Cl. 62 #52-59, Medellín",
     descripcion:
-      "Cuenta con los servicios Transplantes GICIG, Inmunodeficiencias primarias, Grupo Reproducción...",
+      "Servicios: Transplantes GICIG, Inmunodeficiencias primarias, Grupo Reproducción",
     icono: "bi bi-hospital",
   },
   {
     nombre: "Sede San Vicente",
     direccion: "Cl. 64 #51D - 154, Medellín",
     descripcion:
-      "Cuenta con los servicios Patología, Dermatopatología",
+      "Servicios: Patología, Dermatopatología",
     icono: "bi bi-hospital",
   },
 ];
@@ -117,10 +117,11 @@ const sedes = [
 
 .card-title {
   font-weight: 600;
+  font-size: 0.88rem;
 }
 
 .card-text {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
 }
 
 .contacto-card {
