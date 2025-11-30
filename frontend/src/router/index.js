@@ -8,10 +8,19 @@ import DetalleEquipo from '@/views/DetalleEquipo.vue'
 import TrasladoEquipo from '@/views/TrasladoEquipo.vue'
 import EditarEquipo from '@/views/EditarEquipo.vue'
 import EquiposDesactivados from '@/views/EquiposDesactivados.vue' 
+import Login from '@/views/Login.vue'
+import GestionUsuarios from '@/views/GestionUsuarios.vue'
+
 const routes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
   {
     path: '/',
     component: DashboardLayout,
+    meta: { requiresAuth: true },
     children: [
       {
         path: '/home',
@@ -28,7 +37,12 @@ const routes = [
         name: 'Equipos',
         component: Equipos
       },
-      
+      {
+        path: '/gestion-usuarios',
+        name: 'GestionUsuarios',
+        component: GestionUsuarios,
+        meta: { requiresAdmin: true }
+      },
       {
         path: '/equiposDadosDeBaja',
         name: 'EquiposDesactivados',
@@ -43,7 +57,8 @@ const routes = [
       {
         path: '/equipos/agregarEquipo',
         name: 'AgregarEquipo',
-        component: AgregarEquipo
+        component: AgregarEquipo,
+        meta: { requiresAdmin: true }
       },
       {
         path: '/equipos/:id',
@@ -55,7 +70,8 @@ const routes = [
         path: '/equipos/:id/editar/',
         name: 'TrasladoEquipo',
         component: TrasladoEquipo,
-        props: true
+        props: true,
+        meta: { requiresAdmin: true }
       },
       {
         path: '/',
@@ -68,6 +84,29 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  // Obtener datos del localStorage directamente para mayor confiabilidad
+  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}')
+  const isAuthenticated = !!usuario.nombreusuario
+  const isAdmin = usuario.rol === 'admin'
+  
+  console.log('Navegación:', to.path, 'Usuario:', usuario)
+  
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    console.log('Redirigiendo a login: requiere autenticación')
+    next('/login')
+  } else if (to.meta.requiresAdmin && !isAdmin) {
+    console.log('Redirigiendo a home: requiere admin')
+    next('/home')
+  } else if (to.path === '/login' && isAuthenticated) {
+    console.log('Redirigiendo a home: ya autenticado')
+    next('/home')
+  } else {
+    console.log('Navegación permitida')
+    next()
+  }
 })
 
 export default router
