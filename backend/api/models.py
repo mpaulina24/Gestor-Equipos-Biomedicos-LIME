@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 CLASIFICACION_MISIONAL_CHOICES = [ 
     ('Docencia', 'Docencia'), 
@@ -25,6 +26,22 @@ SEDE_CHOICES = [
     ('San Vicente', 'San Vicente'),
 ]
 
+def validar_clasificacion_misional(valor):
+    """
+    Valida que el valor sea una cadena vacía o una combinación de las opciones separadas por comas.
+    Cada opción debe ser una de las opciones válidas.
+    """
+    if valor is None or valor == "":
+        return
+    
+    opciones_validas = ['Docencia', 'Investigación', 'Extensión']
+    # Separar por comas y eliminar espacios
+    opciones = [opcion.strip() for opcion in valor.split(',')]
+    
+    for opcion in opciones:
+        if opcion not in opciones_validas:
+            raise ValidationError(f"'{opcion}' no es una opción válida. Las opciones válidas son: {', '.join(opciones_validas)}")
+
 class Equipo(models.Model):
 
     activo = models.BooleanField(default=True)
@@ -48,11 +65,10 @@ class Equipo(models.Model):
     modelo = models.TextField(blank=True, null=True)
     serie = models.TextField(blank=True, null=True)
 
-    clasificacion_misional = models.CharField( 
-        max_length=50, 
-        choices=CLASIFICACION_MISIONAL_CHOICES, 
+    clasificacion_misional = models.TextField(
         blank=True, 
-        null=True 
+        null=True,
+        validators=[validar_clasificacion_misional]  # Agregar validador
     )
 
     clasificacion_ips = models.CharField(
@@ -146,3 +162,27 @@ class EdicionEquipo(models.Model):
 
     def __str__(self):
         return f"Edición de {self.equipo.nombre_equipo} — {self.fecha}"
+
+class DesactivacionEquipo(models.Model):
+    equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
+    fecha_desactivacion = models.DateField(auto_now_add=True)
+    responsable_desactivacion = models.CharField(max_length=100)
+    justificacion = models.TextField()
+
+    def __str__(self):
+        return f"Desactivación de {self.equipo.nombre_equipo} - {self.fecha_desactivacion}"
+    
+
+class Usuario(models.Model):
+    ROLES = (
+        ('admin', 'Administrador'),
+        ('viewer', 'Solo lectura'),
+    )
+    nombreusuario = models.CharField(max_length=100, unique=True)
+    contraseña = models.CharField(max_length=255)  # Texto plano temporalmente
+    rol = models.CharField(max_length=10, choices=ROLES)
+    activo = models.BooleanField(default=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.nombreusuario} ({self.rol})"
