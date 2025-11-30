@@ -2,97 +2,73 @@
   <nav class="sidenav sidebar-small">
     <!-- Header con el logo -->
     <div class="sidenav-header">
-      <img
-        src="@/assets/LIME.png"
-        alt="Logo LIME"
-        class="navbar-brand-img"
-      />
+      <img src="@/assets/LIME.png" alt="Logo LIME" class="navbar-brand-img" />
     </div>
 
     <!-- Menú -->
     <ul class="navbar-nav">
-
       <li class="nav-item">
-        <router-link
-          to="/home"
-          class="nav-link"
-          :class="{ active: isActive('/home') }"
-        >
+        <router-link to="/home" class="nav-link" :class="{ active: isActive('/home') }">
           <i class="bi bi-house-door"></i>
           <span class="nav-link-text">Inicio</span>
         </router-link>
       </li>
 
       <li class="nav-item">
-        <router-link
-          to="/estadisticas"
-          class="nav-link"
-          :class="{ active: isActive('/estadisticas') }"
-        >
+        <router-link to="/estadisticas" class="nav-link" :class="{ active: isActive('/estadisticas') }">
           <i class="bi bi-bar-chart-line"></i>
           <span class="nav-link-text">Dashboard</span>
         </router-link>
       </li>
 
       <li class="nav-item">
-        <router-link
-          to="/equipos"
-          class="nav-link"
-          :class="{ active: isActive('/equipos') }"
-        >
+        <router-link to="/equipos" class="nav-link" :class="{ active: isActive('/equipos') }">
           <i class="bi-list-ul"></i>
           <span class="nav-link-text">Equipos</span>
         </router-link>
       </li>
 
       <li class="nav-item">
-        <router-link
-          to="equiposDadosDeBaja"
-          class="nav-link"
-          :class="{ active: isActive('equiposDadosDeBaja') }"
-        >
+        <router-link to="/equiposDadosDeBaja" class="nav-link" :class="{ active: isActive('equiposDadosDeBaja') }">
           <i class="bi bi-eye-slash"></i>
           <span class="nav-link-text">Equipos dados de baja</span>
         </router-link>
       </li>
       
+      <!-- Gestión de Usuarios solo para Admin -->
+      <li class="nav-item" v-if="authStore.isAdmin">
+        <router-link to="/gestion-usuarios" class="nav-link" :class="{ active: isActive('/gestion-usuarios') }">
+          <i class="bi bi-people"></i>
+          <span class="nav-link-text">Gestión de Usuarios</span>
+        </router-link>
+      </li>
     </ul>
 
-    <!-- Footer embebido -->
+    <!-- Información del usuario y logout -->
     <div class="sidebar-footer">
-      <div class="footer-links">
-        <a
-          href="https://udea.edu.co/"
-          class="udea-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          UdeA
-        </a>
+      <div class="user-info mb-2">
+        <small class="text-muted">Conectado como:</small>
+        <div class="fw-bold">{{ authStore.userName }}</div>
+        <span class="badge" :class="authStore.isAdmin ? 'bg-danger' : 'bg-info'">
+          {{ authStore.isAdmin ? 'Administrador' : 'Solo lectura' }}
+        </span>
       </div>
+      
+      <button class="btn btn-outline-danger btn-sm w-100" @click="handleLogout">
+        <i class="bi bi-box-arrow-right me-1"></i>
+        Cerrar Sesión
+      </button>
 
-      <div class="footer-devs">
+      <div class="footer-devs mt-3">
         Programado por
-        <a
-          href="https://github.com/mpaulina24"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://github.com/mpaulina24" target="_blank" rel="noopener noreferrer">
           MariaPaulinaArias
         </a>,
-        <a
-          href="https://github.com/DaFeTaCo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://github.com/DaFeTaCo" target="_blank" rel="noopener noreferrer">
           DanielTamayo
         </a>
         y
-        <a
-          href="https://github.com/SantiagoTabaresO"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://github.com/SantiagoTabaresO" target="_blank" rel="noopener noreferrer">
           SantiagoTabares
         </a>
       </div>
@@ -100,15 +76,28 @@
   </nav>
 </template>
 
-<script>
-export default {
-  name: "Sidebar",
-  methods: {
-    isActive(route) {
-      return this.$route.path.includes(route);
-    },
-  },
-};
+<script setup>
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const handleLogout = () => {
+  console.log('Ejecutando logout...')
+  authStore.logout()
+  // No necesitamos router.push porque el logout ya redirige
+}
+
+const isActive = (route) => {
+  return router.currentRoute.value.path.includes(route)
+}
+
+// Asegurarse de que el store se cargue correctamente al montar
+onMounted(() => {
+  authStore.loadFromStorage()
+})
 </script>
 
 <style scoped>
