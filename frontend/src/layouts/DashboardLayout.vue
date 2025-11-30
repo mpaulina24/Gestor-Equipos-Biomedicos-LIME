@@ -9,21 +9,29 @@
       </main>
 
       <Footer />
-
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import Sidebar from '@/components/Sidebar.vue'
 import Topbar from '@/components/Topbar.vue'
 import Footer from '@/components/Footer.vue'
 
+const router = useRouter()
+const authStore = useAuthStore()
 
-export default {
-  name: 'DashboardLayout',
-  components: { Topbar, Sidebar, Footer }
-}
+// Verificar autenticación al cargar el layout
+onMounted(() => {
+  authStore.loadFromStorage()
+  
+  if (!authStore.isAuthenticated) {
+    router.push('/login')
+  }
+})
 </script>
 
 <style scoped>
