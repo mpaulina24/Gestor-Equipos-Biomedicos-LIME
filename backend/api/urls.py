@@ -1,6 +1,7 @@
 # backend/api/urls.py
 from django.urls import path
 from . import views
+from .views import LoginAPIView, UsuarioListCreateAPIView, UsuarioListAPIView, UsuarioDesactivarAPIView
 
 urlpatterns = [
     path('equipos/', views.EquipoActivoListAPIView.as_view(), name='api_equipos_list'), 
@@ -14,4 +15,9 @@ urlpatterns = [
     path('equipos/<int:pk>/editar/', views.EditarEquipoAPIView.as_view(), name='editar-equipo'),
     path('equipos/<int:pk>/modificar/', views.ActualizarEquipoCompletoAPIView.as_view(), name='mofidicar-equipo'),
     path('equipos/<int:pk>/ediciones/', views.EdicionesPorEquipoAPIView.as_view(), name='ediciones-equipo'),
+    path('equipos/<int:pk>/desactivar-detalle/', views.DesactivacionEquipoDetailAPIView.as_view(), name='desactivacion-equipo-detail'),
+    path('auth/login/', LoginAPIView.as_view(), name='login'),
+    path('auth/usuarios/', UsuarioListCreateAPIView.as_view(), name='usuarios-list-create'),
+    path('auth/usuarios/lista/', UsuarioListAPIView.as_view(), name='usuarios-list'),
+    path('auth/usuarios/<int:pk>/desactivar/', UsuarioDesactivarAPIView.as_view(), name='usuario-desactivar'),
 ]
