@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 
 from rest_framework import generics, status
-from .models import Equipo, EdicionEquipo
-from .serializers import EquipoListSerializer, EquipoCreateSerializer, EdicionEquipoSerializer
+from .models import Equipo, EdicionEquipo, DesactivacionEquipo, Usuario
+from .serializers import EquipoListSerializer, EquipoCreateSerializer, EdicionEquipoSerializer, DesactivacionEquipoSerializer, UsuarioSerializer, LoginSerializer, UsuarioCreateSerializer
 
 class EquipoListAPIView(generics.ListAPIView):
     queryset = Equipo.objects.all()
@@ -43,16 +43,101 @@ class EquipoInactivoListAPIView(generics.ListAPIView):
     queryset = Equipo.objects.filter(activo=False)     
     serializer_class = EquipoListSerializer
 
+#class DesactivarEquipoAPIView(generics.UpdateAPIView):
+#    """Cambia el campo 'activo' a False para un equipo específico."""
+#    queryset = Equipo.objects.all()
+#    serializer_class = EquipoCreateSerializer # Usamos EquipoCreateSerializer solo para validar/PUT
+    
+#    def post(self, request, pk):
+#        equipo = get_object_or_404(self.get_queryset(), pk=pk)
+#        equipo.activo = False
+#        equipo.save()
+#        return Response({"status": f"Equipo {pk} desactivado."}, status=status.HTTP_200_OK)
+
 class DesactivarEquipoAPIView(generics.UpdateAPIView):
-    """Cambia el campo 'activo' a False para un equipo específico."""
     queryset = Equipo.objects.all()
-    serializer_class = EquipoCreateSerializer # Usamos EquipoCreateSerializer solo para validar/PUT
+    serializer_class = EquipoCreateSerializer
     
     def post(self, request, pk):
         equipo = get_object_or_404(self.get_queryset(), pk=pk)
+        
+        # Obtener datos del request - USANDO LOS NOMBRES DEL FRONTEND
+        responsable = request.data.get('responsable')
+        justificacion = request.data.get('justificacion')
+        
+        if not responsable or not justificacion:
+            return Response(
+                {"error": "Se requiere responsable y justificación para desactivar el equipo"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Desactivar equipo
         equipo.activo = False
         equipo.save()
-        return Response({"status": f"Equipo {pk} desactivado."}, status=status.HTTP_200_OK)
+        
+        # Registrar desactivación
+        DesactivacionEquipo.objects.create(
+            equipo=equipo,
+            responsable_desactivacion=responsable,
+            justificacion=justificacion
+        )
+        
+        return Response(
+            {"status": f"Equipo {pk} desactivado correctamente", "data": {
+                "responsable": responsable,
+                "justificacion": justificacion
+            }}, 
+            status=status.HTTP_200_OK
+        )
+    
+class DesactivacionEquipoDetailAPIView(generics.ListAPIView):
+    serializer_class = DesactivacionEquipoSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return DesactivacionEquipo.objects.filter(equipo_id=pk).order_by('-fecha_desactivacion')
+    
+class LoginAPIView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            nombreusuario = serializer.validated_data['nombreusuario']
+            contraseña = serializer.validated_data['contraseña']
+            
+            try:
+                usuario = Usuario.objects.get(
+                    nombreusuario=nombreusuario, 
+                    contraseña=contraseña,  # Comparación directa en texto plano
+                    activo=True
+                )
+                return Response({
+                    'success': True,
+                    'usuario': UsuarioSerializer(usuario).data
+                }, status=status.HTTP_200_OK)
+            except Usuario.DoesNotExist:
+                return Response({
+                    'success': False,
+                    'error': 'Usuario o contraseña incorrectos'
+                }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UsuarioListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Usuario.objects.filter(activo=True)
+    serializer_class = UsuarioCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        # Verificación simple - puedes hacerla más robusta después
+        try:
+            return super().create(request, *args, **kwargs)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class UsuarioListAPIView(generics.ListAPIView):
+    queryset = Usuario.objects.filter(activo=True)
+    serializer_class = UsuarioSerializer
 
 class ActivarEquipoAPIView(generics.UpdateAPIView):
     """Cambia el campo 'activo' a True para un equipo específico (Reactivación)."""
@@ -64,6 +149,34 @@ class ActivarEquipoAPIView(generics.UpdateAPIView):
         equipo.activo = True
         equipo.save()
         return Response({"status": f"Equipo {pk} activado."}, status=status.HTTP_200_OK)
+    
+class UsuarioDesactivarAPIView(generics.UpdateAPIView):
+    queryset = Usuario.objects.all()
+    
+    def patch(self, request, pk):
+        try:
+            usuario = Usuario.objects.get(pk=pk)
+            
+            # Solo permitir desactivar usuarios viewer, no admins
+            if usuario.rol == 'admin':
+                return Response(
+                    {'error': 'No se puede desactivar un usuario administrador'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            usuario.activo = False
+            usuario.save()
+            
+            return Response({
+                'success': True,
+                'message': f'Usuario {usuario.nombreusuario} desactivado correctamente'
+            })
+            
+        except Usuario.DoesNotExist:
+            return Response(
+                {'error': 'Usuario no encontrado'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 
 # class EditarEquipoAPIView(generics.UpdateAPIView):
