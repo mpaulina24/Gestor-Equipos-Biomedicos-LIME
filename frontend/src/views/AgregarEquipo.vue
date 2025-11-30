@@ -176,33 +176,26 @@
               <!-- CLASIFICACIONES -->
               <div class="row mt-3">
 
-                
-                <div class="col-md-6 mb-4">
-                <label class="fw-semibold">Clasificación Misional</label>
+                <div class="col-md-6 mb-3">
+                  <label>Clasificación Misional</label>
 
-                <div 
-                  class="form-check" 
-                  v-for="opcion in clasificacionesMisionales" 
-                  :key="opcion.value"
-                >
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    :checked="equipo.clasificacion_misional.includes(opcion.value)"
-                    @change="toggleMisional(opcion.value)"
-                  />
-                  <label class="form-check-label">
-                    {{ opcion.label }}
-                  </label>
+                  <div 
+                    v-for="opcion in clasificacionesMisionales" 
+                    :key="opcion.value" 
+                    class="form-check"
+                  >
+                    <input 
+                      class="form-check-input"
+                      type="checkbox"
+                      :value="opcion.value"
+                      v-model="equipo.clasificacion_misional"
+                    />
+                    <label class="form-check-label">
+                      {{ opcion.label }}
+                    </label>
+                  </div>
+
                 </div>
-
-
-
-
-              </div>
-
-
-
 
                 <div class="col-md-6 mb-3">
                   <label>Clasificación IPS</label>
@@ -634,9 +627,10 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router';
 
-const router = useRouter(); 
+const router = useRouter();
+
 const activeTab = ref("general");
 
 const tabs = [
@@ -646,7 +640,6 @@ const tabs = [
   { id: "metrologica", label: "Información Metrológica" },
   { id: "condiciones", label: "Condiciones Funcionamiento" },
 ];
-
 
 const equipo = ref({
   proceso: "",
@@ -660,7 +653,7 @@ const equipo = ref({
   marca: "",
   modelo: "",
   serie: "",
-  clasificacion_misional: "",
+  clasificacion_misional: [],
   clasificacion_ips: "",
   clasificacion_riesgo: "",
   registro_invima: "",
@@ -687,7 +680,7 @@ const equipo = ref({
   guia_rapida: false,
   instructivo: false,
   protocolo_mto: false, 
-  frecuencia_metrologica: false, 
+  frecuencia_metrologica: false, //  CHARFIELD
 
   // --- Información metrológica administrativa ---
   mantenimiento: false,
@@ -724,21 +717,11 @@ function agregarNuevoServicio() {
     }
 }
 
-const limpiarCampo = (valor) => {
-    if (valor === "" || valor === null || valor === undefined) {
-        return null; 
-    }
-    if (typeof valor === 'boolean') {
-        return valor; 
-    }
-    return valor;
-};
-
 // --- Opciones de Clasificación para Vue ---
 const clasificacionesMisionales = [
-  { value: 'DOCENCIA', label: 'Docencia' },
-  { value: 'INVESTIGACION', label: 'Investigación' },
-  { value: 'EXTENSION', label: 'Extensión' },
+  { value: 'Docencia', label: 'Docencia' },
+  { value: 'Investigación', label: 'Investigación' },
+  { value: 'Extensión', label: 'Extensión' },
 ];
 
 const clasificacionesIPS = [
@@ -772,96 +755,102 @@ const documentos = {
   frecuencia_metrologica: "Frecuencia Metrológica del Fabricante",
 };
 
-const toggleMisional = (valor) => {
-  const arr = equipo.value.clasificacion_misional;
+const estandarizarValor = (valor) => {
+  if (valor === null || valor === undefined || valor === "" || valor === false) {
+    return "NI";
+  }
+  if (typeof valor === "string" && valor.trim() === "") {
+    return "NI";
+  }
+  return valor;
+};
 
-  if (arr.includes(valor)) {
-    equipo.value.clasificacion_misional = arr.filter(v => v !== valor);
-  } else {
-    equipo.value.clasificacion_misional.push(valor);
+const procesarObjetoEquipo = (objeto) => {
+  const procesado = { ...objeto };
+  
+  // Campos que NO deben convertirse a "NI"
+  const excluirCampos = ['id', 'activo', 'clasificacion_misional'];
+  
+  Object.keys(procesado).forEach(key => {
+    if (!excluirCampos.includes(key)) {
+      procesado[key] = estandarizarValor(procesado[key]);
+    }
+  });
+  
+  return procesado;
+};
+
+const guardarEquipo = async () => {
+  try {
+    // 1. Preparar payload base
+    let payload = { 
+      ...equipo.value,
+      
+      // Asegurar que clasificación misional sea string
+      clasificacion_misional: Array.isArray(equipo.value.clasificacion_misional) 
+        ? equipo.value.clasificacion_misional.join(",")
+        : equipo.value.clasificacion_misional || "",
+    };
+
+    // 2. CORRECCIÓN IMPORTANTE: Manejar INVIMA ANTES de estandarizar
+    // Esto asegura que el campo registro_invima tenga el valor correcto
+    if (!equipo.value.requiere_invima) {
+      payload.registro_invima = "NI";
+    } else {
+      // Si requiere invima pero está vacío, dejarlo vacío para que se estandarice después
+      payload.registro_invima = equipo.value.registro_invima || "";
+    }
+
+    // 3. CORRECCIÓN: Convertir campos booleanos a "Si"/"No" ANTES de estandarizar
+    const camposBooleanos = [
+      'hoja_vida', 'registro_importacion', 'manual_operacion', 
+      'manual_mantenimiento', 'guia_rapida', 'instructivo', 
+      'protocolo_mto', 'mantenimiento', 'calibracion', 'en_garantia',
+      'frecuencia_metrologica'
+    ];
+    
+    camposBooleanos.forEach(campo => {
+      if (payload.hasOwnProperty(campo)) {
+        payload[campo] = payload[campo] ? 'Si' : 'No';
+      }
+    });
+
+    // 4. CORRECCIÓN: Convertir números a string ANTES de estandarizar
+    if (payload.frecuencia_mantenimiento !== null && payload.frecuencia_mantenimiento !== undefined) {
+      payload.frecuencia_mantenimiento = payload.frecuencia_mantenimiento.toString();
+    }
+    if (payload.frecuencia_calibracion !== null && payload.frecuencia_calibracion !== undefined) {
+      payload.frecuencia_calibracion = payload.frecuencia_calibracion.toString();
+    }
+
+    // 5. Ahora sí, estandarizar todos los campos vacíos a "NI"
+    payload = procesarObjetoEquipo(payload);
+
+    console.log("Enviando datos estandarizados:", payload);
+
+    const response = await axios.post("http://127.0.0.1:8000/api/equipos/agregarEquipo/", payload);
+    
+    alert("✅ Equipo agregado correctamente");
+    console.log("Respuesta del servidor:", response.data);
+    router.push('/equipos');
+    
+    
+  } catch (error) {
+    if (error.response) {
+      console.error(" Error del servidor:", error.response.data);
+      console.error(" Código de estado:", error.response.status);
+      alert(` Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
+    } else if (error.request) {
+      console.error(" No hubo respuesta del servidor:", error.request);
+      alert(" No se recibió respuesta del servidor. Verifica tu conexión o CORS.");
+    } else {
+      console.error(" Error en la configuración de la petición:", error.message);
+      alert(` Error: ${error.message}`);
+    }
   }
 };
 
-
-const guardarEquipo = async () => {
-    try {
-        let payload = { ...equipo.value };
-
-        // --- 1. Conversión de ARRAY (Clasificación Misional) ---
-        if (Array.isArray(payload.clasificacion_misional)) {
-            payload.clasificacion_misional = payload.clasificacion_misional.join(",");
-        }
-        const limpiar = (v) => (v === '' || v === 0 || v === null || v === false) ? null : v;
-        const limpiarBool = (v) => v === true ? 'True' : v === false ? 'False' : null;
-
-        // Limpieza de campos problemáticos (booleanos/choice/strings)
-        payload.en_garantia = limpiarBool(equipo.value.en_garantia); 
-        
-        // Documentos (Convertir booleanos a 'True'/'False' como strings o 'null')
-        payload.hoja_vida = limpiarBool(equipo.value.hoja_vida);
-        payload.registro_importacion = limpiarBool(equipo.value.registro_importacion);
-        payload.manual_operacion = limpiarBool(equipo.value.manual_operacion);
-        payload.manual_mantenimiento = limpiarBool(equipo.value.manual_mantenimiento);
-        payload.guia_rapida = limpiarBool(equipo.value.guia_rapida);
-        payload.instructivo = limpiarBool(equipo.value.instructivo);
-        payload.protocolo_mto = limpiarBool(equipo.value.protocolo_mto);
-
-        // Frecuencias (Probablemente esperan strings o null)
-        payload.mantenimiento = limpiarBool(equipo.value.mantenimiento);
-        payload.calibracion = limpiarBool(equipo.value.calibracion);
-        
-        // Las frecuencias de mantenimiento/calibración son null si el checkbox es 'No'
-        if (equipo.value.mantenimiento === false) {
-             payload.frecuencia_mantenimiento = null;
-        } else {
-             payload.frecuencia_mantenimiento = limpiar(equipo.value.frecuencia_mantenimiento);
-        }
-        if (equipo.value.calibracion === false) {
-             payload.frecuencia_calibracion = null;
-        } else {
-             payload.frecuencia_calibracion = limpiar(equipo.value.frecuencia_calibracion);
-        }
-        // Campos de Fecha y otros strings que pueden ser nulos
-        payload.fecha_adquisicion = limpiar(equipo.value.fecha_adquisicion);
-        payload.fecha_fabricacion = limpiar(equipo.value.fecha_fabricacion);
-        payload.fecha_fin_garantia = limpiar(equipo.value.fecha_fin_garantia);
-        
-        // Otros campos que pueden ser vacíos
-        payload.frecuencia_metrologica = equipo.value.frecuencia_metrologica 
-                                 ? 'Si' 
-                                 : 'N/A';
-
-        console.log("[PAYLOAD FINAL ENVIADO]:", payload); 
-
-        const response = await axios.post("http://127.0.0.1:8000/api/equipos/agregarEquipo/", payload);
-        
-        alert("Equipo agregado correctamente");
-        console.log("Respuesta del servidor:", response.data);
-        router.push('/equipos'); 
-
-    } catch (error) {
-    // Si el servidor respondió con un error (400, 404, 500, etc.)
-    if (error.response) {
-      console.error(" Error del servidor:", error.response.data);
-      console.error(" Código de estado:", error.response.status);
-      alert(` Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
-
-    // Si no hubo respuesta del servidor (problemas de red o CORS)
-    } else if (error.request) {
-      console.error(" No hubo respuesta del servidor:", error.request);
-      alert("No se recibió respuesta del servidor. Verifica tu conexión o CORS.");
-
-    // Error en la configuración o ejecución de la petición
-    } else {
-      console.error(" Error en la configuración de la petición:", error.message);
-      alert(` Error: ${error.message}`);
-    }
-  }
-
-};
-
-
-const tabsIds = tabs.map(tab => tab.id);
+const tabsIds = tabs.map(tab => tab.id); // ["general", "historico", "documentos", "metrologica", "condiciones"]
 
 const siguienteSeccion = () => {
   const indexActual = tabsIds.indexOf(activeTab.value);
