@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Equipo, EdicionEquipo
+from .models import Equipo, EdicionEquipo, DesactivacionEquipo, Usuario
 
 class EdicionEquipoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,7 +10,25 @@ class EquipoCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Equipo
         fields = '__all__'
+
+class DesactivacionEquipoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DesactivacionEquipo
+        fields = '__all__'
         
+class UsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['id', 'nombreusuario', 'rol', 'activo', 'fecha_creacion']
+
+class LoginSerializer(serializers.Serializer):
+    nombreusuario = serializers.CharField()
+    contraseña = serializers.CharField()
+
+class UsuarioCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['nombreusuario', 'contraseña', 'rol']
 
 class EquipoListSerializer(serializers.ModelSerializer):
     
@@ -33,7 +51,6 @@ class EquipoListSerializer(serializers.ModelSerializer):
             'registro_invima',
             'activo'
         ]
-
 
     def get_equipo(self, obj):
         # Agrupa nombre, marca, modelo
