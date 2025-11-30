@@ -61,7 +61,7 @@
               <td class="text-center">
                 <span
                   v-if="equipo.codigos?.interno"
-                  class="badge rounded-pill badge-verde-claro"
+                  class="badge rounded-pill bg-light text-dark"
                 >
                   {{ equipo.codigos?.interno }}
                 </span>
@@ -75,16 +75,29 @@
 
               <!-- acciones -->
               <td class="text-center">
+                <!-- Botón Reactivar - Solo para admins -->
                 <button
-                  class="icon-btn success"
+                  v-if="authStore.isAdmin"
+                  class="icon-btn success me-1"
                   title="Reactivar Equipo"
                   @click="activarEquipo(equipo.id)"
                 >
                   <i class="bi bi-arrow-clockwise me-1"></i>
                   Reactivar
                 </button>
-              </td>
+                
+                <!-- Mensaje para usuarios viewer -->
+                <span v-else class="text-muted small me-2">Solo lectura</span>
 
+                <!-- Botón Información - Disponible para todos -->
+                <button
+                  class="icon-btn info"
+                  title="Ver detalles de desactivación"
+                  @click="verDetallesDesactivacion(equipo)"
+                >
+                  <i class="bi bi-info-circle"></i>
+                </button>
+              </td>
 
             </tr>
           </tbody>
@@ -93,34 +106,91 @@
 
     </div>
 
+    <!-- Modal para ver detalles de desactivación -->
+    <div class="modal fade" id="modalDetallesDesactivacion" tabindex="-1" aria-labelledby="modalDetallesDesactivacionLabel" aria-hidden="true" ref="modalDetallesDesactivacionElement">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow border-0 rounded-4">
+          <div class="modal-header bg-verde-desactivacion text-white">
+            <h5 class="modal-title" id="modalDetallesDesactivacionLabel">
+              <i class="bi bi-info-circle me-2"></i>
+              Detalles de Desactivación
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div v-if="equipoDesactivacionSeleccionado">
+              <h6 class="fw-bold">Equipo</h6>
+              <p>{{ equipoDesactivacionSeleccionado.nombre_equipo }}</p>
+
+              <h6 class="fw-bold">Fecha de Desactivación</h6>
+              <p>{{ new Date(equipoDesactivacionSeleccionado.infoDesactivacion.fecha_desactivacion).toLocaleDateString() }}</p>
+
+              <h6 class="fw-bold">Responsable</h6>
+              <p>{{ equipoDesactivacionSeleccionado.infoDesactivacion.responsable_desactivacion }}</p>
+
+              <h6 class="fw-bold">Justificación</h6>
+              <p>{{ equipoDesactivacionSeleccionado.infoDesactivacion.justificacion }}</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
+import { Modal } from "bootstrap";
+import { useAuthStore } from '@/stores/auth'
+
+// Store de autenticación
+const authStore = useAuthStore();
 
 const equiposDesactivados = ref([]);
 const busqueda = ref("");
 
+// Variables para el modal de detalles de desactivación
+const equipoDesactivacionSeleccionado = ref(null);
+const modalDetallesDesactivacionElement = ref(null);
+let modalDetallesDesactivacionInstance = null;
+
 const cargarEquiposDesactivados = async () => {
   try {
     const res = await axios.get("http://127.0.0.1:8000/api/equipos/inactivos/");
-    equiposDesactivados.value = res.data.map(eq => {
-      const [nombre_equipoRaw, marcaRaw, modeloRaw, serieRaw] = (eq.equipo || "").split("/").map(s => s.trim()); 
-      const codigoParts = (eq.codigos || "").split("/").map(s => s.trim()).filter(Boolean);
-      const interno = codigoParts[0] || null;
+    equiposDesactivados.value = await Promise.all(
+      res.data.map(async (eq) => {
+        const [nombre_equipoRaw, marcaRaw, modeloRaw, serieRaw] = (eq.equipo || "").split("/").map(s => s.trim()); 
+        const codigoParts = (eq.codigos || "").split("/").map(s => s.trim()).filter(Boolean);
+        const interno = codigoParts[0] || null;
 
-      return {
-        id: eq.id,
-        nombre_equipo: nombre_equipoRaw || "Sin nombre",
-        servicio: eq.proceso || "",
-        serie: serieRaw || "",
-        codigos: { interno },
-      };
-    });
+        // Obtener información de desactivación
+        let infoDesactivacion = null;
+        try {
+          const desactivacionRes = await axios.get(`http://127.0.0.1:8000/api/equipos/${eq.id}/desactivar-detalle/`);
+          if (desactivacionRes.data && desactivacionRes.data.length > 0) {
+            infoDesactivacion = desactivacionRes.data[0]; // Tomar la más reciente
+          }
+        } catch (error) {
+          console.error("Error cargando información de desactivación:", error);
+        }
+
+        return {
+          id: eq.id,
+          nombre_equipo: nombre_equipoRaw || "Sin nombre",
+          servicio: eq.proceso || "",
+          serie: serieRaw || "",
+          codigos: { interno },
+          infoDesactivacion: infoDesactivacion
+        };
+      })
+    );
   } catch (error) {
-    console.error("Error cargando equipos dados de baja:", error);
+    console.error("Error cargando equipos desactivados:", error);
   }
 };
 
@@ -137,6 +207,15 @@ const activarEquipo = async (id) => {
   }
 };
 
+// Función para abrir el modal de detalles de desactivación
+const verDetallesDesactivacion = (equipo) => {
+  equipoDesactivacionSeleccionado.value = equipo;
+  if (!modalDetallesDesactivacionInstance) {
+    modalDetallesDesactivacionInstance = new Modal(modalDetallesDesactivacionElement.value);
+  }
+  modalDetallesDesactivacionInstance.show();
+};
+
 const equiposFiltrados = computed(() => {
   const q = busqueda.value.toLowerCase();
   return equiposDesactivados.value.filter(e =>
@@ -146,7 +225,14 @@ const equiposFiltrados = computed(() => {
   );
 });
 
-onMounted(cargarEquiposDesactivados);
+onMounted(() => {
+  cargarEquiposDesactivados();
+
+  // Inicializar modal de detalles de desactivación
+  if (modalDetallesDesactivacionElement.value && Modal) {
+    modalDetallesDesactivacionInstance = new Modal(modalDetallesDesactivacionElement.value);
+  }
+});
 </script>
 
 <style scoped>
@@ -163,5 +249,24 @@ onMounted(cargarEquiposDesactivados);
   overflow-x: hidden;
 }
 
+.icon-btn.success {
+  color: #198754;
+}
+
+.icon-btn.success:hover {
+  color: #146c43;
+}
+
+.icon-btn.info {
+  color: #1B5E20;
+}
+
+.icon-btn.info:hover {
+  color: #1B5E20;
+}
+
+.bg-verde-desactivacion {
+background-color: #1B5E20 !important;
+}
 
 </style>
