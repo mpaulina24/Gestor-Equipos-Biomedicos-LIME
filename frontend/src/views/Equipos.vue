@@ -159,7 +159,7 @@
               <div class="d-flex flex-column align-items-center gap-1">
                 <span
                   v-if="equipo.codigos.interno"
-                  class="badge rounded-pill badge-verde-claro"
+                  class="badge rounded-pill bg-light text-dark"
                   data-bs-toggle="tooltip"
                   title="Código Interno"
                 >
@@ -208,7 +208,7 @@
               <div class="d-flex flex-column align-items-center gap-1">
                 <span
                   v-if="equipo.clasificacion.clasif_misional"
-                  class="badge rounded-pill badge-verde-claro"
+                  class="badge rounded-pill bg-light text-dark"
                   data-bs-toggle="tooltip"
                   title="Misional"
                 >
@@ -232,7 +232,7 @@
             <td class="text-center">
               <div class="d-flex flex-column align-items-center gap-1"> 
                 <span
-                  class="badge rounded-pill badge-verde-claro invima-text"
+                  class="badge rounded-pill bg-light text-dark invima-text"
                   data-bs-toggle="tooltip"
                   data-bs-placement="top"
                   :title="equipo.invima"
@@ -254,50 +254,53 @@
 
 
             <td class="text-center align-items-center gap-1">
-              
-              <button 
-              class="icon-btn" 
-              title="Editar" 
-              @click="modificarEquipo(equipo.id)"
-              >
-                <i class="bi bi-pencil-square"></i>
-              </button>
+              <!-- CONTENEDOR UNIFICADO DE BOTONES - SIN DUPLICACIÓN -->
+              <div class="d-flex flex-column align-items-center gap-1">
+                <!-- Botón Ver más - Disponible para todos -->
+                <button class="btn-ver-mas" @click="verDetalles(equipo.id)">
+                  Ver más
+                </button>
 
-              <button
-                class="icon-btn"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Traslado"
-                @click="editarEquipo(equipo.id)"
-              >
-                <i class="bi bi-shuffle"></i>
-              </button>
+                <!-- Botones de administración - Solo para admins -->
+                <div v-if="authStore.isAdmin" class="d-flex gap-1 mt-1">
+                  <button 
+                    class="icon-btn" 
+                    title="Editar" 
+                    @click="modificarEquipo(equipo.id)"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
 
-              <button
-                class="icon-btn"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Historial traslados"
-                @click="verRegistroEdiciones(equipo.id)"
-              >
-                <i class="bi-journal-text"></i>
-              </button>
+                  <button
+                    class="icon-btn"
+                    title="Traslado"
+                    @click="editarEquipo(equipo.id)"
+                  >
+                    <i class="bi bi-shuffle"></i>
+                  </button>
 
+                  <button
+                    class="icon-btn"
+                    title="Historial traslados"
+                    @click="verRegistroEdiciones(equipo.id)"
+                  >
+                    <i class="bi-journal-text"></i>
+                  </button>
 
-              <button
-                class="icon-btn"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Dar de baja"
-                @click="desactivarEquipo(equipo.id)"                >
-                <i class="bi bi-eye-slash"></i>
-              </button>
+                  <button
+                    class="icon-btn"
+                    title="Dar de baja"
+                    @click="desactivarEquipo(equipo.id)"
+                  >
+                    <i class="bi bi-eye-slash"></i>
+                  </button>
+                </div>
 
-              <button class="btn-ver-mas" @click="verDetalles(equipo.id)">
-                Ver más
-              </button>
-              
-
+                <!-- Mensaje para usuarios viewer -->
+                <div v-else class="mt-1">
+                  <small class="text-muted">Solo lectura</small>
+                </div>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -345,31 +348,31 @@
                 class="list-group-item"
               >
                 <p class="mb-1">
-                <strong>📅 Fecha:</strong> {{ registro.fecha }}</p>
+                <strong> Fecha:</strong> {{ registro.fecha }}</p>
 
                 <p class="mb-1">
-                  <strong>📍 Sede: </strong>
+                  <strong> Sede: </strong>
                   <span class="text-muted">{{ registro.sede_anterior || 'N/A' }}</span>
                   →
                   <span class="text-success">{{ registro.sede_nueva || 'N/A' }}</span>
                 </p>
 
                 <p class="mb-1">
-                  <strong>🏥 Servicio: </strong>
+                  <strong> Servicio: </strong>
                   <span class="text-muted">{{ registro.servicio_anterior || 'N/A' }}</span>
                   →
                   <span class="text-success">{{ registro.servicio_nuevo || 'N/A' }}</span>
                 </p>
 
                 <p class="mb-1">
-                  <strong>👤 Responsable: </strong>
+                  <strong> Responsable: </strong>
                   <span class="text-muted">{{ registro.responsable_anterior || 'N/A' }}</span>
                   →
                   <span class="text-success">{{ registro.responsable_nuevo || 'N/A' }}</span>
                 </p>
 
                 <p class="mb-0">
-                  <strong>📝 Justificación: </strong> {{ registro.justificacion }}
+                  <strong> Justificación: </strong> {{ registro.justificacion }}
                 </p>
 
               </li>
@@ -388,6 +391,47 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal para desactivar equipo -->
+    <div class="modal fade" id="modalDesactivar" tabindex="-1" aria-labelledby="modalDesactivarLabel" aria-hidden="true" ref="modalDesactivarElement">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow border-0 rounded-4">
+          <div class="modal-header bg-warning text-white">
+            <h5 class="modal-title" id="modalDesactivarLabel">Desactivar Equipo</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted mb-3">¿Está seguro de que desea desactivar este equipo? Esta acción registrará la desactivación y el equipo se moverá a la sección de equipos desactivados.</p>
+            
+            <div class="mb-3">
+              <label class="form-label fw-bold">Responsable de la desactivación</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                v-model="desactivacionData.responsable"
+                placeholder="Ingrese el nombre del responsable"
+                required
+              >
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Justificación</label>
+              <textarea 
+                class="form-control" 
+                v-model="desactivacionData.justificacion"
+                rows="3" 
+                placeholder="Describa el motivo de la desactivación..."
+                required
+              ></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-warning" @click="confirmarDesactivacion">Desactivar Equipo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -395,6 +439,10 @@
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import { useAuthStore } from '@/stores/auth'
+
+// En setup
+const authStore = useAuthStore()
 
 const router = useRouter();
 
@@ -468,8 +516,14 @@ onMounted(async () => {
     tooltipTriggerList.forEach((el) => new window.bootstrap.Tooltip(el));
   }
 
+  // Modal Historial de traslados
   if (modalElement.value && Modal) {
     modalInstance = new Modal(modalElement.value);
+  }
+
+  // Inicializar modal de desactivación
+  if (modalDesactivarElement.value && Modal) {
+    modalDesactivarInstance = new Modal(modalDesactivarElement.value);
   }
 });
 
@@ -524,21 +578,67 @@ const modalElement = ref(null);
 let modalInstance = null;
 const cargando = ref(false);
 
-const desactivarEquipo = async (id) => {
-  if (confirm("¿Estás seguro de que quieres dar de baja este equipo?")) {
-    try {
-      // Llama al endpoint de desactivación
-      await axios.post(`http://127.0.0.1:8000/api/equipos/${id}/desactivar/`);
-      
-      // Actualiza la lista de equipos en el frontend
-      await cargarEquipos(); 
-      alert("Equipo desactivado correctamente.");
-    } catch (error) {
-      console.error("Error al dar de baja el equipo:", error);
-      alert("Hubo un error al intentar dar de baja el equipo.");
+// Variables para el modal de desactivación
+const desactivacionData = ref({
+  responsable: '',
+  justificacion: ''
+});
+const equipoADesactivar = ref(null);
+const modalDesactivarElement = ref(null);
+let modalDesactivarInstance = null;
+
+// Función para abrir el modal de desactivación
+const desactivarEquipo = (id) => {
+  equipoADesactivar.value = id;
+  desactivacionData.value = { responsable: '', justificacion: '' };
+  
+  if (!modalDesactivarInstance) {
+    modalDesactivarInstance = new Modal(modalDesactivarElement.value);
+  }
+  modalDesactivarInstance.show();
+};
+
+// Función para confirmar la desactivación
+const confirmarDesactivacion = async () => {
+  if (!desactivacionData.value.responsable.trim() || !desactivacionData.value.justificacion.trim()) {
+    alert('Por favor complete todos los campos');
+    return;
+  }
+
+  try {
+    await axios.post(`http://127.0.0.1:8000/api/equipos/${equipoADesactivar.value}/desactivar/`, desactivacionData.value);
+    
+    // Cerrar el modal
+    if (modalDesactivarInstance) {
+      modalDesactivarInstance.hide();
     }
+    
+    // Recargar la lista de equipos
+    await cargarEquipos();
+    alert('Equipo desactivado correctamente.');
+  } catch (error) {
+    console.error('Error al desactivar el equipo:', error);
+    alert('Hubo un error al intentar desactivar el equipo.');
   }
 };
+
+//const desactivarEquipo = async (id) => {
+//  if (confirm("¿Estás seguro de que quieres desactivar este equipo?")) {
+//    try {
+      // Llama al endpoint de desactivación
+//      await axios.post(`http://127.0.0.1:8000/api/equipos/${id}/desactivar/`);
+      
+      // Actualiza la lista de equipos en el frontend
+//      await cargarEquipos(); 
+//      alert("Equipo desactivado correctamente.");
+//    } catch (error) {
+//      console.error("Error al desactivar el equipo:", error);
+//      alert("Hubo un error al intentar desactivar el equipo.");
+//    }
+//  }
+//};
+
+
 const verRegistroEdiciones = async (id) => {
   try {
     cargando.value = true;
@@ -632,6 +732,5 @@ const verRegistroEdiciones = async (id) => {
 .btn-ver-mas:hover {
   background-color: rgba(13, 110, 253, 0.2);
 }
-
 
 </style>
