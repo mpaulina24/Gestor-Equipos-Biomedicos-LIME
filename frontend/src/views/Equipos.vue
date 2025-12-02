@@ -81,7 +81,7 @@
       </select>
       </div>
 
-      <div class="ms-auto">
+      <div v-if="authStore.isAdmin" class="ms-auto">
         <button class="btn btn-success px-4 d-flex align-items-center gap-2" @click="agregarEquipo">
           <i class="bi bi-plus-lg"></i> Agregar Equipo
         </button>
@@ -294,11 +294,6 @@
                   >
                     <i class="bi bi-eye-slash"></i>
                   </button>
-                </div>
-
-                <!-- Mensaje para usuarios viewer -->
-                <div v-else class="mt-1">
-                  <small class="text-muted">Solo lectura</small>
                 </div>
               </div>
             </td>
@@ -716,21 +711,5 @@ const verRegistroEdiciones = async (id) => {
   cursor: pointer;
 }
 
-.btn-ver-mas {
-  background-color: rgba(13, 110, 253, 0.1);
-  color: #0d6efd;
-  border: none;
-  border-radius: 50px;
-  font-size: 0.7rem;
-  font-weight: 800;
-  padding: 2px 6px;
-  cursor: pointer;
-  transition: 0.2s;
-  white-space: nowrap;
-}
-
-.btn-ver-mas:hover {
-  background-color: rgba(13, 110, 253, 0.2);
-}
 
 </style>

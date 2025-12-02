@@ -76,6 +76,15 @@
               <!-- acciones -->
               <td class="text-center">
                 <!-- Botón Reactivar - Solo para admins -->
+                <div class="d-flex flex-column align-items-center gap-1">
+                  <button 
+                    class="btn-ver-mas" 
+                    @click="verDetalles(equipo.id)"
+                    >
+                    Ver más
+                  </button>
+                </div>
+
                 <button
                   v-if="authStore.isAdmin"
                   class="icon-btn success me-1"
@@ -85,9 +94,6 @@
                   <i class="bi bi-arrow-clockwise me-1"></i>
                   Reactivar
                 </button>
-                
-                <!-- Mensaje para usuarios viewer -->
-                <span v-else class="text-muted small me-2">Solo lectura</span>
 
                 <!-- Botón Información - Disponible para todos -->
                 <button
@@ -97,6 +103,7 @@
                 >
                   <i class="bi bi-info-circle"></i>
                 </button>
+              
               </td>
 
             </tr>
@@ -147,9 +154,12 @@ import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { Modal } from "bootstrap";
 import { useAuthStore } from '@/stores/auth'
+import { useRouter } from "vue-router";
 
 // Store de autenticación
 const authStore = useAuthStore();
+
+const router = useRouter();
 
 const equiposDesactivados = ref([]);
 const busqueda = ref("");
@@ -192,6 +202,10 @@ const cargarEquiposDesactivados = async () => {
   } catch (error) {
     console.error("Error cargando equipos desactivados:", error);
   }
+};
+
+const verDetalles = async (id) => {
+  router.push(`/equipos/${id}`);
 };
 
 const activarEquipo = async (id) => {

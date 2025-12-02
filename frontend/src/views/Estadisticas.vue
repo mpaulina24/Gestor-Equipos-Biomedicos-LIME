@@ -114,12 +114,13 @@ const equiposRaw = ref([]);
 const inactivosRaw = ref([]);
 
 const azulPalette = [
-  "#2563EB",  // Azul medio
-  "#3B82F6",  // Azul claro
-  "#60A5FA",  // Celeste
-  "#93C5FD",  // Celeste muy claro
-  "#BFDBFE"   // Azul pastel
+  "#1E8F4A", // Verde suave institucional
+  "#4ADE80", // Verde pastel vibrante
+  "#60A5FA", // Azul pastel fuerte
+  "#38BDF8", // Aqua intenso
+  "#FBBF24"  // Amarillo suave
 ];
+
 
 const normalize = (eq) => {
   const sede = (eq.sede || eq.location || "").toString().trim();

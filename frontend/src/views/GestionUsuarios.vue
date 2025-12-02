@@ -19,7 +19,7 @@
         <div class="col-md-4">
           <label class="form-label">Rol</label>
           <select v-model="nuevoUsuario.rol" class="form-select" required>
-            <option value="viewer">Solo lectura (Viewer)</option>
+            <option value="viewer">Visualizador</option>
             <option value="admin">Administrador</option>
           </select>
         </div>
@@ -76,7 +76,7 @@
               <td>{{ usuario.nombreusuario }}</td>
               <td>
                 <span class="badge" :class="usuario.rol === 'admin' ? 'admin-badge' : 'viewer-badge'">
-                  {{ usuario.rol === 'admin' ? 'Administrador' : 'Solo lectura' }}
+                  {{ usuario.rol === 'admin' ? 'Administrador' : 'Visualizador' }}
                 </span>
               </td>
               <td>{{ new Date(usuario.fecha_creacion).toLocaleDateString() }}</td>
@@ -141,9 +141,9 @@ const usuariosFiltrados = computed(() => {
   if (filtroActivos.value === 'todos') {
     return usuarios.value
   } else if (filtroActivos.value === 'activos') {
-    return usuarios.value.filter(u => u.activo)
+    return usuarios.value.filter(u => u.activo==1)
   } else {
-    return usuarios.value.filter(u => !u.activo)
+    return usuarios.value.filter(u => u.activo==0)
   }
 })
 
@@ -151,6 +151,8 @@ const cargarUsuarios = async () => {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/auth/usuarios/lista/')
     usuarios.value = response.data
+    console.log(response.data)
+
   } catch (error) {
     console.error('Error cargando usuarios:', error)
     alert('Error al cargar usuarios')

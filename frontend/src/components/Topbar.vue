@@ -16,7 +16,7 @@
       </strong>
       <span class="badge ms-2"
         :class="authStore.isAdmin ? 'admin-badge' : 'viewer-badge' ">
-        {{ authStore.isAdmin ? 'Administrador' : 'Solo lectura' }}
+        {{ authStore.isAdmin ? 'Administrador' : 'Visualizador' }}
       </span>
 
       <!-- MENU DESPLEGABLE -->

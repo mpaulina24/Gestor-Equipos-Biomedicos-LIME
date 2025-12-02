@@ -625,10 +625,10 @@ const clasificacionesIPS = [
 ];
 
 const clasificacionesRiesgo = [
-  { value: 'I', label: 'Clase I' },
-  { value: 'IIA', label: 'Clase IIa' },
-  { value: 'IIB', label: 'Clase IIb' },
-  { value: 'III', label: 'Clase III' },
+  { value: 'Clase I', label: 'Clase I' },
+  { value: 'Clase IIa', label: 'Clase IIa' },
+  { value: 'Clase IIb', label: 'Clase IIb' },
+  { value: 'Clase III', label: 'Clase III' },
 ];
 
 const documentos = {
