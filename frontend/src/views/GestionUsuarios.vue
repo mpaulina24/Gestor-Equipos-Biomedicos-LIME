@@ -85,27 +85,45 @@
                 <span v-else class="badge bg-secondary">Inactivo</span>
               </td>
               <td v-if="authStore.isAdmin">
-                <!-- Botón para desactivar usuarios viewer activos -->
-                <button 
-                  v-if="usuario.rol === 'viewer' && usuario.activo"
-                  class="btn btn-warning btn-sm"
-                  @click="desactivarUsuario(usuario)"
-                  :disabled="cargandoDesactivar === usuario.id"
-                >
-                  <i class="bi bi-person-dash me-1"></i>
-                  <span v-if="cargandoDesactivar === usuario.id">Desactivando...</span>
-                  <span v-else>Desactivar</span>
-                </button>
+                <!-- Acciones para usuarios ACTIVOS -->
+                <div v-if="usuario.activo">
+                  <!-- Botón para desactivar usuarios viewer -->
+                  <button 
+                    v-if="usuario.rol === 'viewer'"
+                    class="btn btn-warning btn-sm"
+                    @click="desactivarUsuario(usuario)"
+                    :disabled="cargandoDesactivar === usuario.id"
+                  >
+                    <i class="bi bi-person-dash me-1"></i>
+                    <span v-if="cargandoDesactivar === usuario.id">Desactivando...</span>
+                    <span v-else>Desactivar</span>
+                  </button>
+                  
+                  <!-- Mensaje para admins activos -->
+                  <span v-else class="text-muted small">
+                    Admin (no se puede desactivar)
+                  </span>
+                </div>
                 
-                <!-- Mensaje para usuarios ya inactivos -->
-                <span v-else-if="!usuario.activo" class="text-muted small">
-                  Inactivo
-                </span>
-                
-                <!-- Mensaje para admins (no se pueden desactivar) -->
-                <span v-else class="text-muted small">
-                  Admin
-                </span>
+                <!-- Acciones para usuarios INACTIVOS -->
+                <div v-else>
+                  <!-- Botón para reactivar usuarios viewer -->
+                  <button 
+                    v-if="usuario.rol === 'viewer'"
+                    class="btn btn-success btn-sm me-2"
+                    @click="activarUsuario(usuario)"
+                    :disabled="cargandoActivar === usuario.id"
+                  >
+                    <i class="bi bi-person-check me-1"></i>
+                    <span v-if="cargandoActivar === usuario.id">Reactivando...</span>
+                    <span v-else>Reactivar</span>
+                  </button>
+                  
+                  <!-- Mensaje para admins inactivos -->
+                  <span v-else class="text-muted small">
+                    Admin inactivo
+                  </span>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -127,8 +145,9 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 const usuarios = ref([])
 const cargando = ref(false)
-const cargandoDesactivar = ref(null) // Para controlar qué usuario se está desactivando
-const filtroActivos = ref('activos') // 'todos', 'activos', 'inactivos'
+const cargandoDesactivar = ref(null)
+const cargandoActivar = ref(null)
+const filtroActivos = ref('activos')
 
 const nuevoUsuario = ref({
   nombreusuario: '',
@@ -141,9 +160,9 @@ const usuariosFiltrados = computed(() => {
   if (filtroActivos.value === 'todos') {
     return usuarios.value
   } else if (filtroActivos.value === 'activos') {
-    return usuarios.value.filter(u => u.activo==1)
+    return usuarios.value.filter(u => u.activo == 1)
   } else {
-    return usuarios.value.filter(u => u.activo==0)
+    return usuarios.value.filter(u => u.activo == 0)
   }
 })
 
@@ -151,7 +170,7 @@ const cargarUsuarios = async () => {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/auth/usuarios/lista/')
     usuarios.value = response.data
-    console.log(response.data)
+    console.log('Usuarios cargados:', response.data)
 
   } catch (error) {
     console.error('Error cargando usuarios:', error)
@@ -187,7 +206,7 @@ const desactivarUsuario = async (usuario) => {
     return
   }
 
-  if (!confirm(`¿Estás seguro de que deseas desactivar al usuario "${usuario.nombreusuario}"?`)) {
+  if (!confirm(`¿Estás seguro de que deseas desactivar al usuario "${usuario.nombreusuario}"?\n\nEl usuario ya no podrá iniciar sesión hasta que sea reactivado.`)) {
     return
   }
 
@@ -211,6 +230,41 @@ const desactivarUsuario = async (usuario) => {
     }
   } finally {
     cargandoDesactivar.value = null
+  }
+}
+
+const activarUsuario = async (usuario) => {
+  if (!authStore.isAdmin) {
+    alert('No tienes permisos para reactivar usuarios')
+    return
+  }
+
+  if (!confirm(`¿Estás seguro de que deseas reactivar al usuario "${usuario.nombreusuario}"?\n\nEl usuario podrá iniciar sesión nuevamente.`)) {
+    return
+  }
+
+  cargandoActivar.value = usuario.id
+  
+  try {
+    const response = await axios.patch(`http://127.0.0.1:8000/api/auth/usuarios/${usuario.id}/activar/`)
+    
+    if (response.data.success) {
+      alert(response.data.message)
+      await cargarUsuarios() // Recargar la lista
+    } else {
+      alert('Error al reactivar usuario: ' + response.data.error)
+    }
+  } catch (error) {
+    console.error('Error reactivando usuario:', error)
+    if (error.response?.status === 404) {
+      alert('El endpoint para reactivar usuarios no está disponible. Verifica que hayas creado la vista en el backend.')
+    } else if (error.response?.data?.error) {
+      alert('Error al reactivar usuario: ' + error.response.data.error)
+    } else {
+      alert('Error de conexión al reactivar usuario')
+    }
+  } finally {
+    cargandoActivar.value = null
   }
 }
 
