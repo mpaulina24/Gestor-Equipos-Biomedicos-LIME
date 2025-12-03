@@ -136,8 +136,30 @@ class UsuarioListCreateAPIView(generics.ListCreateAPIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class UsuarioListAPIView(generics.ListAPIView):
-    queryset = Usuario.objects.filter(activo=True)
+    queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
+
+class UsuarioActivarAPIView(generics.UpdateAPIView):
+    queryset = Usuario.objects.all()
+    
+    def patch(self, request, pk):
+        try:
+            usuario = Usuario.objects.get(pk=pk)
+            
+            # Verificar que no se esté intentando activar un admin (esto es opcional)
+            usuario.activo = True
+            usuario.save()
+            
+            return Response({
+                'success': True,
+                'message': f'Usuario {usuario.nombreusuario} reactivado correctamente'
+            })
+            
+        except Usuario.DoesNotExist:
+            return Response(
+                {'error': 'Usuario no encontrado'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 class ActivarEquipoAPIView(generics.UpdateAPIView):
     """Cambia el campo 'activo' a True para un equipo específico (Reactivación)."""
