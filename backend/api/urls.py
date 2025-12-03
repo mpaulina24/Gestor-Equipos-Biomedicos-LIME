@@ -20,4 +20,5 @@ urlpatterns = [
     path('auth/usuarios/', UsuarioListCreateAPIView.as_view(), name='usuarios-list-create'),
     path('auth/usuarios/lista/', UsuarioListAPIView.as_view(), name='usuarios-list'),
     path('auth/usuarios/<int:pk>/desactivar/', UsuarioDesactivarAPIView.as_view(), name='usuario-desactivar'),
+    path('auth/usuarios/<int:pk>/activar/', views.UsuarioActivarAPIView.as_view(), name='usuario-activar'),
 ]
