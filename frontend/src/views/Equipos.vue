@@ -392,19 +392,19 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow border-0 rounded-4">
           <div class="modal-header bg-danger text-white">
-            <h5 class="modal-title" id="modalDesactivarLabel">Desactivar Equipo</h5>
+            <h5 class="modal-title" id="modalDesactivarLabel">Dar de baja equipo</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
           </div>
           <div class="modal-body">
-            <p class="text-muted mb-3">¿Está seguro de que desea desactivar este equipo? Esta acción registrará la desactivación y el equipo se moverá a la sección de equipos desactivados.</p>
+            <p class="text-muted mb-3">¿Está seguro de que desea dar de baja este equipo? Esta acción registrará la baja y el equipo se moverá a la sección de equipos dados de baja.</p>
             
             <div class="mb-3">
-              <label class="form-label fw-bold">Responsable de la desactivación</label>
+              <label class="form-label fw-bold">Responsable</label>
               <input 
                 type="text" 
                 class="form-control" 
                 v-model="desactivacionData.responsable"
-                placeholder="Ingrese el nombre del responsable"
+                placeholder="Ingrese el nombre"
                 required
               >
             </div>
@@ -414,14 +414,14 @@
                 class="form-control" 
                 v-model="desactivacionData.justificacion"
                 rows="3" 
-                placeholder="Describa el motivo de la desactivación..."
+                placeholder="Describa el motivo..."
                 required
               ></textarea>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-warning" @click="confirmarDesactivacion">Desactivar Equipo</button>
+            <button type="button" class="btn btn-warning" @click="confirmarDesactivacion">Dar de baja</button>
           </div>
         </div>
       </div>
