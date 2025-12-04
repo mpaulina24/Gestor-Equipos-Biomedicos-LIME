@@ -33,23 +33,49 @@
         <!-- FORMULARIO -->
         <div class="row">
 
-          <div class="col-md-4 mb-3">
-            <label class="form-label small fw-bold text-muted">Sede</label>
-            <input
-              v-model="equipo.sede"
-              class="form-control form-control-sm"
-              placeholder="Ej. Sede universitaria"
-            />
-          </div>
+          
+              <div class="col-md-4 mb-3">
+                <label class="fw-semibold">Sede Multicentro</label>
+                <select v-model="equipo.sede" class="form-select" required>
+                  <option value="" disabled>Seleccione la Sede</option>
+                  <option 
+                    v-for="opcion in opcionesSede" 
+                    :key="opcion.value" 
+                    :value="opcion.value">
+                    {{ opcion.label }}
+                  </option>
+                </select>
+              </div>
 
-          <div class="col-md-4 mb-3">
-            <label class="form-label small fw-bold text-muted">Servicio</label>
-            <input
-              v-model="equipo.proceso"
-              class="form-control form-control-sm"
-              placeholder="Ej. Quimioterapia"
-            />
-          </div>
+              <div class="col-md-8 mb-3">
+                <label class="fw-semibold">Proceso / Servicio</label>
+                <div class="input-group">
+                  <select 
+                    v-model="equipo.proceso" 
+                    class="form-select"
+                    :disabled="mostrarNuevoServicio" 
+                    required
+                  >
+                    <option value="" disabled>Seleccione un proceso</option>
+                    <option 
+                      v-for="servicio in serviciosDisponibles" 
+                      :key="servicio" 
+                      :value="servicio">
+                      {{ servicio }}
+                    </option>
+                  </select>
+
+                  <button 
+                    class="btn custom-btn" 
+                    type="button" 
+                    @click="mostrarNuevoServicio = true"
+                    v-if="!mostrarNuevoServicio">
+                    + Nuevo Servicio
+                  </button>
+                </div>
+              </div>
+
+
 
           <div class="col-md-4 mb-3">
             <label class="form-label small fw-bold text-muted">Responsable</label>
@@ -112,7 +138,16 @@ onMounted(async () => {
     alert("Error al cargar los datos del equipo");
   }
 });
+const opcionesSede = [ 
+  { value: 'Prado', label: 'Prado' },
+  { value: 'SIU', label: 'SIU' },
+  { value: 'San Vicente', label: 'San Vicente' },
+];
 
+const serviciosDisponibles = [
+  "LIME","Fotodermatología","Resonador","Oftalmología",
+  "Trasplantes GICIG","Inmunodeficiencias Primarias","Grupo Reproducción","Patología","Dermatopatología"
+];
 // Guardar cambios con fecha y justificación
 const guardarCambios = async () => {
   if (!justificacion.value.trim()) {
